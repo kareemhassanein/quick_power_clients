@@ -50,6 +50,7 @@ dependencies:
   auto_animated: ^3.1.0
   intl: ^0.18.0
   flutter_spinkit: ^5.1.0
+  url_launcher: ^6.1.8
 
 dev_dependencies:
   flutter_test:

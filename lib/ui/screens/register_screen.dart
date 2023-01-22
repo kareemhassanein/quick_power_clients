@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,8 +20,8 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStateMixin {
   final TextEditingController _customerNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  // final TextEditingController _locationController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
@@ -82,57 +83,57 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                         ),
                       ),
                   // Group: Group 62712
-                  Center(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () async {
-                        _selectedImage =  await _picker.pickImage(source: ImageSource.gallery);
-                        setState(() {
-                        });
-                      },
-                      child: SizedBox(
-                        width: 109.0.r,
-                        height: 109.0.r,
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              alignment: const Alignment(0.09, 0.0),
-                              width: 106.0.w,
-                              height: 105.0.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(53.0.r),
-                                border: Border.all(
-                                  width: 3.0.r,
-                                  color: AppColors().primaryColor,
-                                ),
-                              ),
-                              child: SizedBox(
-                                width: 95.0.r,
-                                height: 95.0.r,
-                                child: ClipOval(child: _selectedImage != null ? Image.file(File(_selectedImage!.path), fit: BoxFit.cover,) : Image.asset('assets/logo.png')),
-                              ),
-                            ),
-                            Positioned(
-                              right: 0,
-                              bottom: 0,
-                              child: Container(
-                                alignment: Alignment.center,
-
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(Radius.elliptical(18.0.r, 17.5.r)),
-                                  color: AppColors().primaryColor,
-                                ),
-                                child:  Padding(
-                                  padding:  EdgeInsets.all(6.0.r),
-                                  child: Icon(Icons.camera_alt_rounded, size: 24.r, color: Colors.white,),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Center(
+                  //   child: GestureDetector(
+                  //     behavior: HitTestBehavior.opaque,
+                  //     onTap: () async {
+                  //       _selectedImage =  await _picker.pickImage(source: ImageSource.gallery);
+                  //       setState(() {
+                  //       });
+                  //     },
+                  //     child: SizedBox(
+                  //       width: 109.0.r,
+                  //       height: 109.0.r,
+                  //       child: Stack(
+                  //         children: <Widget>[
+                  //           Container(
+                  //             alignment: const Alignment(0.09, 0.0),
+                  //             width: 106.0.w,
+                  //             height: 105.0.h,
+                  //             decoration: BoxDecoration(
+                  //               borderRadius: BorderRadius.circular(53.0.r),
+                  //               border: Border.all(
+                  //                 width: 3.0.r,
+                  //                 color: AppColors().primaryColor,
+                  //               ),
+                  //             ),
+                  //             child: SizedBox(
+                  //               width: 95.0.r,
+                  //               height: 95.0.r,
+                  //               child: ClipOval(child: _selectedImage != null ? Image.file(File(_selectedImage!.path), fit: BoxFit.cover,) : Image.asset('assets/logo.png')),
+                  //             ),
+                  //           ),
+                  //           Positioned(
+                  //             right: 0,
+                  //             bottom: 0,
+                  //             child: Container(
+                  //               alignment: Alignment.center,
+                  //
+                  //               decoration: BoxDecoration(
+                  //                 borderRadius: BorderRadius.all(Radius.elliptical(18.0.r, 17.5.r)),
+                  //                 color: AppColors().primaryColor,
+                  //               ),
+                  //               child:  Padding(
+                  //                 padding:  EdgeInsets.all(6.0.r),
+                  //                 child: Icon(Icons.camera_alt_rounded, size: 24.r, color: Colors.white,),
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                       SizedBox(
                         height: 27.5.h,
                       ),
@@ -152,29 +153,13 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                         height: 27.5.h,
                       ),
                       filedTextAuth(
-                          controller: _emailController,
-                          inputType: TextInputType.emailAddress,
-                          prefix: Icon(CupertinoIcons.mail_solid, color: AppColors().primaryColor, size: 24.r,),
-                          textInputAction: TextInputAction.next,
-                          validator: (s) {
-                            if (s!.isEmpty) {
-                              return 'required';
-                            }else if(!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                .hasMatch(s)){
-                              return 'Invalid Email';
-                            }
-                            return null;
-                          },
-                          hint: 'Email'),
-                      SizedBox(
-                        height: 27.5.h,
-                      ),
-                      filedTextAuth(
-                          controller: _locationController,
-                          inputType: TextInputType.text,
-                          enabled: false,
-                          prefix: Icon(CupertinoIcons.location_solid, color: AppColors().primaryColor, size: 24.r,),
-                          suffix: Icon(Icons.my_location_rounded, color: AppColors().primaryColor, size: 24.r,),
+                          controller: _phoneController,
+                          inputType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9]')),
+                          ],
+                          prefix: Icon(CupertinoIcons.phone_fill, color: AppColors().primaryColor, size: 24.r,),
                           textInputAction: TextInputAction.next,
                           validator: (s) {
                             if (s!.isEmpty) {
@@ -182,7 +167,8 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                             }
                             return null;
                           },
-                          hint: 'Location'),
+                          hint: 'Phone'),
+
                       SizedBox(
                         height: 27.5.h,
                       ),
