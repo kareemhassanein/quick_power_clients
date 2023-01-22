@@ -60,6 +60,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             backgroundColor: AppColors().backgroundColor,
             splashColor: Colors.white,
             highlightColor: Colors.white.withOpacity(.5),
+            textSelectionTheme: TextSelectionThemeData(
+              selectionHandleColor: AppColors().primaryColor,
+              selectionColor: AppColors().primaryColor.withOpacity(0.2)
+            )
           ),
           home: child,
           builder: EasyLoading.init(),

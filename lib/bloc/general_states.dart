@@ -10,21 +10,25 @@ class InitialState extends GeneralStates {
   }}
 
 class LoadingState extends GeneralStates {
-  LoadingState({String? msg}){
-    EasyLoading.show(status: msg);
+  LoadingState({String? msg, bool showDialog = true}){
+    if(showDialog) {
+      EasyLoading.show(status: msg);
+    }
   }
 }
 
 class SuccessState extends GeneralStates {
   dynamic response;
-  SuccessState({String? msg, this.response}){
-    EasyLoading.showSuccess(msg??'');
+  SuccessState({String? msg, this.response, bool showDialog = false}){
+    if(showDialog) {
+      EasyLoading.showSuccess(msg ?? '', dismissOnTap: true);
+    }
   }}
 
 class ErrorState extends GeneralStates {
   dynamic errors;
   ErrorState({String? msg, this.errors}){
-    EasyLoading.showError(msg??'');
+    EasyLoading.showError(msg??'', dismissOnTap: true);
   }}
 
 

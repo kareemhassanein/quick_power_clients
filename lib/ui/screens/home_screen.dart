@@ -115,52 +115,61 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               PopupMenuButton(
                                 color: Colors.white,
                                 onSelected: (value) async {
-                                  if(value == 'log_out'){
-                                    showDialog(context: context, builder: (c)=> AlertDialog(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12.r),
-                                      ),
-                                      elevation: 2.r,
-                                      title: Text(
-                                        'Are you sure to Log out?',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 16.0.sp,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(onPressed: (){
-                                          Navigator.pop(context);
-                                        }, child: Text(
-                                          'Cancel',
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 14.0.sp,
-                                            color: Colors.black87,
-                                          ),
-                                        ),),
-                                        TextButton(onPressed: () async {
-                                          await Preferences.removeUserData();
-                                          navigateToScreen(context, const LoginScreen(), withRemoveUntil: true);
-
-                                        }, child: Text(
-                                          'Log out',
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 14.0.sp,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.red,
-                                          ),
-                                        ),),
-
-                                      ],
-                                    ));
-
+                                  if (value == 'log_out') {
+                                    showDialog(
+                                        context: context,
+                                        builder: (c) => AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12.r),
+                                              ),
+                                              elevation: 2.r,
+                                              title: Text(
+                                                'Are you sure to Log out?',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 16.0.sp,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 14.0.sp,
+                                                      color: Colors.black87,
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    await Preferences
+                                                        .removeUserData();
+                                                    navigateToScreen(context,
+                                                        const LoginScreen(),
+                                                        withRemoveUntil: true);
+                                                  },
+                                                  child: Text(
+                                                    'Log out',
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 14.0.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ));
                                   }
                                 },
                                 tooltip: 'Profile',
                                 elevation: 2,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r)
-                                ),
+                                    borderRadius: BorderRadius.circular(12.r)),
                                 itemBuilder: (BuildContext bc) {
                                   return [
                                     PopupMenuItem(
@@ -195,7 +204,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   ),
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -229,6 +237,15 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     EdgeInsets.symmetric(vertical: 7.h),
                                 tabs: [
                                   Text(
+                                    'Pending',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13.0.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
                                     'Done',
                                     style: GoogleFonts.poppins(
                                       fontSize: 13.0.sp,
@@ -239,15 +256,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   ),
                                   Text(
                                     'Inprogress',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13.0.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
-                                    'Pending',
                                     style: GoogleFonts.poppins(
                                       fontSize: 13.0.sp,
                                       color: Colors.white,
@@ -416,41 +424,101 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         color: AppColors().primaryColor,
                       ),
                     ),
-                    SizedBox(
-                      width: 24.w,
-                    ),
                     Expanded(
-                        child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'WayBill ${index + 1}',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14.0,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500,
+                      child: Padding(
+                        padding: EdgeInsetsDirectional.only(start: 24.w, top: 8.h, bottom: 8.h, end: 8.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 5,
+                                  child: Text(
+                                    'WayBill $index',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    'date',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          Expanded(
-                              child: SizedBox(
-                            width: 268.0,
-                            height: 49.0,
-                            child: Text(
-                              'The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by',
-                              style: GoogleFonts.poppins(
-                                fontSize: 10.0.sp,
-                                color: Colors.black,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 3,
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 5,
+                                  child: Text(
+                                    'Gasoline',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14.0.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    '1,000 L',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ))
-                        ],
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 5,
+                                  child: Text(
+                                    'Station Name',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14.0.sp,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    '15,000 SR',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ))
+                    )
                   ],
                 ),
               ),

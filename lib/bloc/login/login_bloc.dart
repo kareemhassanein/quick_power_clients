@@ -18,7 +18,7 @@ class LoginBloc extends Bloc<LoginEvents, GeneralStates> {
       if (event is DoLoginEvent) {
         if(await InternetConnection().isConnected()) {
           yield LoadingState();
-          LoginModel? loginModel = await Repo().login(userMobile: event.userEmail, userPassword: event.userPassword);
+          LoginModel? loginModel = await AuthRepo().login(userMobile: event.userEmail, userPassword: event.userPassword);
           if(loginModel != null){
             if(loginModel.errors != null){
               yield ErrorState(msg: loginModel.message??'Something Went Wrong!', errors: loginModel.errors as Errors);

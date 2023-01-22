@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen>
   final TextEditingController _passwordController = TextEditingController();
   late AnimationController _animationController;
   final LoginBloc _bloc = LoginBloc();
-
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
@@ -56,7 +57,13 @@ class _LoginScreenState extends State<LoginScreen>
               listener: (context, state) {
                 if (state is SuccessState) {
                   _bloc.close();
-                  navigateToScreen(context, const HomeScreen(), withRemoveUntil: true);
+                  navigateToScreen(context, const HomeScreen(),
+                      withRemoveUntil: true);
+                } else if (state is ErrorState) {
+                  print('ddsd');
+                  Future.delayed(const Duration(milliseconds: 300), (){
+                    formKey.currentState!.validate();
+                  });
                 }
               },
               child: SingleChildScrollView(
@@ -67,6 +74,7 @@ class _LoginScreenState extends State<LoginScreen>
                       bloc: _bloc,
                       builder: (context, state) {
                         return Form(
+                          key: formKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -113,7 +121,11 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                               filedTextAuth(
                                   controller: _usernameController,
-                                  inputType: TextInputType.text,
+                                  inputType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
                                   prefix: Icon(
                                     CupertinoIcons.mail_solid,
                                     color: AppColors().primaryColor,
@@ -123,8 +135,9 @@ class _LoginScreenState extends State<LoginScreen>
                                   validator: (s) {
                                     if (s!.isEmpty) {
                                       return 'required';
-                                    }else if(state is ErrorState && state.errors?.userMobile != null){
-                                      return  state.errors.userMobile.first;
+                                    } else if (state is ErrorState &&
+                                        state.errors?.userMobile != null) {
+                                      return state.errors.userMobile.first;
                                     }
                                     return null;
                                   },
@@ -145,8 +158,9 @@ class _LoginScreenState extends State<LoginScreen>
                                   validator: (s) {
                                     if (s!.isEmpty) {
                                       return 'required';
-                                    }else if(state is ErrorState && state.errors?.userPassword != null){
-                                      return  state.errors.userMobile.first;
+                                    } else if (state is ErrorState &&
+                                        state.errors?.userPassword != null) {
+                                      return state.errors.userPassword.first;
                                     }
                                     return null;
                                   },
@@ -154,7 +168,6 @@ class _LoginScreenState extends State<LoginScreen>
                               SizedBox(
                                 height: 12.5.h,
                               ),
-                              // Group: Group 1946
                               Align(
                                 alignment: AlignmentDirectional.centerEnd,
                                 child: GestureDetector(
@@ -192,7 +205,18 @@ class _LoginScreenState extends State<LoginScreen>
                                               BorderRadius.circular(40.0.r),
                                         ))),
                                     onPressed: () {
-                                      _bloc.add(DoLoginEvent(userEmail: _usernameController.text, userPassword: _passwordController.text));
+                                      _bloc.add(InitialEvent());
+                                      Future.delayed(
+                                          const Duration(milliseconds: 100),
+                                          () {
+                                        if (formKey.currentState!.validate()) {
+                                          _bloc.add(DoLoginEvent(
+                                              userEmail:
+                                                  _usernameController.text,
+                                              userPassword:
+                                                  _passwordController.text));
+                                        }
+                                      });
                                     },
                                     child: Text(
                                       'Sign In',

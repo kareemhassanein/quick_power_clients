@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../constrants/colors.dart';
 
-Widget loadingWidget() => CircularProgressIndicator(
-      valueColor: AlwaysStoppedAnimation<Color>(AppColors().primaryColor),
-      strokeWidth: 2.0,
-    );
 
 Widget filedTextAuth({
       String? hint,
@@ -28,7 +25,7 @@ Widget filedTextAuth({
     TextFormField(
       controller: controller,
       keyboardType: inputType,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
+      autovalidateMode: AutovalidateMode.disabled,
       textInputAction: textInputAction,
       validator: validator,
       focusNode: focusNode,
@@ -83,3 +80,8 @@ Widget filedTextAuth({
         color: AppColors().titleColor,
       ),
     );
+
+Widget loadingWidget()=> Center(child: SpinKitSquareCircle(
+  color: AppColors().primaryColor,
+  size: 50.0.sp,
+),);
