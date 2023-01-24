@@ -81,7 +81,9 @@ Widget filedTextAuth({
       ),
     );
 
-Widget loadingWidget()=> Center(child: SpinKitSquareCircle(
-  color: AppColors().primaryColor,
+Widget loadingWidget({Color? color})=> Center(child: SpinKitRing
+  (
+  color: color??AppColors().primaryColor,
   size: 50.0.sp,
+  lineWidth: 5.r,
 ),);

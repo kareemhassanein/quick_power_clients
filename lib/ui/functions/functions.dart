@@ -9,6 +9,7 @@ Future<dynamic> navigateToScreen(BuildContext context, Widget navigateTo,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transitionsBuilder,
     bool? withRemoveUntil}) {
+  FocusManager.instance.primaryFocus?.unfocus();
   if (Platform.isAndroid) {
     return Navigator.pushAndRemoveUntil(
         context,
@@ -39,7 +40,7 @@ Future<void> openMap(double latitude, double longitude) async {
   }
 }
 
-Future<void> openDialog(BuildContext context, Widget Function(BuildContext, Animation<double>, Animation<double>) itemBuilder) =>
+Future<dynamic> openDialog(BuildContext context, Widget Function(BuildContext, Animation<double>, Animation<double>) itemBuilder) =>
   showGeneralDialog(
     barrierDismissible: true,
     barrierLabel: '',

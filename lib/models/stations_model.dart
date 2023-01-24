@@ -75,12 +75,11 @@ class Station {
     lon: json["lon"],
   );
 
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "location_details": locationDetails,
-    "lat": lat,
-    "lon": lon,
+  Map<String, String> toJson() => {
+    "name": name.toString(),
+    "location_details": locationDetails.toString(),
+    "lat": lat.toString(),
+    "lon": lon.toString(),
   };
 }
 

@@ -14,30 +14,69 @@ class StationsBloc extends Bloc<StationsEvents, GeneralStates> {
   Stream<GeneralStates> mapEventToState(
     StationsEvents event,
   ) async* {
-      if (event is GetStationsEvent) {
-        if(await InternetConnection().isConnected()) {
-          yield LoadingState(showDialog: false);
-          print('sssss');
-
+    if (event is GetStationsEvent) {
+      if (await InternetConnection().isConnected()) {
+        yield LoadingState(showDialog: false);
+        print('sssss');
+        StationsModel? stationsModel = await StationsRepo().allStations();
+        print('sssss');
+        if (stationsModel != null) {
+          if (stationsModel.message != null) {
+            yield ErrorState(
+              msg: stationsModel.message ?? 'Something Went Wrong!',
+            );
+          } else if (stationsModel.data != null && stationsModel.success!) {
+            yield SuccessState(response: stationsModel.data, showDialog: false);
+          } else {
+            yield ErrorState(
+              msg: stationsModel.message ?? 'Something Went Wrong!',
+            );
+          }
+        } else {
+          yield ErrorState(
+            msg: 'Something Went Wrong!',
+          );
+        }
+      } else {
+        yield NoInternetState();
+      }
+    } else if (event is AddNewStationEvent) {
+      if (await InternetConnection().isConnected()) {
+        yield LoadingState(showDialog: true);
+        dynamic response = await StationsRepo().storeStation(event.data);
+        if (response['success']??false == true) {
+          yield SuccessState(showDialog: true, msg: 'Station Added');
           StationsModel? stationsModel = await StationsRepo().allStations();
           print('sssss');
-          if(stationsModel != null){
-            if(stationsModel.message != null){
-              yield ErrorState(msg: stationsModel.message??'Something Went Wrong!',);
-            }else if(stationsModel.data != null && stationsModel.success!){
+          if (stationsModel != null) {
+            if (stationsModel.message != null) {
+              yield ErrorState(
+                msg: stationsModel.message ?? 'Something Went Wrong!',
+              );
+            } else if (stationsModel.data != null && stationsModel.success!) {
               yield SuccessState(response: stationsModel.data, showDialog: false);
-            }else{
-              yield ErrorState(msg: stationsModel.message??'Something Went Wrong!',);
+            } else {
+              yield ErrorState(
+                msg: stationsModel.message ?? 'Something Went Wrong!',
+              );
             }
-          }else{
-            yield ErrorState(msg: 'Something Went Wrong!',);
+          } else {
+            yield ErrorState(
+              msg: 'Something Went Wrong!',
+            );
           }
-        }else{
-          yield NoInternetState();
+        } else {
+          yield ErrorState(
+            msg: response['message'] ?? 'Something Went Wrong!',
+          );
         }
-      }else if (event is InitialEvent) {
-        yield InitialState();
+      } else {
+        yield NoInternetState();
       }
+    } else if (event is InitialEvent) {
+      yield InitialState();
+    }
   }
+
   GeneralStates get initialState => InitialState();
 }

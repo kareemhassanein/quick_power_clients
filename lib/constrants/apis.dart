@@ -3,4 +3,5 @@ class Apis{
   static const String login = '$serverUrl/auth/login';
   static const String signUp = '$serverUrl/auth/signup';
   static const String getStations = '$serverUrl/locations';
+  static const String storeStation = '$serverUrl/locations/store';
 }

@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         RegExp(r'[0-9]')),
                                   ],
                                   prefix: Icon(
-                                    CupertinoIcons.mail_solid,
+                                    CupertinoIcons.phone_fill,
                                     color: AppColors().primaryColor,
                                     size: 24.r,
                                   ),

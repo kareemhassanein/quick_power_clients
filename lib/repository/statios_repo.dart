@@ -33,6 +33,28 @@ class StationsRepo {
     return modelResponse;
   }
 
+  Future<dynamic> storeStation(Map<String, String> data) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${Preferences.getUserToken()!}'
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(Apis.storeStation));
+
+    request.headers.addAll(headers);
+    request.fields.addAll(data);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      return jsonDecode(await response.stream.bytesToString());
+    } else {
+      jsonEncode({
+        'success': false,
+        'message': response.reasonPhrase,
+      });
+    }
+  }
+
   static void dioBadRequestAdapter(Dio dio) {
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {

@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:waqoodi_client/preference.dart';
 import 'package:waqoodi_client/ui/functions/functions.dart';
 import 'package:waqoodi_client/ui/screens/login_screen.dart';
+import 'package:waqoodi_client/ui/screens/profile_screen.dart';
 import 'package:waqoodi_client/ui/screens/stations_screen.dart';
 
 import '../../constrants/colors.dart';
@@ -164,6 +165,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                                 ),
                                               ],
                                             ));
+                                  }else{
+                                    navigateToScreen(context,
+                                        const ProfileScreen());
                                   }
                                 },
                                 tooltip: 'Profile',
@@ -177,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                       child: Text(
                                         'My Profile',
                                         style: GoogleFonts.poppins(
-                                          fontSize: 16.0.sp,
+                                          fontSize: 14.0.sp,
                                           color: Colors.black,
                                         ),
                                         textAlign: TextAlign.center,
@@ -188,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                       child: Text(
                                         'Log out',
                                         style: GoogleFonts.poppins(
-                                          fontSize: 16.0.sp,
+                                          fontSize: 14.0.sp,
                                           color: Colors.black,
                                         ),
                                         textAlign: TextAlign.center,
@@ -246,15 +250,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     textAlign: TextAlign.center,
                                   ),
                                   Text(
-                                    'Done',
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13.0.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Text(
                                     'Inprogress',
                                     style: GoogleFonts.poppins(
                                       fontSize: 13.0.sp,
@@ -263,6 +258,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
+                                  Text(
+                                    'Done',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 13.0.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+
                                 ],
                               ),
                             ),

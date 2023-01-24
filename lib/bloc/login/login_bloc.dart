@@ -10,8 +10,8 @@ import '../general_states.dart';
 import 'login_event.dart';
 
 class LoginBloc extends Bloc<LoginEvents, GeneralStates> {
-  LoginBloc() : super(InitialState());
-  @override
+    LoginBloc() : super(InitialState());
+    @override
   Stream<GeneralStates> mapEventToState(
     LoginEvents event,
   ) async* {
@@ -23,8 +23,8 @@ class LoginBloc extends Bloc<LoginEvents, GeneralStates> {
             if(loginModel.errors != null){
               yield ErrorState(msg: loginModel.message??'Something Went Wrong!', errors: loginModel.errors as Errors);
             }else if(loginModel.data != null && loginModel.success!){
-              await Preferences.setUserToken(loginModel.data!.token!);
-              yield SuccessState(msg: loginModel.message, response: loginModel.data);
+              Preferences.setUserToken(loginModel.data!.token!);
+              yield SuccessState(msg: loginModel.message, response: loginModel.data, showDialog: true);
             }else{
               yield ErrorState(msg: loginModel.message??'Something Went Wrong!',);
             }

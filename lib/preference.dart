@@ -33,7 +33,7 @@ class Preferences {
           color: Colors.black,
           fontWeight: FontWeight.w500)
       ..maskType = EasyLoadingMaskType.custom
-      ..indicatorType = EasyLoadingIndicatorType.squareCircle
+      ..indicatorType = EasyLoadingIndicatorType.ring
       ..animationStyle = EasyLoadingAnimationStyle.scale
       ..boxShadow = [
         BoxShadow(
