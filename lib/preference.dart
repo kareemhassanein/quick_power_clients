@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cancellation_token/cancellation_token.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -12,6 +14,7 @@ import 'package:waqoodi_client/ui/functions/customs/custom_loader_animation.dart
 
 class Preferences {
   static late SharedPreferences sharedPreferences;
+  static late CancelToken cancellationToken;
 
   static initSharedPref() async {
     WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +31,7 @@ class Preferences {
       ..maskColor = Colors.black26
       ..textColor = Colors.black
       ..userInteractions = true
-      ..textStyle = GoogleFonts.poppins(
+      ..textStyle = GoogleFonts.readexPro(
           fontSize: 14.0,
           color: Colors.black,
           fontWeight: FontWeight.w500)
@@ -44,6 +47,7 @@ class Preferences {
       ]
       ..dismissOnTap = false;
     sharedPreferences = await SharedPreferences.getInstance();
+    cancellationToken = CancelToken();
   }
 
   static Future<bool> setUserToken(String token) async {

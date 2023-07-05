@@ -5,7 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:waqoodi_client/models/stations_model.dart';
 import 'package:waqoodi_client/preference.dart';
 import '../constrants/apis.dart';
-import '../models/auth/login_model.dart';
+import '../localization/LanguageHelper.dart';
+import '../models/auth/auth_model.dart';
 import 'package:http/http.dart' as http;
 
 class StationsRepo {
@@ -14,6 +15,7 @@ class StationsRepo {
   Future<StationsModel?> allStations() async {
     var headers = {
       'Accept': 'application/json',
+      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
     var request = http.MultipartRequest('GET', Uri.parse(Apis.getStations));
@@ -36,6 +38,7 @@ class StationsRepo {
   Future<dynamic> storeStation(Map<String, String> data) async {
     var headers = {
       'Accept': 'application/json',
+      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
     var request = http.MultipartRequest('POST', Uri.parse(Apis.storeStation));
@@ -44,15 +47,24 @@ class StationsRepo {
     request.fields.addAll(data);
 
     http.StreamedResponse response = await request.send();
+    dynamic  s =  jsonDecode(await response.stream.bytesToString());
+    return s;
+  }
 
-    if (response.statusCode == 200) {
-      return jsonDecode(await response.stream.bytesToString());
-    } else {
-      jsonEncode({
-        'success': false,
-        'message': response.reasonPhrase,
-      });
-    }
+  Future<dynamic> updateStation({required id, required Map<String, String> data}) async {
+    var headers = {
+      'Accept': 'application/json',
+      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
+      'Authorization': 'Bearer ${Preferences.getUserToken()!}'
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(Apis.updateStation(id: id)));
+
+    request.headers.addAll(headers);
+    request.fields.addAll(data..putIfAbsent('_method', () => 'put'));
+
+    http.StreamedResponse response = await request.send();
+    dynamic  s =  jsonDecode(await response.stream.bytesToString());
+    return s;
   }
 
   static void dioBadRequestAdapter(Dio dio) {

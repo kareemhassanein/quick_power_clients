@@ -1,29 +1,27 @@
-class LoginModel {
+class AuthModel {
   bool? success;
   String? message;
   Data? data;
   Errors? errors;
 
+  AuthModel({this.success, this.message, this.data, this.errors});
 
-  LoginModel({this.success, this.message, this.data, this.errors});
-
-  LoginModel.fromJson(Map<String, dynamic> json) {
+  AuthModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
-    errors =
-    json['errors'] != null ? Errors.fromJson(json['errors']) : null;
+    errors = json['errors'] != null ? Errors.fromJson(json['errors']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['success'] = success;
     data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
-    if (this.errors != null) {
-      data['errors'] = this.errors!.toJson();
+    if (errors != null) {
+      data['errors'] = errors!.toJson();
     }
     return data;
   }
@@ -41,7 +39,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['token'] = token;
     data['token_type'] = tokenType;
     return data;
@@ -51,18 +49,29 @@ class Data {
 class Errors {
   List<String>? userMobile;
   List<String>? userPassword;
+  List<String>? userConfirmPassword;
+  List<String>? name;
 
-  Errors({this.userMobile, this.userPassword});
+  Errors({
+    this.userMobile,
+    this.userPassword,
+    this.userConfirmPassword,
+    this.name,
+  });
 
   Errors.fromJson(Map<String, dynamic> json) {
-    userMobile = json['user_mobile']?.cast<String>()!;
+    name = json['name']?.cast<String>()!;
     userPassword = json['user_password']?.cast<String>()!;
+    userConfirmPassword = json['user_password_confirmation']?.cast<String>()!;
+    userMobile = json['user_mobile']?.cast<String>()!;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['user_mobile'] = userMobile;
     data['user_password'] = userPassword;
+    data['user_password_confirmation'] = userConfirmPassword;
+    data['name'] = name;
     return data;
   }
 }

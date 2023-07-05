@@ -1,18 +1,23 @@
+import 'dart:io';
+
 import 'package:auto_animated/auto_animated.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:waqoodi_client/bloc/profile/profile_bloc.dart';
+import 'package:waqoodi_client/bloc/profile/profile_event.dart';
+import 'package:waqoodi_client/localization/Language/Languages.dart';
+import 'package:waqoodi_client/models/user_model.dart';
+import 'package:waqoodi_client/ui/widgets/widgets.dart';
 
 import '../../bloc/general_states.dart';
-import '../../bloc/stations/stations_bloc.dart';
-import '../../bloc/stations/stations_event.dart';
+
 import '../../constrants/colors.dart';
-import '../../models/stations_model.dart';
-import '../functions/functions.dart';
-import '../widgets/widgets.dart';
-import 'add_new_station_screen.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -22,155 +27,121 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final StationsBloc bloc = StationsBloc()..add(GetStationsEvent());
-  List<Station>? stations;
+  late ProfileBloc bloc;
+  UserModel? _userModel;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+  late StateSetter _stateSetter;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = ProfileBloc()..add(GetUserDataEvent());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bloc.close();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors().backgroundColor,
-      body: BlocBuilder<StationsBloc, GeneralStates>(
+    return GestureDetector(
+      onTap: (){
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors().primaryColor,
+          title: Text(
+            Languages.of(context)!.myProfile,
+            style: GoogleFonts.readexPro(
+              fontSize: 18.0.sp,
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          centerTitle: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(12.0.r),
+            ),
+          ),
+        ),
+        backgroundColor: AppColors().backgroundColor,
+        body: BlocListener<ProfileBloc, GeneralStates>(
           bloc: bloc,
-          builder: (context, state) {
+          listener: (context, state) {
             if (state is SuccessState) {
               if (state.response != null) {
-                stations = state.response!.data!;
+                if(_userModel == null) {
+                  _userModel = state.response!;
+                  _nameController.text = _userModel!.data!.name ?? '';
+                  _emailController.text = _userModel!.data!.email ?? '';
+                }else{
+                  Navigator.pop(context, state.response!.data);
+                }
               }
+            }else if (state is ErrorState && _userModel == null) {
+              Navigator.pop(context,);
             }
-            return CustomScrollView(
-              scrollBehavior: const ScrollBehavior(
-                  androidOverscrollIndicator:
-                  AndroidOverscrollIndicator.stretch),
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                SliverAppBar(
-                  backgroundColor: AppColors().primaryColor,
-                  pinned: true,
-                  title: Text(
-                    'My Profile',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16.0.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  centerTitle: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(12.0.r),
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: EdgeInsets.only(
-                      top: 16.h,
-                      right: 8.w,
-                      left: 8.w,
-                      bottom: 70.h + MediaQuery.of(context).viewPadding.bottom),
-                  sliver: stations == null
-                      ? SliverFillRemaining(
-                    hasScrollBody: false,
-                    fillOverscroll: true,
-                    child: loadingWidget(),
-                  )
-                      : LiveSliverList(
-                    itemCount: stations!.length,
-                    controller: ScrollController(),
-                    delay: Duration.zero,
-                    reAnimateOnVisibility: false,
-                    showItemInterval: const Duration(milliseconds: 50),
-                    showItemDuration: const Duration(milliseconds: 250),
-                    itemBuilder: (context, index, anim) =>
-                        ScaleTransition(
-                          scale: anim,
+          },
+          child: BlocBuilder<ProfileBloc, GeneralStates>(
+              bloc: bloc,
+              builder: (context, state) {
+
+                return _userModel == null ? const SizedBox() : SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
                           child: GestureDetector(
-                            onTap: () {
-                              openDialog(
-                                  context,
-                                      (p0, p1, p2) => AddNewStationScreen(
-                                    station: stations![index],
-                                  )).then((value) {
-                                if (value != null) {}
-                              });
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () async {
+                              XFile? selectedImage =  await _picker.pickImage(source: ImageSource.gallery);
+                              if(selectedImage != null){
+                                bloc.add(UpdateUserImageEvent(selectedImage));
+                              }
                             },
-                            child: Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: 8.w, vertical: 8.h),
-                              height: 70.0.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10.0.r),
-                                color: Colors.white,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.25),
-                                    offset: Offset(0, 1.0.r),
-                                    blurRadius: 4.0.r,
-                                  ),
-                                ],
-                              ),
-                              child: Row(
-                                children: [
+                            child: SizedBox(
+                              width: 109.0.r,
+                              height: 109.0.r,
+                              child: Stack(
+                                children: <Widget>[
                                   Container(
-                                    width: 12.0.w,
+                                    alignment: const Alignment(0.09, 0.0),
+                                    width: 106.0.w,
+                                    height: 105.0.h,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.horizontal(
-                                        left: Radius.circular(10.0.r),
+                                      borderRadius: BorderRadius.circular(53.0.r),
+                                      border: Border.all(
+                                        width: 3.0.r,
+                                        color: AppColors().primaryColor,
                                       ),
-                                      color: AppColors().primaryColor,
+                                    ),
+                                    child: SizedBox(
+                                      width: 95.0.r,
+                                      height: 95.0.r,
+                                      child: ClipOval(child:_userModel!.data!.image == null ? Image.asset('assets/logo.png') : imageNetwork(_userModel!.data!.image!)),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 16.w,
-                                  ),
-                                  Expanded(
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8.w, vertical: 8.h),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              stations![index].name!,
-                                              style: GoogleFonts.poppins(
-                                                fontSize: 14.0,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              height: 4.h,
-                                            ),
-                                            Expanded(
-                                                child: Text(
-                                                  stations![index].locationDetails!,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  textAlign: TextAlign.justify,
-                                                  maxLines: 1,
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 12.0.sp,
-                                                    color: AppColors().primaryColor,
-                                                  ),
-                                                ))
-                                          ],
-                                        ),
-                                      )),
-                                  GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    onTap: () {
-                                      openMap(
-                                          double.parse(stations![index].lat!),
-                                          double.parse(
-                                              stations![index].lon!));
-                                    },
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 24.0.w,
+                                  Positioned(
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                      alignment: Alignment.center,
+
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(Radius.elliptical(18.0.r, 17.5.r)),
+                                        color: AppColors().primaryColor,
                                       ),
-                                      child: SvgPicture.string(
-                                        '<svg viewBox="339.69 129.0 20.9 20.9" ><path transform="translate(336.68, 126.0)" d="M 23.60771369934082 12.7103796005249 L 14.19935512542725 3.302021026611328 C 13.79166030883789 2.894325733184814 13.13307476043701 2.894325733184814 12.72537994384766 3.302021026611328 L 3.317020416259766 12.7103796005249 C 2.909324884414673 13.11807537078857 2.909324884414673 13.77666091918945 3.317020416259766 14.18435573577881 L 12.72537994384766 23.59271430969238 C 13.13307476043701 24.00041007995605 13.79166030883789 24.00041007995605 14.19935512542725 23.59271430969238 L 23.60771369934082 14.18435573577881 C 24.01540756225586 13.78711414337158 24.01540756225586 13.12852954864502 23.60771369934082 12.7103796005249 Z M 15.54788780212402 16.0660285949707 L 15.54788780212402 13.45259571075439 L 11.36639499664307 13.45259571075439 L 11.36639499664307 16.58871459960938 L 9.275649070739746 16.58871459960938 L 9.275649070739746 12.40722179412842 C 9.275649070739746 11.83226680755615 9.746067047119141 11.36184883117676 10.32102203369141 11.36184883117676 L 15.54788780212402 11.36184883117676 L 15.54788780212402 8.748415946960449 L 19.20669364929199 12.40722179412842 L 15.54788780212402 16.0660285949707 Z" fill="#edd236" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>',
-                                        width: 20.9,
-                                        height: 20.9,
+                                      child:  Padding(
+                                        padding:  EdgeInsets.all(6.0.r),
+                                        child: Icon(Icons.camera_alt_rounded, size: 24.r, color: Colors.white,),
                                       ),
                                     ),
                                   ),
@@ -179,51 +150,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 24.h,),
+                        filedText(label: '${Languages.of(context)!.name}*', onChange: (s){
+                          _stateSetter((){});
+                        }, prefix: Icon(CupertinoIcons.building_2_fill, color: AppColors().primaryColor),controller: _nameController, inputType: TextInputType.name, textInputAction: TextInputAction.next, validator: (s){
+                          if(s!.isEmpty){
+                            return Languages.of(context)!.required;
+                          }
+                          return null;
+                        }),
+                        SizedBox(height: 24.h,),
+                        filedText(label: Languages.of(context)!.email,  onChange: (s){
+                          _stateSetter((){});
+                        },prefix: Icon(CupertinoIcons.mail_solid, color: AppColors().primaryColor),controller: _emailController, inputType: TextInputType.name, textInputAction: TextInputAction.next, validator: (s){
+                          return null;
+                        }),
+                        SizedBox(height: 32.h,),
+                        SizedBox(
+                          width: double.infinity,
+                          child: StatefulBuilder(
+                            builder: (context, snapshot) {
+                              _stateSetter = snapshot;
+                              return ElevatedButton(
+                                style: ButtonStyle(
+                                  elevation: const MaterialStatePropertyAll(0.0),
+                                  overlayColor: const MaterialStatePropertyAll(Colors.white12),
+                                  backgroundColor: MaterialStatePropertyAll(AppColors().primaryColor.withOpacity((_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email! ) ? 1.0 : 0.25) ),
+                                  padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 8.h)),
+                                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r)
+                                  ))
+                                ),
+                                  onPressed: (_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email! ) ? (){
+                                  bloc.add(UpdateUserDataEvent(DataOfUser(
+                                    name: _nameController.text,
+                                    email: _emailController.text
+                                  ).toDataMap()));
+                                  } : null,
+                                  child: Text(Languages.of(context)!.save, style: GoogleFonts.readexPro(
+                                fontSize: 22.0.sp,
+                                color: AppColors().backgroundColor,
+                                fontWeight: FontWeight.w600,
+                              ),));
+                            }
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
-            );
-          }),
-      bottomSheet: ClipRRect(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(10.0.r),
-        ),
-        child: Container(
-          color: AppColors().primaryColor,
-          child: Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewPadding.bottom),
-            child: TextButton(
-              style: ButtonStyle(
-                  overlayColor: MaterialStateColor.resolveWith(
-                          (states) => Colors.white.withOpacity(0.15)),
-                  splashFactory: InkSparkle.splashFactory,
-                  minimumSize:
-                  MaterialStatePropertyAll(Size(double.infinity, 60.h)),
-                  backgroundColor:
-                  MaterialStatePropertyAll(AppColors().primaryColor),
-                  padding: MaterialStatePropertyAll(
-                      EdgeInsets.symmetric(vertical: 8.h)),
-                  tapTargetSize: MaterialTapTargetSize.padded),
-              onPressed: () {
-                openDialog(context, (p0, p1, p2) => const AddNewStationScreen())
-                    .then((value) {
-                  if (value != null) {
-                    bloc.add(AddNewStationEvent(value.toJson()));
-                  }
-                });
-              },
-              child: Text(
-                'Add New Station',
-                style: GoogleFonts.poppins(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+                );
+              }),
         ),
       ),
     );

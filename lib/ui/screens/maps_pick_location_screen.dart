@@ -6,6 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:waqoodi_client/localization/Language/Languages.dart';
 import 'package:waqoodi_client/ui/widgets/widgets.dart';
 
 import '../../constrants/colors.dart';
@@ -79,15 +80,12 @@ class _MapPickLocationScreenState extends State<MapPickLocationScreen> {
       extendBodyBehindAppBar: true,
       appBar:  AppBar(
         backgroundColor: AppColors().primaryColor,
-        title: Hero(
-          tag: 'stations',
-          child: Text(
-            'Station Location',
-            style: GoogleFonts.poppins(
-              fontSize: 16.0.sp,
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
-            ),
+        title: Text(
+          Languages.of(context)!.stationLocation,
+          style: GoogleFonts.readexPro(
+            fontSize: 16.0.sp,
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
           ),
         ),
         actions: [IconButton(onPressed: () async {
@@ -127,7 +125,7 @@ class _MapPickLocationScreenState extends State<MapPickLocationScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
       floatingActionButton: Padding(
-        padding:  EdgeInsets.only(bottom: 24.h, left: 8.w),
+        padding:  EdgeInsetsDirectional.only(bottom: 24.h, start: 8.w),
         child: FloatingActionButton(
 
           onPressed: () {
@@ -136,8 +134,8 @@ class _MapPickLocationScreenState extends State<MapPickLocationScreen> {
           backgroundColor: AppColors().primaryColor,
           child: _isLoading
               ? Container(
-            width: 24,
-            height: 24,
+            width: 24.r,
+            height: 24.r,
             padding:  EdgeInsets.all(2.0.r),
             child:  loadingWidget(color: Colors.white)
           )

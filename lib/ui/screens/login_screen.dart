@@ -5,15 +5,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:waqoodi_client/bloc/general_states.dart';
-import 'package:waqoodi_client/bloc/login/login_bloc.dart';
-import 'package:waqoodi_client/bloc/login/login_event.dart';
+
 import 'package:waqoodi_client/constrants/colors.dart';
-import 'package:waqoodi_client/models/auth/login_model.dart';
+import 'package:waqoodi_client/localization/Language/Languages.dart';
+import 'package:waqoodi_client/models/auth/auth_model.dart';
 import 'package:waqoodi_client/ui/functions/functions.dart';
 import 'package:waqoodi_client/ui/screens/home_screen.dart';
 import 'package:waqoodi_client/ui/screens/register_screen.dart';
 import 'package:waqoodi_client/ui/widgets/auth_background.dart';
 import 'package:waqoodi_client/ui/widgets/widgets.dart';
+
+import '../../bloc/auth/login_bloc.dart';
+import '../../bloc/auth/login_event.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -27,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen>
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late AnimationController _animationController;
-  final LoginBloc _bloc = LoginBloc();
+  final AuthBloc _bloc = AuthBloc();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -52,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen>
             AuthBackground(
               animatedContainer: _animationController,
             ),
-            BlocListener<LoginBloc, GeneralStates>(
+            BlocListener<AuthBloc, GeneralStates>(
               bloc: _bloc,
               listener: (context, state) {
                 if (state is SuccessState) {
@@ -70,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen>
                 child: SafeArea(
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 30.0.w),
-                    child: BlocBuilder<LoginBloc, GeneralStates>(
+                    child: BlocBuilder<AuthBloc, GeneralStates>(
                       bloc: _bloc,
                       builder: (context, state) {
                         return Form(
@@ -82,8 +85,8 @@ class _LoginScreenState extends State<LoginScreen>
                                 height: 40.h,
                               ),
                               Text(
-                                'Sign In',
-                                style: GoogleFonts.poppins(
+                                  Languages.of(context)!.signIn,
+                                style: GoogleFonts.readexPro(
                                   fontSize: 38.0.sp,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
@@ -108,8 +111,8 @@ class _LoginScreenState extends State<LoginScreen>
                                 height: 46.h,
                               ),
                               Text(
-                                'Please Sign In to your Account to Continue\nwith App.',
-                                style: GoogleFonts.poppins(
+                                Languages.of(context)!.plsSignIn,
+                                style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color:
                                       const Color(0xFF121214).withOpacity(0.7),
@@ -134,14 +137,14 @@ class _LoginScreenState extends State<LoginScreen>
                                   textInputAction: TextInputAction.next,
                                   validator: (s) {
                                     if (s!.isEmpty) {
-                                      return 'required';
+                                      return Languages.of(context)!.required;
                                     } else if (state is ErrorState &&
                                         state.errors?.userMobile != null) {
                                       return state.errors.userMobile.first;
                                     }
                                     return null;
                                   },
-                                  hint: 'Phone'),
+                                  hint: Languages.of(context)!.phone),
                               SizedBox(
                                 height: 45.5.h,
                               ),
@@ -157,14 +160,14 @@ class _LoginScreenState extends State<LoginScreen>
                                   textInputAction: TextInputAction.next,
                                   validator: (s) {
                                     if (s!.isEmpty) {
-                                      return 'required';
+                                      return Languages.of(context)!.required;
                                     } else if (state is ErrorState &&
                                         state.errors?.userPassword != null) {
                                       return state.errors.userPassword.first;
                                     }
                                     return null;
                                   },
-                                  hint: 'Enter Password'),
+                                  hint: Languages.of(context)!.enterPassword),
                               SizedBox(
                                 height: 12.5.h,
                               ),
@@ -177,8 +180,8 @@ class _LoginScreenState extends State<LoginScreen>
                                     padding:
                                         EdgeInsets.symmetric(vertical: 10.h),
                                     child: Text(
-                                      'Forgot Password?',
-                                      style: GoogleFonts.poppins(
+                                      Languages.of(context)!.forgerPassword,
+                                      style: GoogleFonts.readexPro(
                                           fontSize: 16.0.sp,
                                           color: Colors.black,
                                           fontWeight: FontWeight.w500),
@@ -219,8 +222,8 @@ class _LoginScreenState extends State<LoginScreen>
                                       });
                                     },
                                     child: Text(
-                                      'Sign In',
-                                      style: GoogleFonts.poppins(
+                                      Languages.of(context)!.signIn,
+                                      style: GoogleFonts.readexPro(
                                         fontSize: 24.0.sp,
                                         color: AppColors().backgroundColor,
                                         fontWeight: FontWeight.w600,
@@ -242,19 +245,19 @@ class _LoginScreenState extends State<LoginScreen>
                                 child: Center(
                                   child: Text.rich(
                                     TextSpan(
-                                      style: GoogleFonts.poppins(
+                                      style: GoogleFonts.readexPro(
                                         fontSize: 16.5.sp,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
                                         height: 1.87.h,
                                       ),
                                       children: [
-                                        const TextSpan(
-                                          text: 'Don’t have an account?\n',
+                                        TextSpan(
+                                          text: '${Languages.of(context)!.dontHaveAnAccount}\n',
                                         ),
                                         TextSpan(
-                                          text: 'SIGN UP',
-                                          style: GoogleFonts.poppins(
+                                          text: Languages.of(context)!.signUp.toUpperCase(),
+                                          style: GoogleFonts.readexPro(
                                             color: AppColors().primaryColor,
                                           ),
                                         ),

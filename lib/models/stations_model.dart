@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-StationsModel stationsModelFromJson(String str) => StationsModel.fromJson(json.decode(str));
+StationsModel stationsModelFromJson(String str) =>
+    StationsModel.fromJson(json.decode(str));
 
 String stationsModelToJson(StationsModel data) => json.encode(data.toJson());
 
@@ -20,16 +21,16 @@ class StationsModel {
   Data? data;
 
   factory StationsModel.fromJson(Map<String, dynamic> json) => StationsModel(
-    success: json["success"],
-    message: json["message"],
-    data: json["data"] == null ? null : Data.fromJson(json["data"]),
-  );
+        success: json["success"],
+        message: json["message"],
+        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "success": success,
-    "message": message,
-    "data": data?.toJson(),
-  };
+        "success": success,
+        "message": message,
+        "data": data?.toJson(),
+      };
 }
 
 class Data {
@@ -42,45 +43,52 @@ class Data {
   Meta? meta;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    data: json["data"] == null ? [] : List<Station>.from(json["data"]!.map((x) => Station.fromJson(x))),
-    meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
-  );
+        data: json["data"] == null
+            ? []
+            : List<Station>.from(json["data"]!.map((x) => Station.fromJson(x))),
+        meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
-    "meta": meta?.toJson(),
-  };
+        "data": data == null
+            ? []
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
+        "meta": meta?.toJson(),
+      };
 }
 
 class Station {
-  Station({
-    this.id,
-    this.name,
-    this.locationDetails,
-    this.lat,
-    this.lon,
-  });
+  Station(
+      {this.id,
+      this.name,
+      this.locationDetails,
+      this.lat,
+      this.lon,
+      this.cityId});
 
   int? id;
   String? name;
   String? locationDetails;
   String? lat;
   String? lon;
+  String? cityId;
 
   factory Station.fromJson(Map<String, dynamic> json) => Station(
-    id: json["id"],
-    name: json["name"],
-    locationDetails: json["location_details"],
-    lat: json["lat"],
-    lon: json["lon"],
-  );
+        id: json["id"],
+        name: json["name"],
+        locationDetails: json["location_details"],
+        lat: json["lat"],
+        lon: json["lon"],
+        cityId: json["city_id"],
+      );
 
   Map<String, String> toJson() => {
-    "name": name.toString(),
-    "location_details": locationDetails.toString(),
-    "lat": lat.toString(),
-    "lon": lon.toString(),
-  };
+        "name": name.toString(),
+        "location_details": locationDetails.toString(),
+        "lat": lat.toString(),
+        "lon": lon.toString(),
+        "city_id": '90',
+      };
 }
 
 class Meta {
@@ -95,14 +103,14 @@ class Meta {
   int? lastPage;
 
   factory Meta.fromJson(Map<String, dynamic> json) => Meta(
-    total: json["total"],
-    currentPage: json["currentPage"],
-    lastPage: json["lastPage"],
-  );
+        total: json["total"],
+        currentPage: json["currentPage"],
+        lastPage: json["lastPage"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "total": total,
-    "currentPage": currentPage,
-    "lastPage": lastPage,
-  };
+        "total": total,
+        "currentPage": currentPage,
+        "lastPage": lastPage,
+      };
 }
