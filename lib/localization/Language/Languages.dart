@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 abstract class Languages {
@@ -64,4 +63,20 @@ abstract class Languages {
   String get alreadyHaveAccount;
   String get tryAgain;
   String get createNewOrder;
+
+  String get deliveryAddress;
+
+  String get deliveryDate;
+
+  String get exclusiveVAT;
+
+  String get inclusiveVAT;
+
+  String get requiredQuantity;
+
+  String get requiredProduct;
+
+  String get confirmOrder;
+  String get paymentMethod;
+
 }

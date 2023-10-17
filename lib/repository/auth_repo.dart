@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
-import 'package:waqoodi_client/preference.dart';
+import 'package:Quick_Power/preference.dart';
 import '../constrants/apis.dart';
 import '../localization/LanguageHelper.dart';
 import '../models/auth/auth_model.dart';
@@ -102,7 +102,7 @@ class AuthRepo {
   }
 
   Future<AuthModel?> register(
-      {required String name, required String phone, required String password, required String confirmPassword}) async {
+      {required String name, required String phone, required String userId, required String password, required String confirmPassword}) async {
     dioBadRequestAdapter(dio);
     FormData formData = FormData();
     formData.fields.addAll({
@@ -110,6 +110,7 @@ class AuthRepo {
       MapEntry('user_password', password),
       MapEntry('user_password_confirmation', confirmPassword),
       MapEntry('user_mobile', phone),
+      MapEntry('user_identity', userId),
       const MapEntry('type', '1'),
     });
     // formData.files.add(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:waqoodi_client/bloc/profile/profile_event.dart';
+import 'package:Quick_Power/bloc/profile/profile_event.dart';
 
 import '../../bloc/general_states.dart';
 import '../../bloc/profile/profile_bloc.dart';

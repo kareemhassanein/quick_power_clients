@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waqoodi_client/bloc/stations/stations_event.dart';
-import 'package:waqoodi_client/repository/statios_repo.dart';
+import 'package:Quick_Power/bloc/stations/stations_event.dart';
+import 'package:Quick_Power/repository/statios_repo.dart';
 
 import '../../models/stations_model.dart';
 import '../../repository/internet_conncection.dart';

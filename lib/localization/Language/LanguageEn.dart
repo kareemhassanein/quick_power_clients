@@ -232,4 +232,18 @@ class LanguageEn extends Languages {
   // TODO: implement email
   String get email => 'Email';
 
+  String get deliveryAddress => 'Delivery Address';
+
+  String get deliveryDate => 'Delivery Date';
+
+  String get exclusiveVAT => 'Exclusive of Value Added Tax (VAT)';
+
+  String get inclusiveVAT => 'Inclusive of Value Added Tax (VAT)';
+
+  String get requiredQuantity => 'Quantity Required in Liters';
+
+  String get requiredProduct => 'Requested Product';
+
+  String get confirmOrder => 'Order Confirmation';
+  String get paymentMethod => 'Payment Method';
 }

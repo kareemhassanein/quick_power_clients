@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:waqoodi_client/ui/functions/functions.dart';
+import 'package:Quick_Power/ui/functions/functions.dart';
 
 import '../../constrants/colors.dart';
 import '../../localization/Language/Languages.dart';
@@ -43,7 +43,7 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
   Future<void> _updatePlaceMark() async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
         latLng!.latitude, latLng!.longitude,
-        localeIdentifier: LanguageHelper.isEnglish ? 'en' : 'ar');
+        localeIdentifier: Localizations.localeOf(context).languageCode);
     Placemark placeMark = placemarks[0];
     String? name = placeMark.street;
     String? subLocality = placeMark.subLocality;

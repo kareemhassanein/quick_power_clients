@@ -1,5 +1,5 @@
 import 'package:image_picker/image_picker.dart';
-import 'package:waqoodi_client/models/user_model.dart';
+import 'package:Quick_Power/models/user_model.dart';
 
 abstract class HomeEvents {}
 

@@ -9,8 +9,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:waqoodi_client/constrants/colors.dart';
-import 'package:waqoodi_client/ui/functions/customs/custom_loader_animation.dart';
+import 'package:Quick_Power/constrants/colors.dart';
+import 'package:Quick_Power/ui/functions/customs/custom_loader_animation.dart';
 
 class Preferences {
   static late SharedPreferences sharedPreferences;

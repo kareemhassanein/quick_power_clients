@@ -77,7 +77,7 @@ class LanguageAr extends Languages {
 
   @override
   // TODO: implement hello
-  String get hello => 'مرحباً،';
+  String get hello => 'هلا';
 
   @override
   // TODO: implement inProgress
@@ -161,7 +161,7 @@ class LanguageAr extends Languages {
 
   @override
   // TODO: implement sar
-  String get sar => 'ريال';
+  String get sar => 'ريال سعودي';
 
   @override
   // TODO: implement save
@@ -234,4 +234,20 @@ class LanguageAr extends Languages {
   @override
   // TODO: implement email
   String get email => 'الإيميل';
+
+  String get deliveryAddress => 'عنوان التسليم';
+
+  String get deliveryDate => 'تاريخ الاستلام';
+
+  String get exclusiveVAT => 'غير شامل ضريبة القيمة المضافة';
+
+  String get inclusiveVAT => 'شامل ضريبة القيمة المضافة';
+
+  String get requiredQuantity => 'الكمية المطلوبة باللتر';
+
+  String get requiredProduct => 'المنتج المطلوب';
+
+  String get confirmOrder => 'تأكيد الطلب';
+  String get paymentMethod => 'وسيلة الدفع';
+
 }

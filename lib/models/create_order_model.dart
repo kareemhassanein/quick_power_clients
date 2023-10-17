@@ -40,13 +40,13 @@ class Data {
     this.productTypes,
   });
 
-  String? vat;
+  double? vat;
   List<ProductType>? locations;
   List<ProductType>? paymentMethods;
   List<ProductType>? productTypes;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    vat: json["vat"],
+    vat:json["vat"] == null ? 0.0 : (json["vat"] is double ? json["vat"] : double.tryParse(json["vat"])??0.0),
     locations: json["locations"] == null ? [] : List<ProductType>.from(json["locations"]!.map((x) => ProductType.fromJson(x))),
     paymentMethods: json["payment_methods"] == null ? [] : List<ProductType>.from(json["payment_methods"]!.map((x) => ProductType.fromJson(x))),
     productTypes: json["product_types"] == null ? [] : List<ProductType>.from(json["product_types"]!.map((x) => ProductType.fromJson(x))),
@@ -75,7 +75,7 @@ class ProductType {
   factory ProductType.fromJson(Map<String, dynamic> json) => ProductType(
     id: json["id"],
     name: json["name"],
-    unitPrice: json["unit_price"] == null ? null : double.tryParse(json["unit_price"]),
+    unitPrice: double.tryParse(json["unit_price"]),
   );
 
   Map<String, dynamic> toJson() => {

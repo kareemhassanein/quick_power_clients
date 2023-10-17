@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:waqoodi_client/constrants/colors.dart';
-import 'package:waqoodi_client/preference.dart';
-import 'package:waqoodi_client/ui/functions/functions.dart';
-import 'package:waqoodi_client/ui/screens/home_screen.dart';
-import 'package:waqoodi_client/ui/screens/login_screen.dart';
+import 'package:Quick_Power/constrants/colors.dart';
+import 'package:Quick_Power/preference.dart';
+import 'package:Quick_Power/ui/functions/functions.dart';
+import 'package:Quick_Power/ui/screens/home_screen.dart';
+import 'package:Quick_Power/ui/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);

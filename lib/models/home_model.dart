@@ -4,8 +4,8 @@
 
 import 'dart:convert';
 
-import 'package:waqoodi_client/models/order_details_model.dart';
-import 'package:waqoodi_client/models/user_model.dart';
+import 'package:Quick_Power/models/order_details_model.dart';
+import 'package:Quick_Power/models/user_model.dart';
 
 HomeModel homeModelFromJson(String str) => HomeModel.fromJson(json.decode(str));
 

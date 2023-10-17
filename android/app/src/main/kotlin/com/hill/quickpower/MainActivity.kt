@@ -1,4 +1,4 @@
-package com.waqoodi.client.waqoodi_client
+package com.hill.quickpower
 import androidx.core.view.WindowCompat //add this line
 
 import io.flutter.embedding.android.FlutterActivity

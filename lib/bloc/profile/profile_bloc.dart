@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waqoodi_client/bloc/profile/profile_event.dart';
-import 'package:waqoodi_client/models/user_model.dart';
-import 'package:waqoodi_client/preference.dart';
-import 'package:waqoodi_client/repository/profile_repo.dart';
+import 'package:Quick_Power/bloc/profile/profile_event.dart';
+import 'package:Quick_Power/models/user_model.dart';
+import 'package:Quick_Power/preference.dart';
+import 'package:Quick_Power/repository/profile_repo.dart';
 
 import '../../repository/auth_repo.dart';
 import '../../repository/internet_conncection.dart';

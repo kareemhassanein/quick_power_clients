@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:waqoodi_client/constrants/colors.dart';
+import 'package:Quick_Power/constrants/colors.dart';
 
 class AuthBackground extends StatelessWidget {
   final AnimationController animatedContainer;

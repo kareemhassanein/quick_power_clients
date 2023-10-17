@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:waqoodi_client/localization/Language/Languages.dart';
+import 'package:Quick_Power/localization/Language/Languages.dart';
 
 import '../../bloc/auth/login_bloc.dart';
 import '../../bloc/auth/login_event.dart';
@@ -28,6 +28,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStateMixin {
   final TextEditingController _customerNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _userId = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   late AnimationController _animationController;
@@ -145,6 +146,25 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                     return null;
                                   },
                                   hint: Languages.of(context)!.phone),
+                              SizedBox(
+                                height: 27.5.h,
+                              ),
+        filedTextAuth(
+                                  controller: _userId,
+                                  inputType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  prefix: Icon(CupertinoIcons.person_alt_circle, color: AppColors().primaryColor, size: 24.r,),
+                                  textInputAction: TextInputAction.next,
+                                  validator: (s) {
+                                    if (s!.isEmpty) {
+                                      return Languages.of(context)!.required;
+                                    }
+                                    return null;
+                                  },
+                                  hint: 'User Id'),
 
                               SizedBox(
                                 height: 27.5.h,
@@ -183,6 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                             _bloc.add(DoRegisterEvent(
                                                 userPhone:
                                                 _phoneController.text,
+                                                userId: _userId.text,
                                                 userPassword:
                                                 _passwordController.text,
                                                 userConfirmPassword: _confirmPasswordController.text,
@@ -220,6 +241,8 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                               _bloc.add(DoRegisterEvent(
                                                   userPhone:
                                                   _phoneController.text,
+
+                                                  userId: _userId.text,
                                                   userPassword:
                                                   _passwordController.text,
                                               userConfirmPassword: _confirmPasswordController.text,

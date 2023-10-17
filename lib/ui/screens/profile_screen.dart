@@ -8,11 +8,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:waqoodi_client/bloc/profile/profile_bloc.dart';
-import 'package:waqoodi_client/bloc/profile/profile_event.dart';
-import 'package:waqoodi_client/localization/Language/Languages.dart';
-import 'package:waqoodi_client/models/user_model.dart';
-import 'package:waqoodi_client/ui/widgets/widgets.dart';
+import 'package:Quick_Power/bloc/profile/profile_bloc.dart';
+import 'package:Quick_Power/bloc/profile/profile_event.dart';
+import 'package:Quick_Power/localization/Language/Languages.dart';
+import 'package:Quick_Power/models/user_model.dart';
+import 'package:Quick_Power/ui/widgets/widgets.dart';
 
 import '../../bloc/general_states.dart';
 

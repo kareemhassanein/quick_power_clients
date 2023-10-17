@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waqoodi_client/models/auth/auth_model.dart';
-import 'package:waqoodi_client/preference.dart';
+import 'package:Quick_Power/models/auth/auth_model.dart';
+import 'package:Quick_Power/preference.dart';
 
 import '../../repository/auth_repo.dart';
 import '../../repository/internet_conncection.dart';
@@ -37,7 +37,7 @@ class AuthBloc extends Bloc<AuthEvents, GeneralStates> {
       }else if (event is DoRegisterEvent) {
         if(await InternetConnection().isConnected()) {
           yield LoadingState();
-          AuthModel? loginModel = await AuthRepo().register(name: event.userName, password: event.userPassword, confirmPassword: event.userConfirmPassword, phone: event.userPhone);
+          AuthModel? loginModel = await AuthRepo().register(name: event.userName, password: event.userPassword, confirmPassword: event.userConfirmPassword, userId: event.userId,phone: event.userPhone);
           if(loginModel != null){
             if(loginModel.errors != null){
               yield ErrorState(msg: loginModel.message??'Something Went Wrong!', errors: loginModel.errors as Errors);

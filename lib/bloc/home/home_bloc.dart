@@ -1,16 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:waqoodi_client/bloc/home/home_event.dart';
-import 'package:waqoodi_client/models/cancel_order_model.dart';
-import 'package:waqoodi_client/models/create_order_model.dart';
-import 'package:waqoodi_client/models/home_model.dart';
-import 'package:waqoodi_client/models/order_details_model.dart';
-import 'package:waqoodi_client/models/orders_pagination_model.dart';
-import 'package:waqoodi_client/models/post_order_model.dart';
-import 'package:waqoodi_client/models/user_model.dart';
-import 'package:waqoodi_client/preference.dart';
-import 'package:waqoodi_client/repository/orders_repo.dart';
+import 'package:Quick_Power/bloc/home/home_event.dart';
+import 'package:Quick_Power/models/cancel_order_model.dart';
+import 'package:Quick_Power/models/create_order_model.dart';
+import 'package:Quick_Power/models/home_model.dart';
+import 'package:Quick_Power/models/order_details_model.dart';
+import 'package:Quick_Power/models/orders_pagination_model.dart';
+import 'package:Quick_Power/models/post_order_model.dart';
+import 'package:Quick_Power/models/user_model.dart';
+import 'package:Quick_Power/preference.dart';
+import 'package:Quick_Power/repository/orders_repo.dart';
 
 import '../../repository/auth_repo.dart';
 import '../../repository/internet_conncection.dart';

@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'package:waqoodi_client/models/order_details_model.dart';
+import 'package:Quick_Power/models/order_details_model.dart';
 
 OrdersPaginationModel ordersPaginationModelFromJson(String str) => OrdersPaginationModel.fromJson(json.decode(str));
 

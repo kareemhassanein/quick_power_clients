@@ -1,5 +1,5 @@
 class Apis {
-  static const serverUrl = 'https://test.appwaqoodi.com/api/application';
+  static const serverUrl = 'https://quickpower.hillksa.com/api/application';
   static const login = '$serverUrl/auth/login';
   static const signUp = '$serverUrl/auth/register';
   static const getStations = '$serverUrl/locations';

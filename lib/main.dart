@@ -7,9 +7,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:waqoodi_client/preference.dart';
-import 'package:waqoodi_client/ui/screens/login_screen.dart';
-import 'package:waqoodi_client/ui/screens/splash_screen.dart';
+import 'package:Quick_Power/preference.dart';
+import 'package:Quick_Power/ui/screens/login_screen.dart';
+import 'package:Quick_Power/ui/screens/splash_screen.dart';
 
 import 'constrants/colors.dart';
 import 'localization/AppLocalizationDelgate.dart';
@@ -81,7 +81,6 @@ class _StartAppState extends State<StartApp> with WidgetsBindingObserver {
           localeResolutionCallback: localeResolutionCallback,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            accentColor: AppColors().primaryColor,
             fontFamily: GoogleFonts.readexPro().fontFamily,
             primaryColor: AppColors().primaryColor,
             backgroundColor: AppColors().backgroundColor,

@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:waqoodi_client/localization/LanguageHelper.dart';
-import 'package:waqoodi_client/models/cancel_order_model.dart';
-import 'package:waqoodi_client/models/create_order_model.dart';
-import 'package:waqoodi_client/models/home_model.dart';
+import 'package:Quick_Power/localization/LanguageHelper.dart';
+import 'package:Quick_Power/models/cancel_order_model.dart';
+import 'package:Quick_Power/models/create_order_model.dart';
+import 'package:Quick_Power/models/home_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:waqoodi_client/models/order_details_model.dart';
-import 'package:waqoodi_client/models/orders_pagination_model.dart';
-import 'package:waqoodi_client/models/post_order_model.dart';
-import 'package:waqoodi_client/repository/core/core_repo.dart';
+import 'package:Quick_Power/models/order_details_model.dart';
+import 'package:Quick_Power/models/orders_pagination_model.dart';
+import 'package:Quick_Power/models/post_order_model.dart';
+import 'package:Quick_Power/repository/core/core_repo.dart';
 import '../constrants/apis.dart';
 import '../preference.dart';
 
@@ -64,25 +64,30 @@ class OrdersRepo{
   Future<CreateOrderModel?> getCreateOrder() async {
     var headers = {
       'Accept': 'application/json',
-      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
+      'lang': LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
     var request = http.MultipartRequest('GET', Uri.parse(Apis.createOrder));
 
     request.headers.addAll(headers);
 
-    http.StreamedResponse response = await request.send();
-    CreateOrderModel modelResponse;
+    try {
+      final response = await request.send().timeout(const Duration(seconds: 12));
+      CreateOrderModel modelResponse;
+      modelResponse =
+          CreateOrderModel.fromJson(jsonDecode(await response.stream.bytesToString()));
+      return modelResponse;
+    } catch (e) {
+      print(e.toString());
+      String errorMessage = LanguageHelper.isEnglish
+          ? 'An error occurred while processing your request.'
+          : 'حدث خطأ أثناء معالجة طلبك.';
 
-    if (response.statusCode == 200) {
-      modelResponse = CreateOrderModel.fromJson(
-          jsonDecode(await response.stream.bytesToString()));
-    } else {
-      modelResponse = CreateOrderModel(message: response.reasonPhrase, success: false);
+      return CreateOrderModel(success: false, message: errorMessage);
     }
-
-    return modelResponse;
   }
+
+
 
   Future<PostOrderModel?> storeOrder({required data}) async {
     var headers = {

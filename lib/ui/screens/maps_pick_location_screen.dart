@@ -6,8 +6,8 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:waqoodi_client/localization/Language/Languages.dart';
-import 'package:waqoodi_client/ui/widgets/widgets.dart';
+import 'package:Quick_Power/localization/Language/Languages.dart';
+import 'package:Quick_Power/ui/widgets/widgets.dart';
 
 import '../../constrants/colors.dart';
 

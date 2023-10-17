@@ -4,12 +4,12 @@ import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:waqoodi_client/bloc/home/home_bloc.dart';
-import 'package:waqoodi_client/bloc/home/home_event.dart';
-import 'package:waqoodi_client/localization/Language/Languages.dart';
-import 'package:waqoodi_client/localization/LanguageHelper.dart';
-import 'package:waqoodi_client/models/order_details_model.dart';
-import 'package:waqoodi_client/ui/screens/home_screen.dart';
+import 'package:Quick_Power/bloc/home/home_bloc.dart';
+import 'package:Quick_Power/bloc/home/home_event.dart';
+import 'package:Quick_Power/localization/Language/Languages.dart';
+import 'package:Quick_Power/localization/LanguageHelper.dart';
+import 'package:Quick_Power/models/order_details_model.dart';
+import 'package:Quick_Power/ui/screens/home_screen.dart';
 
 import '../../bloc/general_states.dart';
 import '../../constrants/colors.dart';

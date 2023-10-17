@@ -9,22 +9,22 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:waqoodi_client/bloc/home/home_bloc.dart';
-import 'package:waqoodi_client/bloc/home/home_event.dart';
-import 'package:waqoodi_client/bloc/home/home_state.dart';
-import 'package:waqoodi_client/localization/LanguageHelper.dart';
-import 'package:waqoodi_client/models/create_order_model.dart';
-import 'package:waqoodi_client/models/home_model.dart';
-import 'package:waqoodi_client/models/order_details_model.dart';
-import 'package:waqoodi_client/models/orders_pagination_model.dart';
-import 'package:waqoodi_client/preference.dart';
-import 'package:waqoodi_client/ui/functions/functions.dart';
-import 'package:waqoodi_client/ui/screens/add_new_order_screen.dart';
-import 'package:waqoodi_client/ui/screens/change_password_screen.dart';
-import 'package:waqoodi_client/ui/screens/login_screen.dart';
-import 'package:waqoodi_client/ui/screens/order_details_screen.dart';
-import 'package:waqoodi_client/ui/screens/profile_screen.dart';
-import 'package:waqoodi_client/ui/screens/stations_screen.dart';
+import 'package:Quick_Power/bloc/home/home_bloc.dart';
+import 'package:Quick_Power/bloc/home/home_event.dart';
+import 'package:Quick_Power/bloc/home/home_state.dart';
+import 'package:Quick_Power/localization/LanguageHelper.dart';
+import 'package:Quick_Power/models/create_order_model.dart';
+import 'package:Quick_Power/models/home_model.dart';
+import 'package:Quick_Power/models/order_details_model.dart';
+import 'package:Quick_Power/models/orders_pagination_model.dart';
+import 'package:Quick_Power/preference.dart';
+import 'package:Quick_Power/ui/functions/functions.dart';
+import 'package:Quick_Power/ui/screens/add_new_order_screen.dart';
+import 'package:Quick_Power/ui/screens/change_password_screen.dart';
+import 'package:Quick_Power/ui/screens/login_screen.dart';
+import 'package:Quick_Power/ui/screens/order_details_screen.dart';
+import 'package:Quick_Power/ui/screens/profile_screen.dart';
+import 'package:Quick_Power/ui/screens/stations_screen.dart';
 
 import '../../bloc/general_states.dart';
 import '../../constrants/colors.dart';
@@ -243,14 +243,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                           SizedBox(
                                             height: 3.h,
                                           ),
-                                          Text(
-                                            DateFormat('EEEE, dd MMMM yyyy', LanguageHelper.isEnglish ? 'en' : 'ar')
-                                                .format(DateTime.now()),
-                                            style: GoogleFonts.readexPro(
-                                              fontSize: 15.0.sp,
-                                              color:
-                                                  Colors.white.withOpacity(0.7),
-                                              height: 1.87.h,
+                                          StreamBuilder<DateTime>(
+                                            stream: Stream.periodic(const Duration(minutes: 2), (i) => DateTime.now()),
+                                            builder: (context, snapshot) => Text(
+                                              DateFormat('EEEE, dd MMMM yyyy', Localizations.localeOf(context).languageCode)
+                                                  .format(snapshot.data ?? DateTime.now()),
+                                              style: GoogleFonts.readexPro(
+                                                fontSize: 15.0.sp,
+                                                color: Colors.white.withOpacity(0.7),
+                                                height: 1.87.h,
+                                              ),
                                             ),
                                           ),
                                           SizedBox(
@@ -410,17 +412,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         child: Padding(
                                           padding: EdgeInsets.only(top: 12.h),
                                           child: SizedBox(
-                                            width: 38.w,
-                                            height: 38.h,
-                                            child: ClipOval(
-                                              child: homeModel!
-                                                          .data!.user!.image ==
-                                                      null
-                                                  ? Image.asset(
-                                                      'assets/logo.png')
-                                                  : imageNetwork(homeModel!
-                                                      .data!.user!.image!),
-                                            ),
+                                            width: 75.w,
+                                            child: Image.asset(
+                                              color: Colors.white,
+                                                    'assets/logo.png'),
                                           ),
                                         ),
                                       ),

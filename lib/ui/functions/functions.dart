@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:waqoodi_client/constrants/colors.dart';
+import 'package:Quick_Power/constrants/colors.dart';
 
 import '../../localization/LanguageHelper.dart';
 
@@ -111,6 +111,7 @@ Future<dynamic> openDialog(BuildContext context, Widget Function(BuildContext, A
       child: FadeTransition(
           opacity: anim1,
           child: Dialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
             elevation: 2,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.r)),
