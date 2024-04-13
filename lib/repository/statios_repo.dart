@@ -15,6 +15,7 @@ class StationsRepo {
   Future<StationsModel?> allStations() async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
@@ -38,6 +39,7 @@ class StationsRepo {
   Future<dynamic> storeStation(Map<String, String> data) async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
@@ -54,16 +56,16 @@ class StationsRepo {
   Future<dynamic> updateStation({required id, required Map<String, String> data}) async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
     var request = http.MultipartRequest('POST', Uri.parse(Apis.updateStation(id: id)));
-
     request.headers.addAll(headers);
     request.fields.addAll(data..putIfAbsent('_method', () => 'put'));
 
     http.StreamedResponse response = await request.send();
-    dynamic  s =  jsonDecode(await response.stream.bytesToString());
+    dynamic s = jsonDecode(await response.stream.bytesToString());
     return s;
   }
 

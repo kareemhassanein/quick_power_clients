@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:Quick_Power/models/forget_password_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Quick_Power/models/auth/auth_model.dart';
 import 'package:Quick_Power/preference.dart';
@@ -53,7 +54,45 @@ class AuthBloc extends Bloc<AuthEvents, GeneralStates> {
         }else{
           yield NoInternetState();
         }
-      }else if (event is InitialEvent) {
+      }else if (event is SendOtpForgetPasswordEvent) {
+        if(await InternetConnection().isConnected()) {
+          yield LoadingState();
+          SendOtpModel? model = await AuthRepo().sendOtpForgetPassword(userMobile: event.userPhone);
+          if(model != null){
+            if(model.errors != null){
+              yield ErrorState(msg: model.message??'Something Went Wrong!', errors: model.errors as Errors);
+            }else if(model.data != null && model.success!){
+              yield SuccessState(msg: model.message, response: model, showDialog: true);
+            }else{
+              yield ErrorState(msg: model.message??'Something Went Wrong!',);
+            }
+          }else{
+            yield ErrorState(msg: 'Something Went Wrong!',);
+          }
+        }else{
+          yield NoInternetState();
+        }
+      }
+      else if (event is ResetPasswordEvent) {
+        if(await InternetConnection().isConnected()) {
+          yield LoadingState();
+          SendOtpModel? model = await AuthRepo().sendOtpForgetPassword(userMobile: event.userPhone!);
+          if(model != null){
+            if(model.errors != null){
+              yield ErrorState(msg: model.message??'Something Went Wrong!', errors: model.errors as Errors);
+            }else if(model.data != null && model.success!){
+              yield SuccessState(msg: model.message, response: model.data, showDialog: true);
+            }else{
+              yield ErrorState(msg: model.message??'Something Went Wrong!',);
+            }
+          }else{
+            yield ErrorState(msg: 'Something Went Wrong!',);
+          }
+        }else{
+          yield NoInternetState();
+        }
+      }
+      else if (event is InitialEvent) {
         yield InitialState();
       }
   }

@@ -88,6 +88,25 @@ class ProfileBloc extends Bloc<ProfileEvents, GeneralStates> {
         }else{
           yield NoInternetState();
         }
+
+      }else if (event is ResetPasswordEvent) {
+        if(await InternetConnection().isConnected()) {
+          yield LoadingState();
+          UserModel? userModel = await ProfileRepo().resetPassword(event.data);
+          if(userModel != null){
+            if(userModel.success != null && !userModel.success!){
+              yield ErrorState(msg: userModel.message??'Something Went Wrong!',);
+            }else if(userModel.success != null && userModel.success!){
+              yield SuccessState(msg: userModel.message, showDialog: true);
+            }else{
+              yield ErrorState(msg: userModel.message??'Something Went Wrong!',);
+            }
+          }else{
+            yield ErrorState(msg: 'Something Went Wrong!',);
+          }
+        }else{
+          yield NoInternetState();
+        }
       }else if (event is InitialEvent) {
         yield InitialState();
       }

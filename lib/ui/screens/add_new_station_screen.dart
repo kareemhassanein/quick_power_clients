@@ -189,7 +189,6 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
                       cursorHeight: 18.h,
                       enabled: false,
                       controller: _locationController,
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       decoration: InputDecoration(
                         isDense: true,
                         suffixIconConstraints: BoxConstraints(
@@ -215,7 +214,7 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
                       ),
                       maxLines: 1,
                       validator: (s) {
-                        if (s!.isEmpty) {
+                        if (s!.isEmpty && widget.station == null ) {
                           return Languages.of(context)!.required;
                         }
                         return null;
@@ -273,7 +272,6 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
                       ))),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      print(latLng!.latitude.toString());
                       Navigator.pop(
                           context,
                           Station(

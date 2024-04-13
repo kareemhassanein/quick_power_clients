@@ -66,28 +66,49 @@ void showLanguagesDialog(BuildContext context) {
 
 Future<dynamic> navigateToScreen(BuildContext context, Widget navigateTo,
     {Duration? transitionDuration,
-    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
-        transitionsBuilder,
-    bool? withRemoveUntil}) {
+      Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+      transitionsBuilder,
+      bool Function(Route<dynamic>)? customRoute,
+      bool? withRemoveUntil}) {
   FocusManager.instance.primaryFocus?.unfocus();
   if (Platform.isAndroid) {
     return Navigator.pushAndRemoveUntil(
         context,
         PageRouteBuilder(
             opaque: false,
+            transitionDuration:
+            transitionDuration ?? const Duration(milliseconds: 0),
+            reverseTransitionDuration:
+            transitionDuration ?? const Duration(milliseconds: 0),
             pageBuilder: (_, __, ___) => navigateTo,
             transitionsBuilder:
-                transitionsBuilder ?? (_, __, ___, ____) => ____),
-        (c) => withRemoveUntil == null);
+            transitionsBuilder ?? (_, __, ___, ____) => ____),
+        customRoute??(c) =>  withRemoveUntil == null);
   } else {
-    return Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (c) => navigateTo,
-        ),
-        (c) => withRemoveUntil == null);
+    if(transitionDuration !=null){
+      return Navigator.pushAndRemoveUntil(
+          context,
+          PageRouteBuilder(
+              opaque: false,
+              transitionDuration:
+              transitionDuration ?? const Duration(milliseconds: 0),
+              reverseTransitionDuration:
+              transitionDuration ?? const Duration(milliseconds: 0),
+              pageBuilder: (_, __, ___) => navigateTo,
+              transitionsBuilder:
+              transitionsBuilder ?? (_, __, ___, ____) => ____),
+          customRoute??(c) => withRemoveUntil == null);
+    }else {
+      return Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+            builder: (c) => navigateTo,
+          ),
+          customRoute??(c) => withRemoveUntil == null);
+    }
   }
 }
+
 
 Future<void> openMap(double latitude, double longitude) async {
   String googleUrl =

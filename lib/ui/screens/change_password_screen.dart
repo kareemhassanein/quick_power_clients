@@ -13,8 +13,9 @@ import '../../models/user_model.dart';
 import '../widgets/widgets.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
-  const ChangePasswordScreen({Key? key}) : super(key: key);
-
+  final String type;
+  final String? codeOtp;
+  const ChangePasswordScreen({Key? key, required this.type, this.codeOtp}) : super(key: key);
   @override
   State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
@@ -110,7 +111,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                         ))
                                     ),
                                     onPressed: (_passwordController.text.length>=8 && _confirmController.text.length>=8) ? (){
-                                      bloc.add(ChangePasswordEvent({
+                                      bloc.add(ResetPasswordEvent({
+                                        'user_otp' : widget.codeOtp.toString(),
                                         'password' : _passwordController.text,
                                         'password_confirmation' : _confirmController.text,
                                       }));

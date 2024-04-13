@@ -14,6 +14,7 @@ class CoreRepo{
       responseType: ResponseType.json,
       headers: {
         'Accept': 'application/json',
+        'app-type': 'CUSTOMER',
         'Authorization': 'Bearer ${Preferences.getUserToken()!}',
         'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
       sendTimeout: const Duration(seconds: 7).inMilliseconds,
@@ -58,6 +59,7 @@ class CoreRepo{
               responseType: ResponseType.json,
               headers: {
                 'Accept': 'application/json',
+                'app-type': 'CUSTOMER',
                 'Authorization': 'Bearer ${Preferences.getUserToken()!}',
                 'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
               sendTimeout: const Duration(seconds: 7).inMilliseconds,

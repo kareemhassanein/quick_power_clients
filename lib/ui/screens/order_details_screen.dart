@@ -10,14 +10,17 @@ import 'package:Quick_Power/localization/Language/Languages.dart';
 import 'package:Quick_Power/localization/LanguageHelper.dart';
 import 'package:Quick_Power/models/order_details_model.dart';
 import 'package:Quick_Power/ui/screens/home_screen.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:printing/printing.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../bloc/general_states.dart';
 import '../../constrants/colors.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   final OrderDetails orderDetails;
   final bool cancelOption;
-  const OrderDetailsScreen({Key? key, required this.orderDetails, required this.cancelOption})
+  final String? userName;
+  const OrderDetailsScreen({Key? key, required this.orderDetails, required this.cancelOption, this.userName})
       : super(key: key);
 
   @override
@@ -73,13 +76,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           child: BlocBuilder<HomeBloc, GeneralStates>(
               bloc: blocHome,
               builder: (context, state) {
-                if(widget.orderDetails.url != null){
-                  return const PDF().cachedFromUrl(
-                    widget.orderDetails.url.toString(),
-                    placeholder: (progress) => Center(child: Text('$progress %')),
-                    errorWidget: (error) => Center(child: Text(error.toString())),
-                  );
-                }
+
                 return SingleChildScrollView(
                   child: Padding(
                     padding:
@@ -87,15 +84,49 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
+                        Align(
+                          alignment: AlignmentDirectional.center,
+                          child: Text(
+                            widget.orderDetails.code ?? '',
+                            style: GoogleFonts.readexPro(
+                              fontSize: 20.0.sp,
+                              color: const Color(0xFF404040),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 16.h,
+                        ),
                         Text(
-                          widget.orderDetails.code ?? '',
+                          Languages.of(context)!.orderStatus,
                           style: GoogleFonts.readexPro(
                             fontSize: 20.0.sp,
                             color: const Color(0xFF404040),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                        SizedBox(
+                          height: 12.h,
+                        ),
+                        Align(
+                          alignment: AlignmentDirectional.center,
+                          child: Text(
+                            widget.orderDetails.status!.name!,
+                            style: GoogleFonts.readexPro(
+                              fontSize: 18.0.sp,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        const Divider(),
+
                         SizedBox(
                           height: 8.h,
                         ),
@@ -104,7 +135,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                Languages.of(context)!.dueDate,
+                                Languages.of(context)!.recivedDate,
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: const Color(0xFF404040),
@@ -117,6 +148,36 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               child: Text(
                                 DateFormat('EEEE dd/MM/yyyy', LanguageHelper.isEnglish? 'en_US' : 'ar_EG').format(
                                     DateTime.parse(widget.orderDetails.date!)),
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 16.0.sp,
+                                  color: const Color(0xFF404040),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'اسم المستلم',
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 16.0.sp,
+                                  color: const Color(0xFF404040),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                widget.userName??'',
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: const Color(0xFF404040),
@@ -156,6 +217,37 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             ),
                           ],
                         ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                Languages.of(context)!.address,
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 16.0.sp,
+                                  color: const Color(0xFF404040),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                widget.orderDetails.location?.address??'',
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 16.0.sp,
+                                  color: const Color(0xFF404040),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
                         SizedBox(
                           height: 12.h,
                         ),
@@ -265,7 +357,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               flex: 1,
                               child: Text(
                                 NumberFormat("###,### ${Languages.of(context)!.sar}", LanguageHelper.isEnglish ? 'en_US':'ar_EG').format(
-                                    double.parse(widget.orderDetails.total!)),
+                                   widget.orderDetails.total!),
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: AppColors().primaryColor,
@@ -280,34 +372,113 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         ),
                         const Divider(),
                         SizedBox(
-                          height: 16.h,
-                        ),
-                        Text(
-                          Languages.of(context)!.orderStatus,
-                          style: GoogleFonts.readexPro(
-                            fontSize: 20.0.sp,
-                            color: const Color(0xFF404040),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(
                           height: 12.h,
                         ),
-                        Text(
-                          widget.orderDetails.status!.name!,
-                          style: GoogleFonts.readexPro(
-                            fontSize: 16.0.sp,
-                            color: const Color(0xffEDD236),
-                            fontWeight: FontWeight.w500,
+                        Visibility(
+                          visible:  widget.orderDetails.truckInfo != null,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                Languages.of(context)!.truckInfo,
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 20.0.sp,
+                                  color: const Color(0xFF404040),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12.h,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    widget.orderDetails.truckInfo??'',
+                                    style: GoogleFonts.readexPro(
+                                      fontSize: 16.0.sp,
+                                      color: const Color(0xFF404040),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 12.h,
+                              ),
+                              const Divider(),
+                              Text(
+                                Languages.of(context)!.driverInfo,
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 20.0.sp,
+                                  color: const Color(0xFF404040),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12.h,
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  Text(
+                                    widget.orderDetails.driver??'',
+                                    style: GoogleFonts.readexPro(
+                                      fontSize: 16.0.sp,
+                                      color: const Color(0xFF404040),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 12.h,
+                              ),
+                              const Divider(),
+                            ],
                           ),
                         ),
+                        Visibility(
+                          visible:  widget.orderDetails.inviceNo != null,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                Languages.of(context)!.invoiceNo,
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 20.0.sp,
+                                  color: const Color(0xFF404040),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12.h,
+                              ),
+                              Text(
+                                (widget.orderDetails.inviceNo??'').toString(),
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 16.0.sp,
+                                  color: const Color(0xFF404040),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 12.h,
+                              ),
+                              const Divider(),
+
+                            ],
+                          ),
+                        ),
+
+
                       ],
                     ),
                   ),
                 );
               }),
         ),
-        bottomSheet: widget.orderDetails.url != null ? null : ClipRRect(
+        bottomSheet:  ClipRRect(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(10.0.r),
           ),
@@ -329,7 +500,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     padding: MaterialStatePropertyAll(
                         EdgeInsets.symmetric(vertical: 8.h)),
                     tapTargetSize: MaterialTapTargetSize.padded),
-                onPressed: () {
+                onPressed: () async {
+                  print(Uri.parse(widget.orderDetails.url??'').toString());
                   if(widget.cancelOption) {
                     showDialog(
                         context: context,
@@ -384,10 +556,14 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             ),
                           ],
                         ));
+                  }else if(widget.orderDetails.url != null){
+
+                      await launchUrl(Uri.parse(widget.orderDetails.url??''));
+                    
                   }
                 },
                 child: Text(
-                  Languages.of(context)!.cancelOrder,
+                  widget.orderDetails.url == null ?  Languages.of(context)!.cancelOrder : 'طباعة الفاتورة',
                   style: GoogleFonts.readexPro(
                     fontSize: 16.0.sp,
                     color: Colors.white,

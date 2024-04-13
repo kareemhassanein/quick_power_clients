@@ -24,7 +24,7 @@ class HomeBloc extends Bloc<HomeEvents, GeneralStates> {
   ) async* {
     if (event is GetHomeAllEvent) {
       if (await InternetConnection().isConnected()) {
-        yield LoadingState();
+        yield LoadingState(showDialog: event.refresh);
         HomeModel? responseModel = await OrdersRepo().getHomeAll();
         if (responseModel != null) {
           if (responseModel.success != null && !responseModel.success!) {

@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:Quick_Power/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -29,8 +32,13 @@ Future<void> main() async {
       systemNavigationBarIconBrightness: Platform.isIOS ? Brightness.light : Brightness.dark,));
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   SystemChrome.setApplicationSwitcherDescription(const ApplicationSwitcherDescription(primaryColor: 0xff39969B, label: 'Waqoodi'));
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const StartApp());
 }
+
 
 class StartApp extends StatefulWidget {
   const StartApp({Key? key}) : super(key: key);
@@ -64,11 +72,30 @@ class _StartAppState extends State<StartApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    getToken();
+  }
+
+  Future<String?> getToken() async {
+    await FirebaseMessaging.instance.requestPermission(
+      provisional: true, alert: true, criticalAlert: true,);
+    String? token = await FirebaseMessaging.instance.getToken();
+    print('token: $token');
+    return token;
   }
 
   @override
   Widget build(BuildContext context) {
     var s = 'Kareem';
+    FirebaseMessaging.instance.onTokenRefresh
+        .listen((fcmToken) {
+      print('token: $fcmToken');
+
+      // Note: This callback is fired at each app startup and whenever a new
+      // token is generated.
+    })
+        .onError((err) {
+      // Error getting token.
+    });
     return ScreenUtilInit(
       designSize: const Size(414, 896),
       minTextAdapt: true,

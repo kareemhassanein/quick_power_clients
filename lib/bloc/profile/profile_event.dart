@@ -22,5 +22,10 @@ class ChangePasswordEvent extends ProfileEvents {
   ChangePasswordEvent(this.data);
 }
 
+class ResetPasswordEvent extends ProfileEvents {
+  Map<String, String> data;
+  ResetPasswordEvent(this.data);
+}
+
 
 class InitialEvent extends ProfileEvents {}

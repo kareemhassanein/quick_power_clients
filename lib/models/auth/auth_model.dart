@@ -51,18 +51,21 @@ class Errors {
   List<String>? userPassword;
   List<String>? userConfirmPassword;
   List<String>? name;
+  List<String>? userIdentity;
 
   Errors({
     this.userMobile,
     this.userPassword,
     this.userConfirmPassword,
     this.name,
+    this.userIdentity,
   });
 
   Errors.fromJson(Map<String, dynamic> json) {
     name = json['name']?.cast<String>()!;
     userPassword = json['user_password']?.cast<String>()!;
     userConfirmPassword = json['user_password_confirmation']?.cast<String>()!;
+    userIdentity = json['user_identity']?.cast<String>()!;
     userMobile = json['user_mobile']?.cast<String>()!;
   }
 
@@ -71,6 +74,7 @@ class Errors {
     data['user_mobile'] = userMobile;
     data['user_password'] = userPassword;
     data['user_password_confirmation'] = userConfirmPassword;
+    data['user_identity'] = userIdentity;
     data['name'] = name;
     return data;
   }

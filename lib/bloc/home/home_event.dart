@@ -4,7 +4,8 @@ import 'package:Quick_Power/models/user_model.dart';
 abstract class HomeEvents {}
 
 class GetHomeAllEvent extends HomeEvents {
-  GetHomeAllEvent();
+  bool refresh = true;
+  GetHomeAllEvent({this.refresh = true});
 }
 
 class GetOrdersPaginationEvent extends HomeEvents {

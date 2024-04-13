@@ -78,7 +78,6 @@ class StationsBloc extends Bloc<StationsEvents, GeneralStates> {
         dynamic response = await StationsRepo().updateStation(id: event.id, data: event.data);
         print(response.toString());
         if (response['errors'] == null) {
-          yield SuccessState(showDialog: true, msg: 'Station Updated');
           StationsModel? stationsModel = await StationsRepo().allStations();
           if (stationsModel != null) {
             if (stationsModel.message != null) {
@@ -86,7 +85,7 @@ class StationsBloc extends Bloc<StationsEvents, GeneralStates> {
                 msg: stationsModel.message ?? 'Something Went Wrong!',
               );
             } else if (stationsModel.data != null && stationsModel.success!) {
-              yield SuccessState(response: stationsModel.data, showDialog: false);
+              yield SuccessState(response: stationsModel.data, showDialog: true, msg: response['message']);
             } else {
               yield ErrorState(
                 msg: stationsModel.message ?? 'Something Went Wrong!',

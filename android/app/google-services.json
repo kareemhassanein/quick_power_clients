@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "977387646210",
+    "project_id": "perfect-66fcd",
+    "storage_bucket": "perfect-66fcd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:977387646210:android:38f0ce4004e1e6313da61b",
+        "android_client_info": {
+          "package_name": "com.hill.quickpower"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC83uhUMx1RvXoSiRcRa6cWnQrhcsnJAzU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

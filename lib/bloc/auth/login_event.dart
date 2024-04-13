@@ -7,6 +7,19 @@ class DoLoginEvent extends AuthEvents {
   DoLoginEvent({required this.userEmail, required this.userPassword});
 }
 
+class SendOtpForgetPasswordEvent extends AuthEvents {
+  late String userPhone;
+  SendOtpForgetPasswordEvent({required this.userPhone,});
+}
+
+class ResetPasswordEvent extends AuthEvents {
+  late String userOtp;
+  late String password;
+  late String? userPhone;
+  late String confirmPassword;
+  ResetPasswordEvent({required this.userOtp, required this.password, required this.confirmPassword});
+}
+
 class DoRegisterEvent extends AuthEvents {
   late String userName;
   late String userPhone;

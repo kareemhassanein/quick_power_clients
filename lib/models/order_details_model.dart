@@ -43,13 +43,23 @@ class OrderDetails {
     this.location,
     this.rate,
     this.url,
-    this.status
+    this.status,
+    this.dateDelivery,
+    this.dateRecived,
+    this.driver,
+    this.inviceNo,
+    this.truckInfo
   });
 
   int? id;
   String? code;
   String? date;
-  String? total;
+  String? dateRecived;
+  String? dateDelivery;
+  String? inviceNo;
+  String? driver;
+  String? truckInfo;
+  dynamic total;
   Location? productType;
   Location? status;
   String? quantity;
@@ -68,6 +78,11 @@ class OrderDetails {
     status: json["status"] == null ? null : Location.fromJson(json["status"]),
     rate: json["rate"],
     url: json["url"],
+    truckInfo: json["truck_code"],
+    inviceNo: json["invoice_no"],
+    driver: json["driver"],
+    dateRecived: json["date_recived"],
+    dateDelivery: json["date_delivery"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -88,18 +103,22 @@ class Location {
   Location({
     this.id,
     this.name,
+    this.address
   });
 
   int? id;
   String? name;
+  String? address;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
     id: json["id"],
     name: json["name"],
+    address: json["address"],
   );
 
   Map<String, dynamic> toJson() => {
     "id": id,
     "name": name,
+    "address": address,
   };
 }

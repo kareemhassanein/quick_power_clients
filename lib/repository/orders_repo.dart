@@ -19,6 +19,7 @@ class OrdersRepo{
 
     HomeModel modelResponse;
     Response response = await CoreRepo().get(url: Apis.homeAll);
+    print(response.data);
     if (response.statusCode == 200) {
       modelResponse = HomeModel.fromJson(
           jsonDecode(response.data));
@@ -48,6 +49,7 @@ class OrdersRepo{
   Future<OrderDetailsModel?> getOrderDetails({required id}) async {
 
     Response response = await CoreRepo().get(url: Apis.orderDetails(id: id));
+    print(response.data);
 
     OrderDetailsModel modelResponse;
 
@@ -57,13 +59,13 @@ class OrdersRepo{
     } else {
       modelResponse = OrderDetailsModel(message: response.statusMessage, success: false);
     }
-
     return modelResponse;
   }
 
   Future<CreateOrderModel?> getCreateOrder() async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang': LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
@@ -71,20 +73,13 @@ class OrdersRepo{
 
     request.headers.addAll(headers);
 
-    try {
       final response = await request.send().timeout(const Duration(seconds: 12));
+
       CreateOrderModel modelResponse;
       modelResponse =
           CreateOrderModel.fromJson(jsonDecode(await response.stream.bytesToString()));
       return modelResponse;
-    } catch (e) {
-      print(e.toString());
-      String errorMessage = LanguageHelper.isEnglish
-          ? 'An error occurred while processing your request.'
-          : 'حدث خطأ أثناء معالجة طلبك.';
 
-      return CreateOrderModel(success: false, message: errorMessage);
-    }
   }
 
 
@@ -92,6 +87,7 @@ class OrdersRepo{
   Future<PostOrderModel?> storeOrder({required data}) async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
@@ -100,6 +96,8 @@ class OrdersRepo{
     request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
+
+    // print(await response.stream.bytesToString());
     PostOrderModel modelResponse;
 
     if (response.statusCode == 200) {
@@ -108,6 +106,7 @@ class OrdersRepo{
     } else {
       modelResponse = PostOrderModel(message: response.reasonPhrase, success: false);
     }
+    print(modelResponse.toJson().toString());
 
     return modelResponse;
   }
@@ -115,6 +114,7 @@ class OrdersRepo{
   Future<CancelOrderModel?> cancelOrder({required id}) async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };

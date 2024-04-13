@@ -1,3 +1,4 @@
+import 'package:Quick_Power/ui/screens/forget_password_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -175,7 +176,9 @@ class _LoginScreenState extends State<LoginScreen>
                                 alignment: AlignmentDirectional.centerEnd,
                                 child: GestureDetector(
                                   behavior: HitTestBehavior.translucent,
-                                  onTap: () {},
+                                  onTap: () {
+                                    navigateToScreen(context, const ForgetPasswordScreen());
+                                  },
                                   child: Padding(
                                     padding:
                                         EdgeInsets.symmetric(vertical: 10.h),

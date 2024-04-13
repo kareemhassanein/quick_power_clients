@@ -15,4 +15,6 @@ class Apis {
   static orderDetails({required id}) => '$serverUrl/waybills/$id';
   static cancelOrder({required id}) => '$serverUrl/waybills/$id/cancel';
   static updateStation({required id}) => '$serverUrl/locations/$id/update';
+  static const sendOtpforgetPassword = '$serverUrl/auth/send-otp';
+  static const resetPassword = '$serverUrl/auth/reset-password';
 }

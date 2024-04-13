@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:Quick_Power/models/forget_password_model.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:Quick_Power/preference.dart';
@@ -12,6 +13,7 @@ class AuthRepo {
   final Options requestOptions = Options(
       responseType: ResponseType.json,
       headers: {'Accept': 'application/json',
+        'app-type': 'CUSTOMER',
         'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
       sendTimeout: const Duration(seconds: 7).inMilliseconds,
       receiveTimeout: const Duration(seconds: 7).inMilliseconds,
@@ -35,7 +37,9 @@ class AuthRepo {
         data: formData,
         options: Options(
             responseType: ResponseType.json,
-            headers: {'Accept': 'application/json',
+            headers: {
+              'Accept': 'application/json',
+              'app-type': 'CUSTOMER',
               'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
             sendTimeout: const Duration(seconds: 7).inMilliseconds,
             receiveTimeout: const Duration(seconds: 7).inMilliseconds,
@@ -126,6 +130,7 @@ class AuthRepo {
         options: Options(
             responseType: ResponseType.json,
             headers: {'Accept': 'application/json',
+              'app-type': 'CUSTOMER',
               'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
             },
             sendTimeout: const Duration(seconds: 7).inMilliseconds,
@@ -147,6 +152,79 @@ class AuthRepo {
       return AuthModel(message: msg);
     }
   }
+
+
+  Future<SendOtpModel?> sendOtpForgetPassword(
+      {required String userMobile, }) async {
+    dioBadRequestAdapter(dio);
+    FormData formData = FormData();
+    formData.fields.addAll({
+      MapEntry('user_mobile', userMobile),
+      const MapEntry('type', '1'),
+    });
+    try {
+      Response response = await dio.post<String>(
+        Apis.sendOtpforgetPassword,
+        data: formData,
+        options: Options(
+            responseType: ResponseType.json,
+            headers: {'Accept': 'application/json',
+              'app-type': 'CUSTOMER',
+              'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
+
+            receiveDataWhenStatusError: true,
+            validateStatus: (stats) {
+              return true;
+            }),
+      );
+      SendOtpModel modelResponse = SendOtpModel.fromJson(jsonDecode(response.data));
+      return modelResponse;
+    } on DioError catch (e) {
+      String msg = e.message??'';
+      if (e.type == DioErrorType.sendTimeout) {
+        msg = 'Make sure you are connected to the network';
+      }
+      return SendOtpModel(message: msg);
+    }
+  }
+
+  Future<SendOtpModel?> resetPassword(
+      {required String userOtp, required String password, required String passwordConfirmation, }) async {
+    dioBadRequestAdapter(dio);
+    FormData formData = FormData();
+    formData.fields.addAll({
+      MapEntry('user_otp', userOtp),
+      MapEntry('password', password),
+      MapEntry('password_confirmation', passwordConfirmation),
+      const MapEntry('type', '1'),
+    });
+    try {
+      Response response = await dio.post<String>(
+        Apis.resetPassword,
+        data: formData,
+        options: Options(
+            responseType: ResponseType.json,
+            headers: {'Accept': 'application/json',
+              'app-type': 'CUSTOMER',
+              'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
+
+            receiveDataWhenStatusError: true,
+            validateStatus: (stats) {
+              return true;
+            }),
+      );
+      SendOtpModel modelResponse = SendOtpModel.fromJson(jsonDecode(response.data));
+      return modelResponse;
+    } on DioError catch (e) {
+      String msg = e.message??'';
+      if (
+          e.type == DioErrorType.sendTimeout) {
+        msg = 'Make sure you are connected to the network';
+      }
+      return SendOtpModel(message: msg);
+    }
+  }
+
 
   static void dioBadRequestAdapter(Dio dio) {
     (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =

@@ -2,7 +2,9 @@
 
 import 'dart:async';
 import 'dart:math' as math;
+import 'package:Quick_Power/constrants/apis.dart';
 import 'package:auto_animated/auto_animated.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -127,6 +129,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         OrderDetailsScreen(
                           orderDetails: state.response.data,
                           cancelOption: _tabController.index == 0,
+                          userName: homeModel?.data?.user?.name,
                         )).then((value) {
                       if (value != null && value) {
                         blocHome.add(GetHomeAllEvent());
@@ -216,209 +219,217 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           SliverAppBar(
                             backgroundColor: AppColors().primaryColor,
                             pinned: true,
-                            expandedHeight: 210.h,
+                            expandedHeight: 190.h,
                             flexibleSpace: SafeArea(
                               child: FlexibleSpaceBar(
                                 background: Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 22.w, vertical: 20.h),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Column(
+                                      Row(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            '${Languages.of(context)!.hello} ${(homeModel!.data!.user!.name ?? '').split(" ").first}',
-                                            style: GoogleFonts.readexPro(
-                                              fontSize: 28.0.sp,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w600,
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 8.h),
+                                            child: SizedBox(
+                                              width: 48.w,
+                                              child: Image.asset(
+                                                  'assets/logo.png'),
                                             ),
                                           ),
-                                          SizedBox(
-                                            height: 3.h,
-                                          ),
-                                          StreamBuilder<DateTime>(
-                                            stream: Stream.periodic(const Duration(minutes: 2), (i) => DateTime.now()),
-                                            builder: (context, snapshot) => Text(
-                                              DateFormat('EEEE, dd MMMM yyyy', Localizations.localeOf(context).languageCode)
-                                                  .format(snapshot.data ?? DateTime.now()),
-                                              style: GoogleFonts.readexPro(
-                                                fontSize: 15.0.sp,
-                                                color: Colors.white.withOpacity(0.7),
-                                                height: 1.87.h,
+                                          SizedBox(width: 10.w,),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                '${Languages.of(context)!.hello} ${(homeModel!.data!.user!.name ?? '').split(" ").first}',
+                                                style: GoogleFonts.readexPro(
+                                                  fontSize: 28.0.sp,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 20.h,
-                                          ),
-                                          SizeTransition(
-                                            sizeFactor: Tween(
-                                                    begin: 0.0, end: 1.0)
-                                                .animate(CurvedAnimation(
-                                                    parent:
-                                                        _animationController,
-                                                    curve:
-                                                        Curves.easeInOutBack)),
-                                            axis: Axis.horizontal,
-                                            child: Container(
-                                              color: Colors.white,
-                                              width: 64.w,
-                                              height: 6.h,
-                                            ),
+                                              SizedBox(
+                                                height: 3.h,
+                                              ),
+                                              StreamBuilder<DateTime>(
+                                                stream: Stream.periodic(const Duration(minutes: 2), (i) => DateTime.now()),
+                                                builder: (context, snapshot) => Text(
+                                                  DateFormat('EEEE, dd MMMM yyyy', Localizations.localeOf(context).languageCode)
+                                                      .format(snapshot.data ?? DateTime.now()),
+                                                  style: GoogleFonts.readexPro(
+                                                    fontSize: 15.0.sp,
+                                                    color: Colors.white.withOpacity(0.7),
+                                                    height: 1.87.h,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 12.h,
+                                              ),
+                                              SizeTransition(
+                                                sizeFactor: Tween(
+                                                        begin: 0.0, end: 1.0)
+                                                    .animate(CurvedAnimation(
+                                                        parent:
+                                                            _animationController,
+                                                        curve:
+                                                            Curves.easeInOutBack)),
+                                                axis: Axis.horizontal,
+                                                child: Container(
+                                                  color: Colors.white,
+                                                  width: 64.w,
+                                                  height: 6.h,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
                                       PopupMenuButton(
-                                        color: Colors.white,
-                                        onSelected: (value) async {
-                                          if (value == 'log_out') {
-                                            showDialog(
-                                                context: context,
-                                                builder: (c) => AlertDialog(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12.r),
+                                          color: Colors.white,
+                                          onSelected: (value) async {
+                                            if (value == 'log_out') {
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (c) => AlertDialog(
+                                                    shape:
+                                                    RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius
+                                                          .circular(12.r),
+                                                    ),
+                                                    elevation: 2.r,
+                                                    title: Text(
+                                                      Languages.of(context)!.areYouSureToLogOut,
+                                                      style:
+                                                      GoogleFonts.readexPro(
+                                                        fontSize: 16.0.sp,
+                                                        color: Colors.black,
                                                       ),
-                                                      elevation: 2.r,
-                                                      title: Text(
-                                                        Languages.of(context)!.areYouSureToLogOut,
-                                                        style:
-                                                            GoogleFonts.readexPro(
-                                                          fontSize: 16.0.sp,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: Text(
-                                                            Languages.of(context)!.cancel,
-                                                            style: GoogleFonts
-                                                                .readexPro(
-                                                              fontSize: 14.0.sp,
-                                                              color: Colors
-                                                                  .black87,
-                                                            ),
+                                                    ),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Text(
+                                                          Languages.of(context)!.cancel,
+                                                          style: GoogleFonts
+                                                              .readexPro(
+                                                            fontSize: 14.0.sp,
+                                                            color: Colors
+                                                                .black87,
                                                           ),
                                                         ),
-                                                        TextButton(
-                                                          onPressed: () async {
-                                                            await Preferences
-                                                                .removeUserData();
-                                                            navigateToScreen(
-                                                                context,
-                                                                const LoginScreen(),
-                                                                withRemoveUntil:
-                                                                    true);
-                                                          },
-                                                          child: Text(
-                                                            Languages.of(context)!.logOut,
-                                                            style: GoogleFonts
-                                                                .readexPro(
-                                                              fontSize: 14.0.sp,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: Colors.red,
-                                                            ),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          await Preferences
+                                                              .removeUserData();
+                                                          navigateToScreen(
+                                                              context,
+                                                              const LoginScreen(),
+                                                              withRemoveUntil:
+                                                              true);
+                                                        },
+                                                        child: Text(
+                                                          Languages.of(context)!.logOut,
+                                                          style: GoogleFonts
+                                                              .readexPro(
+                                                            fontSize: 14.0.sp,
+                                                            fontWeight:
+                                                            FontWeight
+                                                                .w500,
+                                                            color: Colors.red,
                                                           ),
                                                         ),
-                                                      ],
-                                                    ));
-                                          } else if (value ==
-                                              'changePassword') {
-                                            navigateToScreen(context,
-                                                const ChangePasswordScreen());
-                                          }else if (value ==
-                                              '/changeLanguage') {
-                                            showLanguagesDialog(context);
-                                          } else {
-                                            navigateToScreen(context,
-                                                    const ProfileScreen())
-                                                .then((value) {
-                                              if (value != null) {
-                                                setState(() {
-                                                  homeModel!.data!.user = value;
-                                                });
-                                              }
-                                            });
-                                          }
-                                        },
-                                        tooltip: Languages.of(context)!.profile,
-                                        elevation: 2,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12.r)),
-                                        itemBuilder: (BuildContext bc) {
-                                          return [
-                                            PopupMenuItem(
-                                              value: '/changeLanguage',
-                                              child: Text(
-                                                Languages.of(context)!.changeLanguage,
-                                                style: GoogleFonts.readexPro(
-                                                  fontSize: 14.0.sp,
-                                                  color: Colors.black,
+                                                      ),
+                                                    ],
+                                                  ));
+                                            } else if (value ==
+                                                'changePassword') {
+                                              navigateToScreen(context,
+                                                   const ChangePasswordScreen(type: Apis.changePassword,));
+                                            }else if (value ==
+                                                '/changeLanguage') {
+                                              showLanguagesDialog(context);
+                                            } else {
+                                              navigateToScreen(context,
+                                                  const ProfileScreen())
+                                                  .then((value) {
+                                                if (value != null) {
+                                                  setState(() {
+                                                    homeModel!.data!.user = value;
+                                                  });
+                                                }
+                                              });
+                                            }
+                                          },
+                                          tooltip: Languages.of(context)!.profile,
+                                          elevation: 2,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(12.r)),
+                                          itemBuilder: (BuildContext bc) {
+                                            return [
+                                              PopupMenuItem(
+                                                value: '/changeLanguage',
+                                                child: Text(
+                                                  Languages.of(context)!.changeLanguage,
+                                                  style: GoogleFonts.readexPro(
+                                                    fontSize: 14.0.sp,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                textAlign: TextAlign.center,
                                               ),
-                                            ),
-                                            PopupMenuItem(
-                                              value: '/profile',
-                                              child: Text(
-                                                Languages.of(context)!.myProfile,
-                                                style: GoogleFonts.readexPro(
-                                                  fontSize: 14.0.sp,
-                                                  color: Colors.black,
+                                              PopupMenuItem(
+                                                value: '/profile',
+                                                child: Text(
+                                                  Languages.of(context)!.myProfile,
+                                                  style: GoogleFonts.readexPro(
+                                                    fontSize: 14.0.sp,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                textAlign: TextAlign.center,
                                               ),
-                                            ),
-                                            PopupMenuItem(
-                                              value: 'changePassword',
-                                              child: Text(
-                                                Languages.of(context)!.changePassword,
-                                                style: GoogleFonts.readexPro(
-                                                  fontSize: 14.0.sp,
-                                                  color: Colors.black,
+                                              PopupMenuItem(
+                                                value: 'changePassword',
+                                                child: Text(
+                                                  Languages.of(context)!.changePassword,
+                                                  style: GoogleFonts.readexPro(
+                                                    fontSize: 14.0.sp,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                textAlign: TextAlign.center,
                                               ),
-                                            ),
-                                            PopupMenuItem(
-                                              value: 'log_out',
-                                              child: Text(
-                                                Languages.of(context)!.logOut,
-                                                style: GoogleFonts.readexPro(
-                                                  fontSize: 14.0.sp,
-                                                  color: Colors.black,
+                                              PopupMenuItem(
+                                                value: 'log_out',
+                                                child: Text(
+                                                  Languages.of(context)!.logOut,
+                                                  style: GoogleFonts.readexPro(
+                                                    fontSize: 14.0.sp,
+                                                    color: Colors.black,
+                                                  ),
+                                                  textAlign: TextAlign.center,
                                                 ),
-                                                textAlign: TextAlign.center,
                                               ),
-                                            ),
-                                          ];
-                                        },
-                                        child: Padding(
-                                          padding: EdgeInsets.only(top: 12.h),
-                                          child: SizedBox(
-                                            width: 75.w,
-                                            child: Image.asset(
-                                              color: Colors.white,
-                                                    'assets/logo.png'),
-                                          ),
-                                        ),
+                                            ];
+                                          },
+                                          child: const Icon(Icons.more_vert_rounded, color: Colors.white,)
                                       ),
+
                                     ],
                                   ),
                                 ),
@@ -556,6 +567,25 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               ),
                             ),
                           ),
+                          CupertinoSliverRefreshControl(
+                            onRefresh: () async {
+                              Future block = blocHome.stream.first;
+                              blocHome.add(GetHomeAllEvent(refresh: false));
+                              return await block.then((value) => Future.delayed(const Duration(milliseconds: 1000)));
+                            },
+                            builder: (
+                                BuildContext context,
+                                RefreshIndicatorMode refreshState,
+                                double pulledExtent,
+                                double refreshTriggerPullDistance,
+                                double refreshIndicatorExtent,
+                                ) {
+                              // You can also use custom widget/animation for the refresh indicator
+                              return Center(child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(AppColors().primaryColor),
+                              ));
+                            },
+                          ),
                           StatefulBuilder(builder: (context, snapshot) {
                             setter = snapshot;
                             return _listItems();
@@ -668,9 +698,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       padding: EdgeInsets.only(
           right: 8.w,
           left: 8.w,
+        bottom: selectedOrders.length < 6 ? (600.h - selectedOrders.length* 100).h : 0
       ),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
+
           (context, index) => ScaleTransition(
             scale: _animationControllerList,
             child: GestureDetector(
@@ -712,7 +744,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             Row(
                               children: [
                                 Expanded(
-                                  flex: 5,
+                                  flex: 4,
                                   child: Text(
                                     selectedOrders[index].code! ?? '',
                                     maxLines: 1,
@@ -743,7 +775,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             Row(
                               children: [
                                 Expanded(
-                                  flex: 5,
+                                  flex: 4,
                                   child: Text(
                                     selectedOrders[index].productType!.name! ??
                                         '',
@@ -774,7 +806,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                             Row(
                               children: [
                                 Expanded(
-                                  flex: 5,
+                                  flex: 4,
                                   child: Text(
                                     selectedOrders[index].location!.name! ?? '',
                                     maxLines: 1,
@@ -789,8 +821,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                   flex: 3,
                                   child: Text(
                                     NumberFormat("###,### ${Languages.of(context)!.sar}", LanguageHelper.isEnglish? 'en_US':'ar_EG').format(
-                                        double.parse(
-                                            selectedOrders[index].total!)),
+
+                                            selectedOrders[index].total!),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.readexPro(

@@ -25,7 +25,7 @@ class LanguageAr extends Languages {
 
   @override
   // TODO: implement areYouSureToCancelOrder
-  String get areYouSureToCancelOrder => 'هل أنت متأكد من إلغاء الأمر';
+  String get areYouSureToCancelOrder => 'هل أنت متأكد من إلغاء الطلب';
 
   @override
   // TODO: implement areYouSureToLogOut
@@ -249,5 +249,53 @@ class LanguageAr extends Languages {
 
   String get confirmOrder => 'تأكيد الطلب';
   String get paymentMethod => 'وسيلة الدفع';
+
+  @override
+  // TODO: implement userId
+  String get userId => 'رقم الهوية';
+
+  @override
+  // TODO: implement forgetPasswordHint
+  String get forgetPasswordHint => 'لإعادة تعيين كلمة المرور الخاصة بك، يرجى إدخال رقم هاتفك المسجل لتلقى الرمز في رسالة نصية';
+
+  @override
+  // TODO: implement otpVerification
+  String get otpVerification => 'التحقق من الرمز';
+
+  @override
+  // TODO: implement otpVerificationHint
+  String get otpVerificationHint => 'أدخل رمز التحقق المكون من 4 أرقام المرسل إلى هاتفك';
+
+  @override
+  // TODO: implement resendAfter
+  String get resendAfter => 'إعادة ارسال بعد';
+
+  @override
+  // TODO: implement seconds
+  String get seconds => 'ث';
+
+  @override
+  // TODO: implement send
+  String get send => 'ارسال';
+
+  @override
+  // TODO: implement recivedDate
+  String get recivedDate => 'تاريخ التسليم';
+
+  @override
+  // TODO: implement driverInfo
+  String get driverInfo => 'بيانات السائق';
+
+  @override
+  // TODO: implement expectedData
+  String get expectedData => 'تاريخ الوصول المتوقع';
+
+  @override
+  // TODO: implement truckInfo
+  String get truckInfo => 'بيانات الشاحنة';
+
+  @override
+  // TODO: implement invoiceNo
+  String get invoiceNo => 'رقم الفاتورة';
 
 }

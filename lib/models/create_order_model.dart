@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:Quick_Power/models/stations_model.dart';
+
 CreateOrderModel createOrderModelFromJson(String str) => CreateOrderModel.fromJson(json.decode(str));
 
 String createOrderModelToJson(CreateOrderModel data) => json.encode(data.toJson());
@@ -41,13 +43,13 @@ class Data {
   });
 
   double? vat;
-  List<ProductType>? locations;
+  List<Station>? locations;
   List<ProductType>? paymentMethods;
   List<ProductType>? productTypes;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
     vat:json["vat"] == null ? 0.0 : (json["vat"] is double ? json["vat"] : double.tryParse(json["vat"])??0.0),
-    locations: json["locations"] == null ? [] : List<ProductType>.from(json["locations"]!.map((x) => ProductType.fromJson(x))),
+    locations: json["locations"] == null ? [] : List<Station>.from(json["locations"]!.map((x) => Station.fromJson(x))),
     paymentMethods: json["payment_methods"] == null ? [] : List<ProductType>.from(json["payment_methods"]!.map((x) => ProductType.fromJson(x))),
     productTypes: json["product_types"] == null ? [] : List<ProductType>.from(json["product_types"]!.map((x) => ProductType.fromJson(x))),
   );
@@ -75,7 +77,7 @@ class ProductType {
   factory ProductType.fromJson(Map<String, dynamic> json) => ProductType(
     id: json["id"],
     name: json["name"],
-    unitPrice: double.tryParse(json["unit_price"]),
+    unitPrice: json["unit_price"],
   );
 
   Map<String, dynamic> toJson() => {

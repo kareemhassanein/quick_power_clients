@@ -246,4 +246,53 @@ class LanguageEn extends Languages {
 
   String get confirmOrder => 'Order Confirmation';
   String get paymentMethod => 'Payment Method';
+
+  @override
+  // TODO: implement userId
+  String get userId => 'ID Number';
+
+  @override
+  // TODO: implement forgetPasswordHint
+  String get forgetPasswordHint => 'To reset your password, please enter your registered phone number to receive a One-Time Password (OTP) via text message.';
+
+  @override
+  // TODO: implement otpVerification
+  String get otpVerification => 'OTP Verification';
+
+  @override
+  // TODO: implement otpVerificationHint
+  String get otpVerificationHint => 'Enter the 4-digit OTP code sent to your phone';
+
+  @override
+  // TODO: implement resendAfter
+  String get resendAfter => 'Resend after';
+
+  @override
+  // TODO: implement seconds
+  String get seconds => 'S';
+
+  @override
+  // TODO: implement send
+  String get send => 'Send';
+
+  @override
+  // TODO: implement recivedDate
+  String get recivedDate => "Recived Date";
+
+  @override
+  // TODO: implement driverInfo
+  String get driverInfo => 'Driver Info';
+
+  @override
+  // TODO: implement expectedData
+  String get expectedData => 'Expected Date';
+
+  @override
+  // TODO: implement truckInfo
+  String get truckInfo => 'Truck Info';
+
+  @override
+  // TODO: implement invoiceNo
+  String get invoiceNo => 'Invoice No';
+
 }

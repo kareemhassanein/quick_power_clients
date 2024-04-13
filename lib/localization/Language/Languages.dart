@@ -43,6 +43,7 @@ abstract class Languages {
   String get profile;
   String get name;
   String get required;
+  String get userId;
   String get save;
   String get addNewStation;
   String get address;
@@ -63,6 +64,7 @@ abstract class Languages {
   String get alreadyHaveAccount;
   String get tryAgain;
   String get createNewOrder;
+  String get forgetPasswordHint;
 
   String get deliveryAddress;
 
@@ -78,5 +80,14 @@ abstract class Languages {
 
   String get confirmOrder;
   String get paymentMethod;
-
+  String get otpVerification;
+  String get otpVerificationHint;
+  String get send;
+  String get resendAfter;
+  String get seconds;
+  String get recivedDate;
+  String get truckInfo;
+  String get driverInfo;
+  String get expectedData;
+  String get invoiceNo;
 }

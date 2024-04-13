@@ -13,6 +13,7 @@ class ProfileRepo {
   Future<UserModel?> getUserData() async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
@@ -36,6 +37,7 @@ class ProfileRepo {
   Future<UserModel?> updateUserImage(XFile file) async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
@@ -59,6 +61,7 @@ class ProfileRepo {
  Future<UserModel?> updateUserData(Map<String, String> data) async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
@@ -82,10 +85,34 @@ class ProfileRepo {
  Future<UserModel?> changePassword(Map<String, String> data) async {
     var headers = {
       'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
       'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
     var request = http.MultipartRequest('POST', Uri.parse(Apis.changePassword));
+    request.fields.addAll(data);
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    UserModel modelResponse;
+
+    if (response.statusCode == 200) {
+      modelResponse = UserModel.fromJson(
+          jsonDecode(await response.stream.bytesToString()));
+    } else {
+      modelResponse = UserModel(message: response.reasonPhrase);
+    }
+
+    return modelResponse;
+  }
+
+ Future<UserModel?> resetPassword(Map<String, String> data) async {
+    var headers = {
+      'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
+      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(Apis.resetPassword));
     request.fields.addAll(data);
     request.headers.addAll(headers);
 

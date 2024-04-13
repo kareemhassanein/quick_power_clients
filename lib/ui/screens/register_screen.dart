@@ -25,19 +25,23 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStateMixin {
+class _RegisterScreenState extends State<RegisterScreen>
+    with TickerProviderStateMixin {
   final TextEditingController _customerNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _userId = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   late AnimationController _animationController;
   final AuthBloc _bloc = AuthBloc();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 0))..forward();
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 0))
+      ..forward();
   }
 
   @override
@@ -45,12 +49,14 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
     return Scaffold(
       backgroundColor: AppColors().backgroundColor,
       body: GestureDetector(
-        onTap: (){
+        onTap: () {
           FocusManager.instance.primaryFocus?.unfocus();
         },
         child: Stack(
           children: [
-            AuthBackground(animatedContainer: _animationController,),
+            AuthBackground(
+              animatedContainer: _animationController,
+            ),
             BlocListener<AuthBloc, GeneralStates>(
               bloc: _bloc,
               listener: (context, state) {
@@ -59,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                   navigateToScreen(context, const HomeScreen(),
                       withRemoveUntil: true);
                 } else if (state is ErrorState) {
-                  Future.delayed(const Duration(milliseconds: 300), (){
+                  Future.delayed(const Duration(milliseconds: 300), () {
                     formKey.currentState!.validate();
                   });
                 }
@@ -102,7 +108,8 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                 Languages.of(context)!.plsSignUp,
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF121214).withOpacity(0.7),
+                                  color:
+                                      const Color(0xFF121214).withOpacity(0.7),
                                   height: 1.87.h,
                                 ),
                               ),
@@ -112,7 +119,11 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                               filedTextAuth(
                                   controller: _customerNameController,
                                   inputType: TextInputType.text,
-                                  prefix: Icon(CupertinoIcons.building_2_fill, color: AppColors().primaryColor, size: 24.r,),
+                                  prefix: Icon(
+                                    CupertinoIcons.building_2_fill,
+                                    color: AppColors().primaryColor,
+                                    size: 24.r,
+                                  ),
                                   textInputAction: TextInputAction.next,
                                   validator: (s) {
                                     if (s!.isEmpty) {
@@ -134,7 +145,11 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'[0-9]')),
                                   ],
-                                  prefix: Icon(CupertinoIcons.phone_fill, color: AppColors().primaryColor, size: 24.r,),
+                                  prefix: Icon(
+                                    CupertinoIcons.phone_fill,
+                                    color: AppColors().primaryColor,
+                                    size: 24.r,
+                                  ),
                                   textInputAction: TextInputAction.next,
                                   validator: (s) {
                                     if (s!.isEmpty) {
@@ -149,23 +164,29 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                               SizedBox(
                                 height: 27.5.h,
                               ),
-        filedTextAuth(
+                              filedTextAuth(
                                   controller: _userId,
                                   inputType: TextInputType.number,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'[0-9]')),
                                   ],
-                                  prefix: Icon(CupertinoIcons.person_alt_circle, color: AppColors().primaryColor, size: 24.r,),
+                                  prefix: Icon(
+                                    CupertinoIcons.person_alt_circle,
+                                    color: AppColors().primaryColor,
+                                    size: 24.r,
+                                  ),
                                   textInputAction: TextInputAction.next,
                                   validator: (s) {
                                     if (s!.isEmpty) {
                                       return Languages.of(context)!.required;
+                                    }else if (state is ErrorState &&
+                                        state.errors?.userIdentity != null) {
+                                      return state.errors.userIdentity.first;
                                     }
                                     return null;
                                   },
-                                  hint: 'User Id'),
-
+                                  hint: Languages.of(context)!.userId),
                               SizedBox(
                                 height: 27.5.h,
                               ),
@@ -173,7 +194,11 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                   controller: _passwordController,
                                   inputType: TextInputType.visiblePassword,
                                   isPassword: true,
-                                  prefix: Icon(Icons.lock, color: AppColors().primaryColor, size: 24.r,),
+                                  prefix: Icon(
+                                    Icons.lock,
+                                    color: AppColors().primaryColor,
+                                    size: 24.r,
+                                  ),
                                   textInputAction: TextInputAction.next,
                                   validator: (s) {
                                     if (s!.isEmpty) {
@@ -192,78 +217,94 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                   controller: _confirmPasswordController,
                                   inputType: TextInputType.visiblePassword,
                                   isPassword: true,
-                                  prefix: Icon(Icons.lock, color: AppColors().primaryColor, size: 24.r,),
+                                  prefix: Icon(
+                                    Icons.lock,
+                                    color: AppColors().primaryColor,
+                                    size: 24.r,
+                                  ),
                                   textInputAction: TextInputAction.done,
-                                  onSubmit: (){
+                                  onSubmit: () {
                                     _bloc.add(InitialEvent());
                                     Future.delayed(
-                                        const Duration(milliseconds: 100),
-                                            () {
-                                          if (formKey.currentState!.validate()) {
-                                            _bloc.add(DoRegisterEvent(
-                                                userPhone:
-                                                _phoneController.text,
-                                                userId: _userId.text,
-                                                userPassword:
+                                        const Duration(milliseconds: 100), () {
+                                      if (formKey.currentState!.validate()) {
+                                        _bloc.add(DoRegisterEvent(
+                                            userPhone: _phoneController.text,
+                                            userId: _userId.text,
+                                            userPassword:
                                                 _passwordController.text,
-                                                userConfirmPassword: _confirmPasswordController.text,
-                                                userName: _customerNameController.text));
-                                          }
-                                        });
+                                            userConfirmPassword:
+                                                _confirmPasswordController.text,
+                                            userName:
+                                                _customerNameController.text));
+                                      }
+                                    });
                                   },
                                   validator: (s) {
                                     if (s!.isEmpty) {
                                       return Languages.of(context)!.required;
                                     } else if (state is ErrorState &&
-                                        state.errors?.userConfirmPassword != null) {
-                                      return state.errors.userConfirmPassword.first;
+                                        state.errors?.userConfirmPassword !=
+                                            null) {
+                                      return state
+                                          .errors.userConfirmPassword.first;
                                     }
                                     return null;
                                   },
                                   hint: Languages.of(context)!.confirmPassword),
-                              SizedBox(height: 33.5.h,),
+                              SizedBox(
+                                height: 33.5.h,
+                              ),
                               Center(
                                 child: TextButton(
                                     style: ButtonStyle(
-                                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 70.h, vertical: 10.h)),
-                                        backgroundColor: MaterialStateProperty.all(AppColors().primaryColor),
+                                        padding: MaterialStateProperty.all(
+                                            EdgeInsets.symmetric(
+                                                horizontal: 70.h,
+                                                vertical: 10.h)),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                AppColors().primaryColor),
                                         shape: MaterialStateProperty.all(
                                             RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(40.0.r),
-                                            ))
-                                    ),
-                                    onPressed: (){
+                                          borderRadius:
+                                              BorderRadius.circular(40.0.r),
+                                        ))),
+                                    onPressed: () {
                                       _bloc.add(InitialEvent());
                                       Future.delayed(
                                           const Duration(milliseconds: 100),
-                                              () {
-                                            if (formKey.currentState!.validate()) {
-                                              _bloc.add(DoRegisterEvent(
-                                                  userPhone:
-                                                  _phoneController.text,
-
-                                                  userId: _userId.text,
-                                                  userPassword:
+                                          () {
+                                        if (formKey.currentState!.validate()) {
+                                          _bloc.add(DoRegisterEvent(
+                                              userPhone: _phoneController.text,
+                                              userId: _userId.text,
+                                              userPassword:
                                                   _passwordController.text,
-                                              userConfirmPassword: _confirmPasswordController.text,
-                                              userName: _customerNameController.text));
-                                            }
-                                          });
-                                    }, child:
-                                Text(
-                                  Languages.of(context)!.signUp,
-                                  style: GoogleFonts.readexPro(
-                                    fontSize: 24.0.sp,
-                                    color: AppColors().backgroundColor,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                )),
+                                              userConfirmPassword:
+                                                  _confirmPasswordController
+                                                      .text,
+                                              userName: _customerNameController
+                                                  .text));
+                                        }
+                                      });
+                                    },
+                                    child: Text(
+                                      Languages.of(context)!.signUp,
+                                      style: GoogleFonts.readexPro(
+                                        fontSize: 24.0.sp,
+                                        color: AppColors().backgroundColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    )),
                               ),
-                              SizedBox(height: 33.0.h,),
+                              SizedBox(
+                                height: 33.0.h,
+                              ),
                               GestureDetector(
                                 behavior: HitTestBehavior.translucent,
-                                onTap: (){
+                                onTap: () {
                                   Navigator.pop(context);
                                 },
                                 child: Center(
@@ -277,10 +318,13 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                       ),
                                       children: [
                                         TextSpan(
-                                          text: '${Languages.of(context)!.alreadyHaveAccount} ',
+                                          text:
+                                              '${Languages.of(context)!.alreadyHaveAccount} ',
                                         ),
                                         TextSpan(
-                                          text: Languages.of(context)!.signIn.toUpperCase(),
+                                          text: Languages.of(context)!
+                                              .signIn
+                                              .toUpperCase(),
                                           style: GoogleFonts.readexPro(
                                             color: AppColors().primaryColor,
                                           ),
@@ -291,7 +335,9 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 40.0.h,),
+                              SizedBox(
+                                height: 40.0.h,
+                              ),
                             ],
                           ),
                         );
@@ -301,7 +347,6 @@ class _RegisterScreenState extends State<RegisterScreen> with TickerProviderStat
                 ),
               ),
             )
-
           ],
         ),
       ),
