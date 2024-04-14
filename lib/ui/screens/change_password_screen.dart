@@ -104,14 +104,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                     style: ButtonStyle(
                                         elevation: const MaterialStatePropertyAll(0.0),
                                         overlayColor: const MaterialStatePropertyAll(Colors.white12),
-                                        backgroundColor: MaterialStatePropertyAll(AppColors().primaryColor.withOpacity((_passwordController.text.length>=8 && _confirmController.text.length>=8) ? 1.0 : 0.25) ),
+                                        backgroundColor: MaterialStatePropertyAll(AppColors().primaryColor.withOpacity((_passwordController.text.length>=4 && _confirmController.text.length>=4) ? 1.0 : 0.25) ),
                                         padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 8.h)),
                                         shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(12.r)
                                         ))
                                     ),
-                                    onPressed: (_passwordController.text.length>=8 && _confirmController.text.length>=8) ? (){
-                                      bloc.add(ResetPasswordEvent({
+                                    onPressed: (_passwordController.text.length>=4 && _confirmController.text.length>=4) ? (){
+                                      bloc.add(ChangePasswordEvent({
                                         'user_otp' : widget.codeOtp.toString(),
                                         'password' : _passwordController.text,
                                         'password_confirmation' : _confirmController.text,

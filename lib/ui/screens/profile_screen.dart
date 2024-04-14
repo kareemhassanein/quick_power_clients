@@ -31,6 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   UserModel? _userModel;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   late StateSetter _stateSetter;
 
@@ -80,6 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _userModel = state.response!;
                   _nameController.text = _userModel!.data!.name ?? '';
                   _emailController.text = _userModel!.data!.email ?? '';
+                  _idController.text = _userModel!.data!.userId ?? '';
                 }else{
                   Navigator.pop(context, state.response!.data);
                 }
@@ -165,6 +167,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },prefix: Icon(CupertinoIcons.mail_solid, color: AppColors().primaryColor),controller: _emailController, inputType: TextInputType.name, textInputAction: TextInputAction.next, validator: (s){
                           return null;
                         }),
+                        SizedBox(height: 24.h,),
+                        filedText(label: Languages.of(context)!.userId,  onChange: (s){
+                          _stateSetter((){});
+                        },prefix: Icon(CupertinoIcons.person_alt_circle, color: AppColors().primaryColor),controller: _idController, inputType: TextInputType.name, textInputAction: TextInputAction.next, validator: (s){
+                          if(s!.isEmpty){
+                            return Languages.of(context)!.required;
+                          }
+                          return null;
+                        }),
                         SizedBox(height: 32.h,),
                         SizedBox(
                           width: double.infinity,
@@ -175,16 +186,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 style: ButtonStyle(
                                   elevation: const MaterialStatePropertyAll(0.0),
                                   overlayColor: const MaterialStatePropertyAll(Colors.white12),
-                                  backgroundColor: MaterialStatePropertyAll(AppColors().primaryColor.withOpacity((_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email! ) ? 1.0 : 0.25) ),
+                                  backgroundColor: MaterialStatePropertyAll(AppColors().primaryColor.withOpacity((_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email!  || _idController.text.length>=10 ) ? 1.0 : 0.25) ),
                                   padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 8.h)),
                                   shape: MaterialStatePropertyAll(RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.r)
                                   ))
                                 ),
-                                  onPressed: (_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email! ) ? (){
+                                  onPressed: (_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email! || _idController.text.length>=10 ) ? (){
                                   bloc.add(UpdateUserDataEvent(DataOfUser(
                                     name: _nameController.text,
-                                    email: _emailController.text
+                                    email: _emailController.text,
+                                    userId: _idController.text,
                                   ).toDataMap()));
                                   } : null,
                                   child: Text(Languages.of(context)!.save, style: GoogleFonts.readexPro(

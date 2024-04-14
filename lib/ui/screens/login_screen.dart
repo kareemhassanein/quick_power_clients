@@ -129,6 +129,7 @@ class _LoginScreenState extends State<LoginScreen>
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'[0-9]')),
+                                    LengthLimitingTextInputFormatter(10)
                                   ],
                                   prefix: Icon(
                                     CupertinoIcons.phone_fill,

@@ -30,7 +30,7 @@ class ProfileRepo {
     } else {
       modelResponse = UserModel(message: response.reasonPhrase);
     }
-
+    print(modelResponse.toJson().toString());
     return modelResponse;
   }
 
@@ -72,12 +72,9 @@ class ProfileRepo {
     http.StreamedResponse response = await request.send();
     UserModel modelResponse;
 
-    if (response.statusCode == 200) {
       modelResponse = UserModel.fromJson(
           jsonDecode(await response.stream.bytesToString()));
-    } else {
-      modelResponse = UserModel(message: response.reasonPhrase);
-    }
+
 
     return modelResponse;
   }

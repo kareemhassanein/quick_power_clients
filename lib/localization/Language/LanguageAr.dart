@@ -298,4 +298,8 @@ class LanguageAr extends Languages {
   // TODO: implement invoiceNo
   String get invoiceNo => 'رقم الفاتورة';
 
+  @override
+  // TODO: implement reciverName
+  String get reciverName => 'Reciver Name';
+
 }

@@ -144,6 +144,8 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(
                                         RegExp(r'[0-9]')),
+                                    LengthLimitingTextInputFormatter(10)
+
                                   ],
                                   prefix: Icon(
                                     CupertinoIcons.phone_fill,

@@ -90,4 +90,5 @@ abstract class Languages {
   String get driverInfo;
   String get expectedData;
   String get invoiceNo;
+  String get reciverName;
 }

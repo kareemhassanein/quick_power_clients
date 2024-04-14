@@ -135,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         blocHome.add(GetHomeAllEvent());
                       }
                     });
+                    print( homeModel!.data!.user!.toJson().toString());
                   }
                 },
                 child: BlocBuilder<HomeBloc, GeneralStates>(
@@ -249,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                '${Languages.of(context)!.hello} ${(homeModel!.data!.user!.name ?? '').split(" ").first}',
+                                                '${Languages.of(context)!.hello} ${(homeModel!.data!.user!.name ?? '')}',
                                                 style: GoogleFonts.readexPro(
                                                   fontSize: 28.0.sp,
                                                   color: Colors.white,

@@ -295,4 +295,8 @@ class LanguageEn extends Languages {
   // TODO: implement invoiceNo
   String get invoiceNo => 'Invoice No';
 
+  @override
+  // TODO: implement reciverName
+  String get reciverName => 'Reciver Name';
+
 }

@@ -559,7 +559,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                   }else if(widget.orderDetails.url != null){
 
                       await launchUrl(Uri.parse(widget.orderDetails.url??''));
-                    
+
                   }
                 },
                 child: Text(
