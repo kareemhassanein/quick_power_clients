@@ -36,6 +36,9 @@ class _RegisterScreenState extends State<RegisterScreen>
   late AnimationController _animationController;
   final AuthBloc _bloc = AuthBloc();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool passwordVisable = false;
+  bool passwordConfirmVisable = false;
+
   @override
   void initState() {
     super.initState();
@@ -196,6 +199,12 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   controller: _passwordController,
                                   inputType: TextInputType.visiblePassword,
                                   isPassword: true,
+                                  passwordVisible: passwordVisable,
+                                  onPasswordChange: (){
+                                    setState(() {
+                                      passwordVisable = !passwordVisable;
+                                    });
+                                  },
                                   prefix: Icon(
                                     Icons.lock,
                                     color: AppColors().primaryColor,
@@ -219,6 +228,12 @@ class _RegisterScreenState extends State<RegisterScreen>
                                   controller: _confirmPasswordController,
                                   inputType: TextInputType.visiblePassword,
                                   isPassword: true,
+                                  passwordVisible: passwordConfirmVisable,
+                                  onPasswordChange: (){
+                                    setState(() {
+                                      passwordConfirmVisable = !passwordConfirmVisable;
+                                    });
+                                  },
                                   prefix: Icon(
                                     Icons.lock,
                                     color: AppColors().primaryColor,

@@ -33,6 +33,8 @@ class _LoginScreenState extends State<LoginScreen>
   late AnimationController _animationController;
   final AuthBloc _bloc = AuthBloc();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool passwordVisable = false;
+
   @override
   void initState() {
     super.initState();
@@ -154,6 +156,12 @@ class _LoginScreenState extends State<LoginScreen>
                                   controller: _passwordController,
                                   inputType: TextInputType.visiblePassword,
                                   isPassword: true,
+                                  passwordVisible: passwordVisable,
+                                  onPasswordChange: (){
+                                    setState(() {
+                                      passwordVisable = !passwordVisable;
+                                    });
+                                  },
                                   prefix: Icon(
                                     Icons.lock,
                                     color: AppColors().primaryColor,

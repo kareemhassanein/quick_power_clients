@@ -25,6 +25,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
   late StateSetter _stateSetter;
+  bool passwordVisable = false;
+  bool passwordConfirmVisable = false;
 
   @override
   void initState() {
@@ -80,7 +82,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        filedText(passwordVisible: true, label: '${Languages.of(context)!.newPassword}*', onChange: (s){
+                        filedText(
+                            onPasswordChange: (){
+                              setState(() {
+                                passwordVisable = !passwordVisable;
+                              });
+                            },
+                            passwordVisible: passwordVisable,
+                            label: '${Languages.of(context)!.newPassword}*', onChange: (s){
                           _stateSetter((){});
                         }, prefix: Icon(CupertinoIcons.lock_fill, color: AppColors().primaryColor), isPassword: true,controller: _passwordController, inputType: TextInputType.name, textInputAction: TextInputAction.next, validator: (s){
                           if(s!.isEmpty){
@@ -89,7 +98,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           return null;
                         }),
                         SizedBox(height: 24.h,),
-                        filedText(label: '${Languages.of(context)!.confirmNewPassword}*',  onChange: (s){
+                        filedText( onPasswordChange: (){
+                          setState(() {
+                            passwordConfirmVisable = !passwordConfirmVisable;
+                          });
+                        },
+                            passwordVisible: passwordConfirmVisable,
+                            label: '${Languages.of(context)!.confirmNewPassword}*',  onChange: (s){
                           _stateSetter((){});
                         },prefix: Icon(CupertinoIcons.lock_fill, color: AppColors().primaryColor), isPassword: true,controller: _confirmController, inputType: TextInputType.name, textInputAction: TextInputAction.next, validator: (s){
                           return null;

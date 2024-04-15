@@ -10,15 +10,18 @@ import '../../constrants/colors.dart';
 Widget filedTextAuth(
         {String? hint,
         IconData? icon,
-        bool? isPassword,
+          bool isPassword = false,
         required TextEditingController controller,
         required TextInputType inputType,
         required TextInputAction textInputAction,
         Function? onSubmit,
         FocusNode? focusNode,
+
         bool? enabled,
-        bool? passwordVisible,
-        List<TextInputFormatter>? inputFormatters,
+          bool passwordVisible = true,
+          Function()? onPasswordChange,
+
+          List<TextInputFormatter>? inputFormatters,
         Widget? suffix,
         Widget? prefix,
         required String? Function(String?)? validator,
@@ -30,13 +33,14 @@ Widget filedTextAuth(
       textInputAction: textInputAction,
       validator: validator,
       focusNode: focusNode,
-      obscureText: isPassword != null,
+      obscureText: isPassword && ! passwordVisible,
       autocorrect: false,
       inputFormatters: inputFormatters,
       enableSuggestions: true,
       textAlign: TextAlign.start,
       enabled: enabled,
       maxLines: 1,
+
       cursorColor: AppColors().primaryColor,
       autofocus: false,
       decoration: InputDecoration(
@@ -52,6 +56,17 @@ Widget filedTextAuth(
           hoverColor: AppColors().primaryColor,
           // control your hints text size
           isDense: false,
+          suffix: isPassword ? GestureDetector(
+            onTap: onPasswordChange,
+            child: Padding(
+              padding:  EdgeInsets.symmetric(horizontal: 16.w),
+              child: Icon(
+                passwordVisible!
+                    ? Icons.visibility
+                    : Icons.visibility_off,
+              ),
+            ),
+          ) : null,
           hintText: hint,
           prefixIconConstraints: BoxConstraints(
               maxWidth: 150.w,
@@ -90,7 +105,7 @@ Widget filedText(
         {String? label,
         String? hint,
         IconData? icon,
-        bool? isPassword,
+        bool isPassword = false,
         required TextEditingController controller,
         required TextInputType inputType,
         required TextInputAction textInputAction,
@@ -98,8 +113,10 @@ Widget filedText(
         Function? onSubmit,
         FocusNode? focusNode,
         bool? enabled,
-        bool? passwordVisible,
-        List<TextInputFormatter>? inputFormatters,
+          bool passwordVisible = true,
+          Function()? onPasswordChange,
+
+          List<TextInputFormatter>? inputFormatters,
         Widget? suffix,
         Widget? prefix,
         required String? Function(String?)? validator,
@@ -109,7 +126,7 @@ Widget filedText(
       children: [
         if (label != null)
           Text(
-            label!,
+            label,
             style: GoogleFonts.readexPro(
               fontSize: 16.0.sp,
               fontWeight: FontWeight.w500,
@@ -140,7 +157,7 @@ Widget filedText(
               textInputAction: textInputAction,
               validator: validator,
               focusNode: focusNode,
-              obscureText: isPassword != null,
+              obscureText: isPassword && ! passwordVisible,
               autocorrect: false,
               inputFormatters: inputFormatters,
               enableSuggestions: true,
@@ -163,6 +180,17 @@ Widget filedText(
                   // control your hints text size
                   isDense: false,
                   hintText: hint,
+                  suffix: isPassword ? GestureDetector(
+                    onTap: onPasswordChange,
+                    child: Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Icon(
+                        passwordVisible!
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                    ),
+                  ) : null,
                   prefixIconConstraints: BoxConstraints(
                       maxWidth: 150.w,
                       minWidth: 43.w,
