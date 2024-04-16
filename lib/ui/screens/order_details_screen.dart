@@ -166,7 +166,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                'اسم المستلم',
+                                Languages.of(context)!.reciverName,
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: const Color(0xFF404040),
