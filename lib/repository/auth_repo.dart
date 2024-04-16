@@ -106,7 +106,7 @@ class AuthRepo {
   }
 
   Future<AuthModel?> register(
-      {required String name, required String phone, required String userId, required String password, required String confirmPassword}) async {
+      {required String name, required String phone, required String userId, required String password, required String confirmPassword, required String vatNo, required String address}) async {
     dioBadRequestAdapter(dio);
     FormData formData = FormData();
     formData.fields.addAll({
@@ -115,6 +115,8 @@ class AuthRepo {
       MapEntry('user_password_confirmation', confirmPassword),
       MapEntry('user_mobile', phone),
       MapEntry('user_identity', userId),
+      MapEntry('vat', vatNo),
+      MapEntry('user_address', address),
       const MapEntry('type', '1'),
     });
     // formData.files.add(

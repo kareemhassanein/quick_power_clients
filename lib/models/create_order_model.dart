@@ -72,7 +72,7 @@ class ProductType {
 
   int? id;
   String? name;
-  double? unitPrice;
+  num? unitPrice;
 
   factory ProductType.fromJson(Map<String, dynamic> json) => ProductType(
     id: json["id"],

@@ -32,7 +32,7 @@ class OrdersRepo{
 
   Future<OrdersPaginationModel?> getOrdersPagination({required type, required page}) async {
 
-    Response response = await CoreRepo().get(url: Apis.homePagination(type: type.toString(), page: page.toString()));
+    Response response = await CoreRdepo().get(url: Apis.homePagination(type: type.toString(), page: page.toString()));
 
     OrdersPaginationModel modelResponse;
 

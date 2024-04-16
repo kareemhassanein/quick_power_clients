@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:auto_animated/auto_animated.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -32,6 +33,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _idController = TextEditingController();
+  final TextEditingController _vatNoController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   final ImagePicker _picker = ImagePicker();
   late StateSetter _stateSetter;
 
@@ -82,6 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _nameController.text = _userModel!.data!.name ?? '';
                   _emailController.text = _userModel!.data!.email ?? '';
                   _idController.text = _userModel!.data!.userId ?? '';
+                  _vatNoController.text = _userModel!.data!.vatNo ?? '';
+                  _addressController.text = _userModel!.data!.address ?? '';
                 }else{
                   Navigator.pop(context, state.response!.data);
                 }
@@ -168,9 +173,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           return null;
                         }),
                         SizedBox(height: 24.h,),
-                        filedText(label: Languages.of(context)!.userId,  onChange: (s){
+                        filedText(label: '${Languages.of(context)!.userId}*',
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],onChange: (s){
                           _stateSetter((){});
-                        },prefix: Icon(CupertinoIcons.person_alt_circle, color: AppColors().primaryColor),controller: _idController, inputType: TextInputType.name, textInputAction: TextInputAction.next, validator: (s){
+                        },prefix: Icon(CupertinoIcons.person_alt_circle,
+                                color: AppColors().primaryColor),controller: _idController, inputType: TextInputType.number, textInputAction: TextInputAction.next, validator: (s){
+                          if(s!.isEmpty){
+                            return Languages.of(context)!.required;
+                          }
+                          return null;
+                        }),
+                        SizedBox(height: 24.h,),
+
+                        filedText(label: '${Languages.of(context)!.vatNo}*',  inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ], onChange: (s){
+                          _stateSetter((){});
+                        },prefix: Icon(CupertinoIcons.number, color: AppColors().primaryColor),controller: _vatNoController, inputType: TextInputType.number, textInputAction: TextInputAction.next, validator: (s){
+                          if(s!.isEmpty){
+                            return Languages.of(context)!.required;
+                          }
+                          return null;
+
+                        }),
+                        SizedBox(height: 24.h,),
+                        filedText(label: '${Languages.of(context)!.address}*',  onChange: (s){
+                          _stateSetter((){});
+                        },prefix: Icon(Icons.location_city_outlined, color: AppColors().primaryColor),controller: _addressController, inputType: TextInputType.name, textInputAction: TextInputAction.done, validator: (s){
                           if(s!.isEmpty){
                             return Languages.of(context)!.required;
                           }
@@ -196,6 +227,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   bloc.add(UpdateUserDataEvent(DataOfUser(
                                     name: _nameController.text,
                                     email: _emailController.text,
+                                    vatNo: _vatNoController.text,
+                                    address: _addressController.text,
                                     userId: _idController.text,
                                   ).toDataMap()));
                                   } : null,

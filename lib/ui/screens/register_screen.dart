@@ -30,6 +30,8 @@ class _RegisterScreenState extends State<RegisterScreen>
   final TextEditingController _customerNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _userId = TextEditingController();
+  final TextEditingController _vatNumberController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
@@ -196,6 +198,54 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 height: 27.5.h,
                               ),
                               filedTextAuth(
+                                  controller: _vatNumberController,
+                                  inputType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'[0-9]')),
+                                  ],
+                                  prefix: Icon(
+                                    CupertinoIcons.number,
+                                    color: AppColors().primaryColor,
+                                    size: 24.r,
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  validator: (s) {
+                                    if (s!.isEmpty) {
+                                      return Languages.of(context)!.required;
+                                    }else if (state is ErrorState &&
+                                        state.errors?.vatNo != null) {
+                                      return state.errors.vatNo.first;
+                                    }
+                                    return null;
+                                  },
+                                  hint: Languages.of(context)!.vatNo),
+                              SizedBox(
+                                height: 27.5.h,
+                              ),
+                              filedTextAuth(
+                                  controller: _addressController,
+                                  inputType: TextInputType.text,
+                                  prefix: Icon(
+                                    Icons.location_city_rounded,
+                                    color: AppColors().primaryColor,
+                                    size: 24.r,
+                                  ),
+                                  textInputAction: TextInputAction.next,
+                                  validator: (s) {
+                                    if (s!.isEmpty) {
+                                      return Languages.of(context)!.required;
+                                    }else if (state is ErrorState &&
+                                        state.errors?.address != null) {
+                                      return state.errors.address.first;
+                                    }
+                                    return null;
+                                  },
+                                  hint: Languages.of(context)!.address),
+                              SizedBox(
+                                height: 27.5.h,
+                              ),
+                              filedTextAuth(
                                   controller: _passwordController,
                                   inputType: TextInputType.visiblePassword,
                                   isPassword: true,
@@ -248,12 +298,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                                         _bloc.add(DoRegisterEvent(
                                             userPhone: _phoneController.text,
                                             userId: _userId.text,
+                                            vatNo: _vatNumberController.text,
                                             userPassword:
-                                                _passwordController.text,
+                                            _passwordController.text,
                                             userConfirmPassword:
-                                                _confirmPasswordController.text,
-                                            userName:
-                                                _customerNameController.text));
+                                            _confirmPasswordController
+                                                .text,
+                                            userName: _customerNameController
+                                                .text, address: _addressController.text));
                                       }
                                     });
                                   },
@@ -296,13 +348,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                                           _bloc.add(DoRegisterEvent(
                                               userPhone: _phoneController.text,
                                               userId: _userId.text,
+                                              vatNo: _vatNumberController.text,
                                               userPassword:
                                                   _passwordController.text,
                                               userConfirmPassword:
                                                   _confirmPasswordController
                                                       .text,
                                               userName: _customerNameController
-                                                  .text));
+                                                  .text, address: _addressController.text));
                                         }
                                       });
                                     },

@@ -256,6 +256,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w600,
                                                 ),
+                                                overflow: TextOverflow.ellipsis,
                                               ),
                                               SizedBox(
                                                 height: 3.h,

@@ -24,8 +24,10 @@ class DoRegisterEvent extends AuthEvents {
   late String userName;
   late String userPhone;
   late String userId;
+  late String vatNo;
+  late String address;
   late String userPassword;
   late String userConfirmPassword;
-  DoRegisterEvent({required this.userName, required this.userPhone, required this.userId, required this.userPassword, required this.userConfirmPassword,});
+  DoRegisterEvent({required this.userName, required this.userPhone, required this.userId, required this.userPassword, required this.userConfirmPassword, required this.vatNo, required this.address});
 }
 class InitialEvent extends AuthEvents {}

@@ -38,7 +38,8 @@ class DataOfUser {
     this.status,
     this.createdAt,
     this.userId,
-    this.vat,
+    this.vatNo,
+    this.address
   });
 
   int? id;
@@ -48,7 +49,8 @@ class DataOfUser {
   String? image;
   String? status;
   String? userId;
-  String? vat;
+  String? vatNo;
+  String? address;
   DateTime? createdAt;
 
   factory DataOfUser.fromJson(Map<String, dynamic> json) => DataOfUser(
@@ -58,8 +60,9 @@ class DataOfUser {
     phone: json["phone"],
     image: json["image"],
     status: json["status"],
+    address: json["user_address"],
     userId: json["user_identity"],
-    vat: json["vat"],
+    vatNo: json["vat"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
   );
 
@@ -70,12 +73,15 @@ class DataOfUser {
     "phone": phone,
     "image": image,
     "status": status,
+    "user_address": address,
     "created_at": createdAt?.toIso8601String(),
   };
 
   Map<String, String> toDataMap() => {
     "name": name.toString(),
     "user_email": email.toString(),
+    "user_address": address.toString(),
+    "vat": vatNo.toString(),
     "user_identity": userId.toString(),
   };
 }

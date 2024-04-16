@@ -91,4 +91,5 @@ abstract class Languages {
   String get expectedData;
   String get invoiceNo;
   String get reciverName;
+  String get vatNo;
 }

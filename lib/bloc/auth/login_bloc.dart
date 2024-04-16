@@ -38,7 +38,7 @@ class AuthBloc extends Bloc<AuthEvents, GeneralStates> {
       }else if (event is DoRegisterEvent) {
         if(await InternetConnection().isConnected()) {
           yield LoadingState();
-          AuthModel? loginModel = await AuthRepo().register(name: event.userName, password: event.userPassword, confirmPassword: event.userConfirmPassword, userId: event.userId,phone: event.userPhone);
+          AuthModel? loginModel = await AuthRepo().register(address: event.address, vatNo: event.vatNo,name: event.userName, password: event.userPassword, confirmPassword: event.userConfirmPassword, userId: event.userId,phone: event.userPhone);
           if(loginModel != null){
             if(loginModel.errors != null){
               yield ErrorState(msg: loginModel.message??'Something Went Wrong!', errors: loginModel.errors as Errors);

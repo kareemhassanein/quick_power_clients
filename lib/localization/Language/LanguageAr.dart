@@ -300,6 +300,10 @@ class LanguageAr extends Languages {
 
   @override
   // TODO: implement reciverName
-  String get reciverName => 'Reciver Name';
+  String get reciverName => 'اسم المستلم';
+
+  @override
+  // TODO: implement vatNo
+  String get vatNo => 'الرقم الضريبي';
 
 }
