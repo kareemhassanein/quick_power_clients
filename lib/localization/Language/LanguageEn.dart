@@ -303,4 +303,12 @@ class LanguageEn extends Languages {
   // TODO: implement vatNo
   String get vatNo => 'Vat Number';
 
+  @override
+// TODO: implement notePriceAfter
+  String get notePriceBefore => '*Note: Prices not include transportation fees';
+
+  @override
+// TODO: implement notePriceBefore
+  String get  notePriceAfter=> '*Note: Prices include transportation fees';
+
 }

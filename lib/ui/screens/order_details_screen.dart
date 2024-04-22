@@ -368,6 +368,17 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           ],
                         ),
                         SizedBox(
+                          height: 8.h,
+                        ),
+                        Text(
+                          widget.orderDetails.status?.id == 477 ? Languages.of(context)?.notePriceBefore??'' :  Languages.of(context)?.notePriceAfter??'' ,
+                          style: GoogleFonts.readexPro(
+                            fontSize: 12.0.sp,
+                            color: AppColors().primaryColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        SizedBox(
                           height: 12.h,
                         ),
                         const Divider(),

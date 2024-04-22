@@ -306,4 +306,12 @@ class LanguageAr extends Languages {
   // TODO: implement vatNo
   String get vatNo => 'الرقم الضريبي';
 
+  @override
+  // TODO: implement notePriceAfter
+  String get notePriceBefore => '*ملاحظة: الأسعار غير شاملة أجره النقل';
+
+  @override
+  // TODO: implement notePriceBefore
+  String get  notePriceAfter=> '*ملاحظة: الأسعار شاملة أجره النقل';
+
 }

@@ -92,4 +92,6 @@ abstract class Languages {
   String get invoiceNo;
   String get reciverName;
   String get vatNo;
+  String get notePriceBefore;
+  String get notePriceAfter;
 }

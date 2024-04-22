@@ -534,6 +534,21 @@ class _AddNewOrderScreenState extends State<AddNewOrderScreen> {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 8.0.w, vertical: 8.h),
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                         Languages.of(context)?.notePriceBefore??'',
+                          style: GoogleFonts.readexPro(
+                            fontSize: 12.0.sp,
+                            color: AppColors().primaryColor,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
                     SizedBox(
                       height: 8.h,
                     ),
