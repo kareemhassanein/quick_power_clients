@@ -94,4 +94,7 @@ abstract class Languages {
   String get vatNo;
   String get notePriceBefore;
   String get notePriceAfter;
+  String get trackShipment;
+  String get trackingShipment;
+  String get driverLocation;
 }

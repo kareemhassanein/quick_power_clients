@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:Quick_Power/models/driver_location.dart';
+import 'package:Quick_Power/models/notifications_model.dart';
 import 'package:dio/dio.dart';
 import 'package:Quick_Power/localization/LanguageHelper.dart';
 import 'package:Quick_Power/models/cancel_order_model.dart';
@@ -82,13 +84,64 @@ class OrdersRepo{
 
   }
 
+  Future<NotificationModel?> getNotificationsList() async {
+    var headers = {
+      'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
+      'lang': LanguageHelper.isEnglish ? 'en' : 'ar',
+      'Authorization': 'Bearer ${Preferences.getUserToken()!}'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse(Apis.notificationsList));
+
+    request.headers.addAll(headers);
+
+    final response = await request.send().timeout(const Duration(seconds: 60));
+
+    NotificationModel modelResponse;
+      modelResponse =
+          NotificationModel.fromJson(jsonDecode(await response.stream.bytesToString()));
+      return modelResponse;
+  }
+
+  Future<Future<String?>> seenAllNotifications() async {
+    var headers = {
+      'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
+      'lang': LanguageHelper.isEnglish ? 'en' : 'ar',
+      'Authorization': 'Bearer ${Preferences.getUserToken()!}'
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(Apis.readAllNotifications));
+
+    request.headers.addAll(headers);
+
+    final response = await request.send().timeout(const Duration(seconds: 60));
+      return response.stream.bytesToString();
+  }
+
+
+
+  Future<Future<String?>> updateFCMToken(String token) async {
+    var headers = {
+      'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
+      'lang': LanguageHelper.isEnglish ? 'en' : 'ar',
+      'Authorization': 'Bearer ${Preferences.getUserToken()!}'
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(Apis.updateFCMToken));
+    request.fields.addAll({'user_token' : token});
+
+    request.headers.addAll(headers);
+
+    final response = await request.send().timeout(const Duration(seconds: 60));
+      return response.stream.bytesToString();
+  }
+
 
 
   Future<PostOrderModel?> storeOrder({required data}) async {
     var headers = {
       'Accept': 'application/json',
       'app-type': 'CUSTOMER',
-      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
     var request = http.MultipartRequest('POST', Uri.parse(Apis.storeOrder));
@@ -130,6 +183,27 @@ class OrdersRepo{
     } else {
       modelResponse = CancelOrderModel(message: response.reasonPhrase);
     }
+
+    return modelResponse;
+  }
+
+
+  Future<DriverLocation?> getriverLocation(String orderId) async {
+    var headers = {
+      'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
+      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
+      'Authorization': 'Bearer ${Preferences.getUserToken()!}'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse(Apis.getDriverLocation(id: orderId)));
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    DriverLocation modelResponse;
+
+
+      modelResponse = DriverLocation.fromJson(
+          jsonDecode(await response.stream.bytesToString()));
 
     return modelResponse;
   }

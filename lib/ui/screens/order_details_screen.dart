@@ -1,8 +1,11 @@
+import 'package:Quick_Power/ui/functions/functions.dart';
+import 'package:Quick_Power/ui/screens/tracking_driver_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:Quick_Power/bloc/home/home_bloc.dart';
 import 'package:Quick_Power/bloc/home/home_event.dart';
@@ -20,7 +23,11 @@ class OrderDetailsScreen extends StatefulWidget {
   final OrderDetails orderDetails;
   final bool cancelOption;
   final String? userName;
-  const OrderDetailsScreen({Key? key, required this.orderDetails, required this.cancelOption, this.userName})
+  const OrderDetailsScreen(
+      {Key? key,
+      required this.orderDetails,
+      required this.cancelOption,
+      this.userName})
       : super(key: key);
 
   @override
@@ -76,7 +83,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           child: BlocBuilder<HomeBloc, GeneralStates>(
               bloc: blocHome,
               builder: (context, state) {
-
                 return SingleChildScrollView(
                   child: Padding(
                     padding:
@@ -122,11 +128,51 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             ),
                           ),
                         ),
+
+                        Visibility(
+                          visible: widget.orderDetails.status?.systemCode == '41006',
+                          child: Container(
+                            width: double.infinity,
+                            padding: EdgeInsets.only(
+                              top: 16.h
+                            ),
+                            child: TextButton(
+                              style: ButtonStyle(
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.symmetric(
+                                          horizontal: 34.w, vertical: 10.h)),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      AppColors().primaryColor),
+                                  shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10.0.r),
+                                      ))),
+                              onPressed: () {
+
+                                navigateToScreen(
+                                    context, TrackingDriverScreen(orderId: widget.orderDetails.id.toString(), clientLocation: LatLng(
+                                  double.parse(widget.orderDetails.location?.lat??'0.0'),double.parse(widget.orderDetails.location?.lon??'0.0')
+                                ), stationName: widget.orderDetails.location?.name??
+                                  '', waybillCode: widget.orderDetails.code??'',),
+                                    transitionDuration:
+                                    const Duration(milliseconds: 0));
+                              },
+                              child: Text(
+                               Languages.of(context)!.trackShipment,
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 15.0.sp,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
                         SizedBox(
                           height: 8.h,
                         ),
                         const Divider(),
-
                         SizedBox(
                           height: 8.h,
                         ),
@@ -146,8 +192,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                DateFormat('EEEE dd/MM/yyyy', LanguageHelper.isEnglish? 'en_US' : 'ar_EG').format(
-                                    DateTime.parse(widget.orderDetails.date!)),
+                                DateFormat(
+                                        'EEEE dd/MM/yyyy',
+                                        LanguageHelper.isEnglish
+                                            ? 'en_US'
+                                            : 'ar_EG')
+                                    .format(DateTime.parse(
+                                        widget.orderDetails.date!)),
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: const Color(0xFF404040),
@@ -177,7 +228,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                widget.userName??'',
+                                widget.userName ?? '',
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: const Color(0xFF404040),
@@ -237,7 +288,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                widget.orderDetails.location?.address??'',
+                                widget.orderDetails.location?.address ?? '',
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: const Color(0xFF404040),
@@ -247,7 +298,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             ),
                           ],
                         ),
-
                         SizedBox(
                           height: 12.h,
                         ),
@@ -324,7 +374,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               child: Text(
                                 NumberFormat(
                                   "###,### ${Languages.of(context)!.l}",
-                                  LanguageHelper.isEnglish?'en_US' : 'ar_EG',
+                                  LanguageHelper.isEnglish ? 'en_US' : 'ar_EG',
                                 ).format(double.parse(
                                     widget.orderDetails.quantity!)),
                                 style: GoogleFonts.readexPro(
@@ -356,8 +406,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                             Expanded(
                               flex: 1,
                               child: Text(
-                                NumberFormat("###,### ${Languages.of(context)!.sar}", LanguageHelper.isEnglish ? 'en_US':'ar_EG').format(
-                                   widget.orderDetails.total!),
+                                NumberFormat(
+                                        "###,### ${Languages.of(context)!.sar}",
+                                        LanguageHelper.isEnglish
+                                            ? 'en_US'
+                                            : 'ar_EG')
+                                    .format(widget.orderDetails.total!),
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: AppColors().primaryColor,
@@ -371,7 +425,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           height: 8.h,
                         ),
                         Text(
-                          widget.orderDetails.status?.id == 477 ? Languages.of(context)?.notePriceBefore??'' :  Languages.of(context)?.notePriceAfter??'' ,
+                          widget.orderDetails.status?.id == 477
+                              ? Languages.of(context)?.notePriceBefore ?? ''
+                              : Languages.of(context)?.notePriceAfter ?? '',
                           style: GoogleFonts.readexPro(
                             fontSize: 12.0.sp,
                             color: AppColors().primaryColor,
@@ -386,7 +442,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           height: 12.h,
                         ),
                         Visibility(
-                          visible:  widget.orderDetails.truckInfo != null,
+                          visible: widget.orderDetails.truckInfo != null,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -405,7 +461,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    widget.orderDetails.truckInfo??'',
+                                    widget.orderDetails.truckInfo ?? '',
                                     style: GoogleFonts.readexPro(
                                       fontSize: 16.0.sp,
                                       color: const Color(0xFF404040),
@@ -432,7 +488,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    widget.orderDetails.driver??'',
+                                    widget.orderDetails.driver ?? '',
                                     style: GoogleFonts.readexPro(
                                       fontSize: 16.0.sp,
                                       color: const Color(0xFF404040),
@@ -449,7 +505,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           ),
                         ),
                         Visibility(
-                          visible:  widget.orderDetails.inviceNo != null,
+                          visible: widget.orderDetails.inviceNo != null,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -466,7 +522,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 height: 12.h,
                               ),
                               Text(
-                                (widget.orderDetails.inviceNo??'').toString(),
+                                (widget.orderDetails.inviceNo ?? '').toString(),
                                 style: GoogleFonts.readexPro(
                                   fontSize: 16.0.sp,
                                   color: const Color(0xFF404040),
@@ -477,19 +533,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 height: 12.h,
                               ),
                               const Divider(),
-
                             ],
                           ),
                         ),
-
-
                       ],
                     ),
                   ),
                 );
               }),
         ),
-        bottomSheet:  ClipRRect(
+        bottomSheet: ClipRRect(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(10.0.r),
           ),
@@ -501,80 +554,72 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               child: TextButton(
                 style: ButtonStyle(
                     overlayColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.white.withOpacity(0.15)),
+                        (states) => Colors.white.withOpacity(0.15)),
                     splashFactory: InkSparkle.splashFactory,
-                    minimumSize: MaterialStatePropertyAll(
-                        Size(double.infinity, 60.h)),
+                    minimumSize:
+                        MaterialStatePropertyAll(Size(double.infinity, 60.h)),
                     backgroundColor: const MaterialStatePropertyAll(
-                  Colors.redAccent,
+                      Colors.redAccent,
                     ),
                     padding: MaterialStatePropertyAll(
                         EdgeInsets.symmetric(vertical: 8.h)),
                     tapTargetSize: MaterialTapTargetSize.padded),
                 onPressed: () async {
-                  print(Uri.parse(widget.orderDetails.url??'').toString());
-                  if(widget.cancelOption) {
+                  print(Uri.parse(widget.orderDetails.url ?? '').toString());
+                  if (widget.cancelOption) {
                     showDialog(
                         context: context,
                         builder: (c) => AlertDialog(
-                          shape:
-                          RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius
-                                .circular(12.r),
-                          ),
-                          elevation: 2.r,
-                          title: Text(
-                            '${Languages.of(context)!.areYouSureToCancelOrder}\n${widget.orderDetails.code!}',
-                            style:
-                            GoogleFonts.readexPro(
-                              fontSize: 16.0.sp,
-                              color: Colors.black,
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(
-                                    context);
-                              },
-                              child: Text(
-                                Languages.of(context)!.no,
-                                style: GoogleFonts
-                                    .readexPro(
-                                  fontSize: 14.0.sp,
-                                  color: Colors
-                                      .black87,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
+                              ),
+                              elevation: 2.r,
+                              title: Text(
+                                '${Languages.of(context)!.areYouSureToCancelOrder}\n${widget.orderDetails.code!}',
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 16.0.sp,
+                                  color: Colors.black,
                                 ),
                               ),
-                            ),
-                            TextButton(
-                              onPressed: () async {
-                                Navigator.pop(context);
-                                blocHome.add(CancelOrderEvent(id: widget.orderDetails.id!.toString()));
-                              },
-                              child: Text(
-                                Languages.of(context)!.yesCancel,
-                                style: GoogleFonts
-                                    .readexPro(
-                                  fontSize: 14.0.sp,
-                                  fontWeight:
-                                  FontWeight
-                                      .w500,
-                                  color: Colors.red,
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text(
+                                    Languages.of(context)!.no,
+                                    style: GoogleFonts.readexPro(
+                                      fontSize: 14.0.sp,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ));
-                  }else if(widget.orderDetails.url != null){
-
-                      await launchUrl(Uri.parse(widget.orderDetails.url??''));
-
+                                TextButton(
+                                  onPressed: () async {
+                                    Navigator.pop(context);
+                                    blocHome.add(CancelOrderEvent(
+                                        id: widget.orderDetails.id!
+                                            .toString()));
+                                  },
+                                  child: Text(
+                                    Languages.of(context)!.yesCancel,
+                                    style: GoogleFonts.readexPro(
+                                      fontSize: 14.0.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ));
+                  } else if (widget.orderDetails.url != null) {
+                    await launchUrl(Uri.parse(widget.orderDetails.url ?? ''));
                   }
                 },
                 child: Text(
-                  widget.orderDetails.url == null ?  Languages.of(context)!.cancelOrder : 'طباعة الفاتورة',
+                  widget.orderDetails.url == null
+                      ? Languages.of(context)!.cancelOrder
+                      : 'طباعة الفاتورة',
                   style: GoogleFonts.readexPro(
                     fontSize: 16.0.sp,
                     color: Colors.white,

@@ -313,5 +313,11 @@ class LanguageAr extends Languages {
   @override
   // TODO: implement notePriceBefore
   String get  notePriceAfter=> '*ملاحظة: الأسعار شاملة أجره النقل';
+  @override
+  String get trackShipment => 'تتبع الشحن';
+  @override
+  String get trackingShipment => 'تتبع شحن';
+  @override
+  String get driverLocation => 'موقع السائق';
 
 }

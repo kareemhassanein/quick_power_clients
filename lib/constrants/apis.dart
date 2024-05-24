@@ -17,4 +17,8 @@ class Apis {
   static updateStation({required id}) => '$serverUrl/locations/$id/update';
   static const sendOtpforgetPassword = '$serverUrl/auth/send-otp';
   static const resetPassword = '$serverUrl/auth/reset-password';
+  static const notificationsList = '$serverUrl/notifications';
+  static const readAllNotifications = '$serverUrl/notifications/readAll';
+  static const updateFCMToken = '$serverUrl/profile/updateFcmToken';
+  static getDriverLocation({required id}) => '$serverUrl/car-waybills/get_driver_location/$id';
 }

@@ -310,5 +310,13 @@ class LanguageEn extends Languages {
   @override
 // TODO: implement notePriceBefore
   String get  notePriceAfter=> '*Note: Prices include transportation fees';
+  @override
+  String get trackShipment => 'Track Shipment';
+
+  @override
+  String get trackingShipment => 'Track Shipment';
+
+  @override
+  String get driverLocation => 'Driver Location';
 
 }

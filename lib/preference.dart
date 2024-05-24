@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cancellation_token/cancellation_token.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -39,7 +40,7 @@ class Preferences {
       ..boxShadow = [
         BoxShadow(
           color: Colors.black.withOpacity(0.25),
-          offset: Offset(0, 1.0),
+          offset: const Offset(0, 1.0),
           blurRadius: 2.0,
         ),
       ]
@@ -57,6 +58,7 @@ class Preferences {
   }
 
   static Future<bool> removeUserData() async {
+    await FirebaseMessaging.instance.deleteToken();
     return await sharedPreferences.remove('userToken');
   }
 }

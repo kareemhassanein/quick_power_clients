@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:Quick_Power/firebase_options.dart';
+import 'package:Quick_Power/repository/orders_repo.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ import 'package:Quick_Power/ui/screens/splash_screen.dart';
 import 'constrants/colors.dart';
 import 'localization/AppLocalizationDelgate.dart';
 import 'localization/LanguageHelper.dart';
-
+import 'package:timeago/timeago.dart' as timeago;
 
 Future<void> main() async {
   await Preferences.initSharedPref();
@@ -36,6 +37,8 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  timeago.setLocaleMessages('en', timeago.EnMessages());
+  timeago.setLocaleMessages('ar', timeago.ArMessages());
   runApp(const StartApp());
 }
 
@@ -72,30 +75,11 @@ class _StartAppState extends State<StartApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    getToken();
   }
 
-  Future<String?> getToken() async {
-    await FirebaseMessaging.instance.requestPermission(
-      provisional: true, alert: true, criticalAlert: true,);
-    String? token = await FirebaseMessaging.instance.getToken();
-    print('token: $token');
-    return token;
-  }
 
   @override
   Widget build(BuildContext context) {
-    var s = 'Kareem';
-    FirebaseMessaging.instance.onTokenRefresh
-        .listen((fcmToken) {
-      print('token: $fcmToken');
-
-      // Note: This callback is fired at each app startup and whenever a new
-      // token is generated.
-    })
-        .onError((err) {
-      // Error getting token.
-    });
     return ScreenUtilInit(
       designSize: const Size(414, 896),
       minTextAdapt: true,

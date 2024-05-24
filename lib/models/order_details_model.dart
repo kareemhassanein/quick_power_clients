@@ -103,17 +103,26 @@ class Location {
   Location({
     this.id,
     this.name,
-    this.address
+    this.address,
+    this.lat,
+    this.lon,
+    this.systemCode
   });
 
   int? id;
   String? name;
   String? address;
+  String? lat;
+  String? lon;
+  String? systemCode;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
     id: json["id"],
     name: json["name"],
-    address: json["address"],
+    address: json["location_details"],
+    lat: json["lat"],
+    lon: json["lon"],
+    systemCode: json["system_code"],
   );
 
   Map<String, dynamic> toJson() => {

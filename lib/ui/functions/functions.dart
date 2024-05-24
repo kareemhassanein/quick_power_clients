@@ -157,7 +157,6 @@ Future<DateTime?> selectDate(BuildContext context) async {
    ),
    textButtonTheme: TextButtonThemeData(
      style: TextButton.styleFrom(
-       primary: AppColors().primaryColor,
 
      ),
    ),
