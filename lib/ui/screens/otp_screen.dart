@@ -65,7 +65,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                           Text(
                             Languages.of(context)?.otpVerification??'',
-                            style: GoogleFonts.readexPro(
+                            style: TextStyle(
                               fontSize: 30.sp,
                               fontWeight: FontWeight.w600,
                             ),
@@ -83,7 +83,7 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                           Text(
                             Languages.of(context)?.otpVerificationHint??'',
-                            style: GoogleFonts.readexPro(
+                            style: TextStyle(
                               fontSize: 16.0.sp,
                               height: 1.87.h,
                             ),

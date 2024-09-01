@@ -51,7 +51,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           backgroundColor: AppColors().primaryColor,
           title: Text(
             Languages.of(context)!.changePassword,
-            style: GoogleFonts.kufam(
+            style: TextStyle(
               fontSize: 16.0.sp,
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -115,7 +115,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           child: StatefulBuilder(
                               builder: (context, snapshot) {
                                 _stateSetter = snapshot;
-                                return ElevatedButton(
+                                return TextButton(
                                     style: ButtonStyle(
                                         elevation: const MaterialStatePropertyAll(0.0),
                                         overlayColor: const MaterialStatePropertyAll(Colors.white12),
@@ -132,11 +132,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                         'password_confirmation' : _confirmController.text,
                                       }));
                                     } : null,
-                                    child: Text(Languages.of(context)!.save, style: GoogleFonts.readexPro(
-                                      fontSize: 22.0.sp,
-                                      color: AppColors().backgroundColor,
-                                      fontWeight: FontWeight.w600,
-                                    ),));
+                                    child: Text(Languages.of(context)!.save, ));
                               }
                           ),
                         )

@@ -89,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                               Text(
                                   Languages.of(context)!.signIn,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 38.0.sp,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                               Text(
                                 Languages.of(context)!.plsSignIn,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
                                   color:
                                       const Color(0xFF121214).withOpacity(0.7),
@@ -193,7 +193,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         EdgeInsets.symmetric(vertical: 10.h),
                                     child: Text(
                                       Languages.of(context)!.forgerPassword,
-                                      style: GoogleFonts.readexPro(
+                                      style: TextStyle(
                                           fontSize: 16.0.sp,
                                           color: Colors.black,
                                           fontWeight: FontWeight.w500),
@@ -235,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen>
                                     },
                                     child: Text(
                                       Languages.of(context)!.signIn,
-                                      style: GoogleFonts.readexPro(
+                                      style: TextStyle(
                                         fontSize: 24.0.sp,
                                         color: AppColors().backgroundColor,
                                         fontWeight: FontWeight.w600,
@@ -257,7 +257,7 @@ class _LoginScreenState extends State<LoginScreen>
                                 child: Center(
                                   child: Text.rich(
                                     TextSpan(
-                                      style: GoogleFonts.readexPro(
+                                      style: TextStyle(
                                         fontSize: 16.5.sp,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
@@ -269,7 +269,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         ),
                                         TextSpan(
                                           text: Languages.of(context)!.signUp.toUpperCase(),
-                                          style: GoogleFonts.readexPro(
+                                          style: TextStyle(
                                             color: AppColors().primaryColor,
                                           ),
                                         ),

@@ -92,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               ),
                               Text(
                                 Languages.of(context)!.signUp,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 38.0.sp,
                                   color: Colors.black,
                                   fontWeight: FontWeight.w600,
@@ -111,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               ),
                               Text(
                                 Languages.of(context)!.plsSignUp,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
                                   color:
                                       const Color(0xFF121214).withOpacity(0.7),
@@ -361,7 +361,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     },
                                     child: Text(
                                       Languages.of(context)!.signUp,
-                                      style: GoogleFonts.readexPro(
+                                      style: TextStyle(
                                         fontSize: 24.0.sp,
                                         color: AppColors().backgroundColor,
                                         fontWeight: FontWeight.w600,
@@ -380,7 +380,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                 child: Center(
                                   child: Text.rich(
                                     TextSpan(
-                                      style: GoogleFonts.readexPro(
+                                      style: TextStyle(
                                         fontSize: 16.5.sp,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w500,
@@ -395,7 +395,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                           text: Languages.of(context)!
                                               .signIn
                                               .toUpperCase(),
-                                          style: GoogleFonts.readexPro(
+                                          style: TextStyle(
                                             color: AppColors().primaryColor,
                                           ),
                                         ),

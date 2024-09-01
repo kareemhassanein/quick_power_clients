@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:Quick_Power/constrants/apis.dart';
+import 'package:Quick_Power/models/terms_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:Quick_Power/bloc/home/home_event.dart';
 import 'package:Quick_Power/models/cancel_order_model.dart';
@@ -182,7 +184,63 @@ class HomeBloc extends Bloc<HomeEvents, GeneralStates> {
       } else {
         yield NoInternetState();
       }
-    } else if (event is InitialEvent) {
+    }  else if (event is GetTermsEvent) {
+      if (await InternetConnection().isConnected()) {
+        yield LoadingState();
+        TermsModel? responseModel = await OrdersRepo().getTerms();
+        if (responseModel != null) {
+          if (!responseModel.success!) {
+            yield ErrorState(
+              msg: responseModel.message ?? 'Something Went Wrong!',
+            );
+          } else if (responseModel.data != null && responseModel.success!) {
+            yield SuccessState(
+                msg: responseModel.message,
+                response: responseModel,
+                type: Apis.getTerms,
+                showDialog: false);
+          } else {
+            yield ErrorState(
+              msg: responseModel.message ?? 'Something Went Wrong!',
+            );
+          }
+        } else {
+          yield ErrorState(
+            msg: 'Something Went Wrong!',
+          );
+        }
+      } else {
+        yield NoInternetState();
+      }
+    }  else if (event is GetQsEvent) {
+      if (await InternetConnection().isConnected()) {
+        yield LoadingState();
+        TermsModel? responseModel = await OrdersRepo().getQs();
+        if (responseModel != null) {
+          if (!responseModel.success!) {
+            yield ErrorState(
+              msg: responseModel.message ?? 'Something Went Wrong!',
+            );
+          } else if (responseModel.data != null && responseModel.success!) {
+            yield SuccessState(
+                msg: responseModel.message,
+                response: responseModel,
+                type: Apis.getQs,
+                showDialog: false);
+          } else {
+            yield ErrorState(
+              msg: responseModel.message ?? 'Something Went Wrong!',
+            );
+          }
+        } else {
+          yield ErrorState(
+            msg: 'Something Went Wrong!',
+          );
+        }
+      } else {
+        yield NoInternetState();
+      }
+    }else if (event is InitialEvent) {
       yield InitialState();
     }
   }

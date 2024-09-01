@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: AppColors().primaryColor,
           title: Text(
             Languages.of(context)!.myProfile,
-            style: GoogleFonts.readexPro(
+            style: TextStyle(
               fontSize: 18.0.sp,
               color: Colors.white,
               fontWeight: FontWeight.w600,
@@ -232,7 +232,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     userId: _idController.text,
                                   ).toDataMap()));
                                   } : null,
-                                  child: Text(Languages.of(context)!.save, style: GoogleFonts.readexPro(
+                                  child: Text(Languages.of(context)!.save, style: TextStyle(
                                 fontSize: 22.0.sp,
                                 color: AppColors().backgroundColor,
                                 fontWeight: FontWeight.w600,

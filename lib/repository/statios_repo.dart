@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:Quick_Power/models/stations_model.dart';
 import 'package:Quick_Power/preference.dart';
+import 'package:dio/io.dart';
 import '../constrants/apis.dart';
 import '../localization/LanguageHelper.dart';
 import '../models/auth/auth_model.dart';

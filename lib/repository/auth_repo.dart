@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:Quick_Power/models/forget_password_model.dart';
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:Quick_Power/preference.dart';
+import 'package:dio/io.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import '../constrants/apis.dart';
 import '../localization/LanguageHelper.dart';
 import '../models/auth/auth_model.dart';
@@ -15,8 +16,8 @@ class AuthRepo {
       headers: {'Accept': 'application/json',
         'app-type': 'CUSTOMER',
         'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
-      sendTimeout: const Duration(seconds: 7).inMilliseconds,
-      receiveTimeout: const Duration(seconds: 7).inMilliseconds,
+      sendTimeout: const Duration(seconds: 7),
+      receiveTimeout: const Duration(seconds: 7),
       receiveDataWhenStatusError: true,
       validateStatus: (stats) {
         return true;
@@ -41,8 +42,8 @@ class AuthRepo {
               'Accept': 'application/json',
               'app-type': 'CUSTOMER',
               'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
-            sendTimeout: const Duration(seconds: 7).inMilliseconds,
-            receiveTimeout: const Duration(seconds: 7).inMilliseconds,
+            sendTimeout: const Duration(seconds: 7),
+            receiveTimeout: const Duration(seconds: 7),
             receiveDataWhenStatusError: true,
             validateStatus: (stats) {
               return true;
@@ -52,12 +53,39 @@ class AuthRepo {
       AuthModel modelResponse = AuthModel.fromJson(jsonDecode(response.data));
       return modelResponse;
     } on DioError catch (e) {
-      String msg = e.message;
-      if (e.type == DioErrorType.connectTimeout ||
+
+      return AuthModel(message: e.message);
+    }
+  }
+  Future<dynamic> deleteAccount() async {
+    EasyLoading.show();
+    dioBadRequestAdapter(dio);
+    try {
+      Response response = await dio.post<String>(
+        Apis.deleteMyAccount,
+        options: Options(
+            responseType: ResponseType.json,
+            headers: {'Accept': 'application/json',
+              'app-type': 'CUSTOMER',
+              'Authorization': 'Bearer ${Preferences.getUserToken()!}',
+              'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
+
+            receiveDataWhenStatusError: true,
+            validateStatus: (stats) {
+              return true;
+            }),
+      );
+      print(response.data);
+      EasyLoading.dismiss();
+      return response.data;
+    } on DioError catch (e) {
+      String msg = e.message??'';
+      if (e.type == DioErrorType.connectionTimeout ||
           e.type == DioErrorType.sendTimeout) {
+        EasyLoading.dismiss();
         msg = 'Make sure you are connected to the network';
       }
-      return AuthModel(message: msg);
+      return null;
     }
   }
 
@@ -74,8 +102,8 @@ class AuthRepo {
       );
       return response;
     } on DioError catch (e) {
-      String msg = e.message;
-      if (e.type == DioErrorType.connectTimeout ||
+      String msg = e.message!;
+      if (e.type == DioErrorType.connectionTimeout ||
           e.type == DioErrorType.sendTimeout) {
         msg = 'Make sure you are connected to the network';
       }
@@ -96,8 +124,8 @@ class AuthRepo {
       );
       return response;
     } on DioError catch (e) {
-      String msg = e.message;
-      if (e.type == DioErrorType.connectTimeout ||
+      String msg = e.message!;
+      if (e.type == DioErrorType.connectionTimeout ||
           e.type == DioErrorType.sendTimeout) {
         msg = 'Make sure you are connected to the network';
       }
@@ -135,8 +163,8 @@ class AuthRepo {
               'app-type': 'CUSTOMER',
               'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
             },
-            sendTimeout: const Duration(seconds: 7).inMilliseconds,
-            receiveTimeout: const Duration(seconds: 7).inMilliseconds,
+            sendTimeout: const Duration(seconds: 15),
+            receiveTimeout: const Duration(seconds: 15),
             receiveDataWhenStatusError: true,
             validateStatus: (stats) {
               return true;
@@ -146,8 +174,8 @@ class AuthRepo {
       AuthModel modelResponse = AuthModel.fromJson(jsonDecode(response.data));
       return modelResponse;
     } on DioError catch (e) {
-      String msg = e.message;
-      if (e.type == DioErrorType.connectTimeout ||
+      String msg = e.message!;
+      if (e.type == DioErrorType.connectionTimeout ||
           e.type == DioErrorType.sendTimeout) {
         msg = 'Make sure you are connected to the network';
       }

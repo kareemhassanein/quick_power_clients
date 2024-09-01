@@ -1,3 +1,5 @@
+import 'package:Quick_Power/ui/widgets/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -43,7 +45,7 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
   Future<void> _updatePlaceMark() async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
         latLng!.latitude, latLng!.longitude,
-        localeIdentifier: Localizations.localeOf(context).languageCode);
+    );
     Placemark placeMark = placemarks[0];
     String? name = placeMark.street;
     String? subLocality = placeMark.subLocality;
@@ -65,101 +67,39 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                  margin: EdgeInsets.only(bottom: 16.h),
-                  alignment: Alignment(-0.89.r, 0.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7.0.r),
-                    color: AppColors().backgroundColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.16),
-                        offset: Offset(0, 3.0.r),
-                        blurRadius: 6.0.r,
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    cursorColor: AppColors().primaryColor,
-                    cursorHeight: 18.h,
-                    controller: _nameController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      isCollapsed: true,
-                      contentPadding: EdgeInsets.only(
-                          left: 16.w, right: 16.w, bottom: 12.h, top: 12.h),
-                      border: InputBorder.none,
-                      hintText: Languages.of(context)!.name,
-                      hintMaxLines: 1,
-                      hintStyle: GoogleFonts.readexPro(
-                        fontSize: 13.0.sp,
-                        color: const Color(0xFF656565),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    minLines: 1,
-                    maxLines: 3,
-                    validator: (s) {
-                      if (s!.isEmpty) {
-                        return Languages.of(context)!.required;
-                      }
-                      return null;
-                    },
-                    style: GoogleFonts.readexPro(
-                        fontSize: 14.0.sp,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w500),
-                  )),
-              Container(
-                  margin: EdgeInsets.only(bottom: 16.h),
-                  alignment: Alignment(-0.89.r, 0.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(7.0.r),
-                    color: AppColors().backgroundColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.16),
-                        offset: Offset(0, 3.0.r),
-                        blurRadius: 6.0.r,
-                      ),
-                    ],
-                  ),
-                  child: TextFormField(
-                    cursorColor: AppColors().primaryColor,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    cursorHeight: 18.h,
-                    controller: _addressController,
-                    decoration: InputDecoration(
-                      isCollapsed: true,
-                      contentPadding: EdgeInsets.only(
-                          left: 16.w, right: 16.w, bottom: 12.h, top: 12.h),
-                      border: InputBorder.none,
-                      hintText: Languages.of(context)!.address,
-                      hintMaxLines: 1,
-                      hintStyle: GoogleFonts.readexPro(
-                        fontSize: 13.0.sp,
-                        color: const Color(0xFF656565),
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    minLines: 4,
-                    maxLines: 5,
-                    validator: (s) {
-                      if (s!.isEmpty) {
-                        return Languages.of(context)!.required;
-                      }
-                      return null;
-                    },
-                    style: GoogleFonts.readexPro(
-                      fontSize: 14.0.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    ),
-                  )),
-              // Group: Group 62797
+              filedTextWidget(
+                  context: context,
+                  label: '*${Languages.of(context)!.name}',
+
+                  controller: _nameController,
+                  inputType: TextInputType.name,
+
+                  textInputAction: TextInputAction.done,
+                minLines: 1,
+                maxLines: 3,
+                validation: (s) {
+                  if (s!.isEmpty) {
+                    return Languages.of(context)!.required;
+                  }
+                  return null;
+                },),
+              filedTextWidget(
+                  context: context,
+                  label: '*${Languages.of(context)!.address}',
+
+                  controller: _addressController,
+                  inputType: TextInputType.streetAddress,
+
+                  textInputAction: TextInputAction.done,
+                validation: (s) {
+                  if (s!.isEmpty) {
+                    return Languages.of(context)!.required;
+                  }
+                  return null;
+                },),
+
               GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
+                onTap: (){
                   navigateToScreen(
                       context,
                       MapPickLocationScreen(
@@ -171,96 +111,29 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
                     }
                   });
                 },
-                child: Container(
-                    alignment: Alignment(-0.07.r, 0.0),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(7.0),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.16),
-                          offset: Offset(0, 3.0.r),
-                          blurRadius: 6.0.r,
-                        ),
-                      ],
-                    ),
-                    child: TextFormField(
-                      cursorColor: AppColors().primaryColor,
-                      cursorHeight: 18.h,
-                      enabled: false,
-                      controller: _locationController,
-                      decoration: InputDecoration(
-                        isDense: true,
-                        suffixIconConstraints: BoxConstraints(
-                          maxHeight: 18.0.h,
-                        ),
-                        suffixIcon: Padding(
-                          padding: EdgeInsetsDirectional.only(end: 16.0.w, ),
-                          child: SvgPicture.string(
-                            '<svg viewBox="252.5 12.5 10.5 15.0" ><path transform="translate(245.0, 9.5)" d="M 12.75 3 C 9.847499847412109 3 7.5 5.347499847412109 7.5 8.25 C 7.5 12.1875 12.75 18 12.75 18 C 12.75 18 18 12.1875 18 8.25 C 18 5.347499847412109 15.65250015258789 3 12.75 3 Z M 12.75 10.125 C 11.71500015258789 10.125 10.875 9.284999847412109 10.875 8.25 C 10.875 7.215000152587891 11.71500015258789 6.375 12.75 6.375 C 13.78499984741211 6.375 14.625 7.215000152587891 14.625 8.25 C 14.625 9.284999847412109 13.78499984741211 10.125 12.75 10.125 Z" fill="#39969b" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>',
-                          ),
-                        ),
-                        isCollapsed: true,
-                        contentPadding: EdgeInsets.only(
-                            left: 16.w, right: 16.w, bottom: 12.h, top: 12.h),
-                        border: InputBorder.none,
-                        hintText: Languages.of(context)!.location,
-                        hintMaxLines: 1,
-                        hintStyle: GoogleFonts.readexPro(
-                          fontSize: 13.0.sp,
-                          color: const Color(0xFF656565),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      maxLines: 1,
-                      validator: (s) {
-                        if (s!.isEmpty && widget.station == null ) {
-                          return Languages.of(context)!.required;
-                        }
-                        return null;
-                      },
-                      style: GoogleFonts.readexPro(
-                        fontSize: 14.0.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),
-                    )
-                    // SizedBox(
-                    //   height: 16.0.h,
-                    //   child: Row(
-                    //     children: <Widget>[
-                    //       SizedBox(width: 16.w,),
-                    //       Expanded(
-                    //         child: Text(
-                    //           palaceMarkAddress??'Location',
-                    //           overflow: TextOverflow.ellipsis,
-                    //           style: GoogleFonts.readexPro(
-                    //             fontSize: 12.0.sp,
-                    //             color: const Color(0xFF656565),
-                    //             fontWeight: FontWeight.w500,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //
-                    //       Padding(
-                    //         padding: EdgeInsets.symmetric(horizontal: 16.0.w),
-                    //         child: SvgPicture.string(
-                    //           // Icon material-location-on
-                    //           '<svg viewBox="252.5 12.5 10.5 15.0" ><path transform="translate(245.0, 9.5)" d="M 12.75 3 C 9.847499847412109 3 7.5 5.347499847412109 7.5 8.25 C 7.5 12.1875 12.75 18 12.75 18 C 12.75 18 18 12.1875 18 8.25 C 18 5.347499847412109 15.65250015258789 3 12.75 3 Z M 12.75 10.125 C 11.71500015258789 10.125 10.875 9.284999847412109 10.875 8.25 C 10.875 7.215000152587891 11.71500015258789 6.375 12.75 6.375 C 13.78499984741211 6.375 14.625 7.215000152587891 14.625 8.25 C 14.625 9.284999847412109 13.78499984741211 10.125 12.75 10.125 Z" fill="#39969b" stroke="none" stroke-width="1" stroke-miterlimit="4" stroke-linecap="butt" /></svg>',
-                    //           width: 10.5,
-                    //           height: 15.0,
-                    //         ),
-                    //       ),
-                    //
-                    //     ],
-                    //   ),
-                    // ),
-                    ),
+                child: filedTextWidget(
+                    context: context,
+                    enabled: false,
+                    label: '*${Languages.of(context)!.location}',
+
+                    controller: _locationController,
+                    inputType: TextInputType.text,
+                    textInputAction: TextInputAction.done,
+                  minLines: 1,
+                  maxLines: 5,
+                  validation: (s) {
+                    if (s!.isEmpty && widget.station == null ) {
+                      return Languages.of(context)!.required;
+                    }
+                    return null;
+                  },),
               ),
+
               SizedBox(
                 height: 20.h,
               ),
-              Center(
+              SizedBox(
+                width: double.infinity,
                 child: TextButton(
                   style: ButtonStyle(
                       padding: MaterialStateProperty.all(EdgeInsets.symmetric(
@@ -284,12 +157,7 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
                   },
                   child: Text(
                     '${Languages.of(context)!.submit}${widget.station != null ?' ${Languages.of(context)!.edit}' : ''}',
-                    style: GoogleFonts.readexPro(
-                      fontSize: 15.0.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
+
                   ),
                 ),
               ),

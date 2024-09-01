@@ -34,4 +34,13 @@ class CancelOrderEvent extends HomeEvents {
 }
 
 
+class GetTermsEvent extends HomeEvents {
+  GetTermsEvent();
+}
+
+class GetQsEvent extends HomeEvents {
+  GetQsEvent();
+}
+
+
 class InitialEvent extends HomeEvents {}

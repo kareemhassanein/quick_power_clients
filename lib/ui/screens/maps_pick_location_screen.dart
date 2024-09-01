@@ -82,7 +82,7 @@ class _MapPickLocationScreenState extends State<MapPickLocationScreen> {
         backgroundColor: AppColors().primaryColor,
         title: Text(
           Languages.of(context)!.stationLocation,
-          style: GoogleFonts.readexPro(
+          style: TextStyle(
             fontSize: 16.0.sp,
             color: Colors.white,
             fontWeight: FontWeight.w600,

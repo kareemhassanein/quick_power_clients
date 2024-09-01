@@ -1,6 +1,8 @@
 import 'package:Quick_Power/ui/functions/functions.dart';
 import 'package:Quick_Power/ui/screens/tracking_driver_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,10 +61,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           backgroundColor: AppColors().primaryColor,
           title: Text(
             Languages.of(context)!.orderDetails,
-            style: GoogleFonts.readexPro(
-              fontSize: 18.0.sp,
+            style: const TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w600,
             ),
           ),
           centerTitle: true,
@@ -72,7 +72,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             ),
           ),
         ),
-        backgroundColor: AppColors().backgroundColor,
         body: BlocListener<HomeBloc, GeneralStates>(
           bloc: blocHome,
           listener: (context, state) {
@@ -96,9 +95,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           alignment: AlignmentDirectional.center,
                           child: Text(
                             widget.orderDetails.code ?? '',
-                            style: GoogleFonts.readexPro(
+                            style: TextStyle(
                               fontSize: 20.0.sp,
-                              color: const Color(0xFF404040),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -108,9 +106,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         ),
                         Text(
                           Languages.of(context)!.orderStatus,
-                          style: GoogleFonts.readexPro(
+                          style: TextStyle(
                             fontSize: 20.0.sp,
-                            color: const Color(0xFF404040),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -121,21 +118,19 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           alignment: AlignmentDirectional.center,
                           child: Text(
                             widget.orderDetails.status!.name!,
-                            style: GoogleFonts.readexPro(
+                            style: TextStyle(
                               fontSize: 18.0.sp,
                               color: Colors.red,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
-
                         Visibility(
-                          visible: widget.orderDetails.status?.systemCode == '41006',
+                          visible:
+                              widget.orderDetails.status?.systemCode == '41006',
                           child: Container(
                             width: double.infinity,
-                            padding: EdgeInsets.only(
-                              top: 16.h
-                            ),
+                            padding: EdgeInsets.only(top: 16.h),
                             child: TextButton(
                               style: ButtonStyle(
                                   padding: MaterialStateProperty.all(
@@ -145,21 +140,33 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                       AppColors().primaryColor),
                                   shape: MaterialStateProperty.all(
                                       RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0.r),
-                                      ))),
+                                    borderRadius: BorderRadius.circular(10.0.r),
+                                  ))),
                               onPressed: () {
-
                                 navigateToScreen(
-                                    context, TrackingDriverScreen(orderId: widget.orderDetails.id.toString(), clientLocation: LatLng(
-                                  double.parse(widget.orderDetails.location?.lat??'0.0'),double.parse(widget.orderDetails.location?.lon??'0.0')
-                                ), stationName: widget.orderDetails.location?.name??
-                                  '', waybillCode: widget.orderDetails.code??'',),
+                                    context,
+                                    TrackingDriverScreen(
+                                      orderId:
+                                          widget.orderDetails.id.toString(),
+                                      clientLocation: LatLng(
+                                          double.parse(widget
+                                                  .orderDetails.location?.lat ??
+                                              '0.0'),
+                                          double.parse(widget
+                                                  .orderDetails.location?.lon ??
+                                              '0.0')),
+                                      stationName:
+                                          widget.orderDetails.location?.name ??
+                                              '',
+                                      waybillCode:
+                                          widget.orderDetails.code ?? '',
+                                    ),
                                     transitionDuration:
-                                    const Duration(milliseconds: 0));
+                                        const Duration(milliseconds: 0));
                               },
                               child: Text(
-                               Languages.of(context)!.trackShipment,
-                                style: GoogleFonts.readexPro(
+                                Languages.of(context)!.trackShipment,
+                                style: TextStyle(
                                   fontSize: 15.0.sp,
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
@@ -182,9 +189,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               flex: 1,
                               child: Text(
                                 Languages.of(context)!.recivedDate,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -199,9 +205,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                             : 'ar_EG')
                                     .format(DateTime.parse(
                                         widget.orderDetails.date!)),
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -218,9 +223,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               flex: 1,
                               child: Text(
                                 Languages.of(context)!.reciverName,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -229,9 +233,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               flex: 1,
                               child: Text(
                                 widget.userName ?? '',
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -248,9 +251,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               flex: 1,
                               child: Text(
                                 Languages.of(context)!.station,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -259,9 +261,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               flex: 1,
                               child: Text(
                                 widget.orderDetails.location!.name!,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -278,9 +279,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               flex: 1,
                               child: Text(
                                 Languages.of(context)!.address,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -289,9 +289,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               flex: 1,
                               child: Text(
                                 widget.orderDetails.location?.address ?? '',
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -307,151 +306,277 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         ),
                         Text(
                           Languages.of(context)!.invoiceDetails,
-                          style: GoogleFonts.readexPro(
+                          style: TextStyle(
                             fontSize: 20.0.sp,
-                            color: const Color(0xFF404040),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         SizedBox(
                           height: 12.h,
                         ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: Text(
-                                Languages.of(context)!.productType,
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
-                                  fontWeight: FontWeight.w600,
+                        Table(
+                          children: [
+                            TableRow(
+                              decoration:
+                                  BoxDecoration(color: Colors.grey[300]),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: Text(
+                                          Languages.of(context)!.productType,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                widget.orderDetails.productType!.name!,
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
-                                  fontWeight: FontWeight.w500,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: Text(
+                                          Languages.of(context)!.quantity,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))),
                                 ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                '',
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
-                                  fontWeight: FontWeight.w500,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                      child: Text('سعر اللتر',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold))),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8.h,
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                Languages.of(context)!.quantity,
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 15.0.sp,
-                                  color: const Color(0xFF404040),
-                                  fontWeight: FontWeight.w600,
-                                ),
+                            TableRow(children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                    widget.orderDetails.productType!.name!),
                               ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                NumberFormat(
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(NumberFormat(
                                   "###,### ${Languages.of(context)!.l}",
                                   LanguageHelper.isEnglish ? 'en_US' : 'ar_EG',
                                 ).format(double.parse(
-                                    widget.orderDetails.quantity!)),
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.start,
+                                    widget.orderDetails.quantity!))),
                               ),
-                            ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text('${NumberFormat.currency(
+                                    decimalDigits: 3,
+                                    symbol: '')
+                                    .format(double.tryParse(
+                                    widget.orderDetails.itemPrice ??
+                                        "0.0") ??
+                                    0.0)} ${Languages.of(context)!.sar}'),
+                              ),
+                            ]),
                           ],
+                          border:
+                              TableBorder.all(color: Colors.black, width: 0.8),
                         ),
-                        SizedBox(
-                          height: 8.h,
+                        const SizedBox(
+                          height: 8,
                         ),
                         Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                Languages.of(context)!.total,
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
-                                  fontWeight: FontWeight.w600,
-                                ),
+                          children: [
+                            Text(
+                              'الاجمالى الفرعي : ',
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                NumberFormat(
-                                        "###,### ${Languages.of(context)!.sar}",
-                                        LanguageHelper.isEnglish
-                                            ? 'en_US'
-                                            : 'ar_EG')
-                                    .format(widget.orderDetails.total!),
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 16.0.sp,
-                                  color: AppColors().primaryColor,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                            Text(
+                              '${NumberFormat.currency(
+
+                                      decimalDigits: 2,
+
+                                      symbol: '')
+                                  .format(double.tryParse(
+                                          widget.orderDetails.totalPriceItem ??
+                                              "0.0") ??
+                                      0.0)} ${Languages.of(context)!.sar}',
+                              style: TextStyle(
+                                fontSize: 16.0.sp,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(
-                          height: 8.h,
+                        const SizedBox(
+                          height: 8,
                         ),
+                        if(widget.orderDetails.status?.id != 477 || ((widget.orderDetails.totalFeesWait??0) != 0))
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'اجرة الشحن : ',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  '${NumberFormat.currency(
+                                      decimalDigits: 2,
+                                      symbol: '')
+                                      .format(
+                                      widget.orderDetails.totalFeesLoad ??
+                                          "0.0")} ${Languages.of(context)!.sar}',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if((widget.orderDetails.totalFeesWait??0) != 0)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'اجرة الانتظار : ',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  '${NumberFormat.currency(
+                                      decimalDigits: 2,
+                                      symbol: '')
+                                      .format(
+                                      widget.orderDetails.totalFeesWait ??
+                                          "0.0")} ${Languages.of(context)!.sar}',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if((widget.orderDetails.totalFeesDifference??0) != 0)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'فروقات التحميل : ',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                Text(
+                                  '${NumberFormat.currency(
+                                      decimalDigits: 2,
+                                      symbol: '')
+                                      .format(
+                                      widget.orderDetails.totalFeesDifference ??
+                                          "0.0")} ${Languages.of(context)!.sar}',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'قيمة ضريبة القيمة المضافة : ',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
+                                ),
+                                Text(
+                                  '${NumberFormat.currency(
+                                      decimalDigits: 2,
+                                      symbol: '')
+                                      .format(
+                                      widget.orderDetails.totalVat??
+                                          "0.0")} ${Languages.of(context)!.sar}',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'الاجمالى شامل الضريبة : ',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
+                                ),
+                                Text(
+                                  '${NumberFormat.currency(
+                                      decimalDigits: 2,
+                                      symbol: '')
+                                      .format(
+                                      widget.orderDetails.total??
+                                          "0.0")} ${Languages.of(context)!.sar}',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        if(widget.orderDetails.url != null)
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                              onPressed: (){
+                                launchUrl(Uri.parse(widget.orderDetails.url??''));
+                          },
+                              style: ButtonStyle(
+                                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)
+                                )),
+                                backgroundColor: MaterialStatePropertyAll(AppColors().primaryColor)
+                                          ),child: Text('طباعة الفاتورة', style: TextStyle(
+                            color: Colors.white
+                          ), )),
+                        ),
+                        if( widget.orderDetails.status?.id == 477)
                         Text(
-                          widget.orderDetails.status?.id == 477
-                              ? Languages.of(context)?.notePriceBefore ?? ''
-                              : Languages.of(context)?.notePriceAfter ?? '',
-                          style: GoogleFonts.readexPro(
+                          Languages.of(context)?.notePriceBefore ??'',
+                          style: TextStyle(
                             fontSize: 12.0.sp,
                             color: AppColors().primaryColor,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         SizedBox(
-                          height: 12.h,
+                          height: 8.h,
                         ),
                         const Divider(),
                         SizedBox(
                           height: 12.h,
                         ),
                         Visibility(
-                          visible: widget.orderDetails.truckInfo != null,
+                          visible: widget.orderDetails.truckCode != null,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 Languages.of(context)!.truckInfo,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 20.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -461,10 +586,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               Row(
                                 children: <Widget>[
                                   Text(
-                                    widget.orderDetails.truckInfo ?? '',
-                                    style: GoogleFonts.readexPro(
+                                    widget.orderDetails.truckCode ?? '',
+                                    style: TextStyle(
                                       fontSize: 16.0.sp,
-                                      color: const Color(0xFF404040),
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -476,9 +600,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               const Divider(),
                               Text(
                                 Languages.of(context)!.driverInfo,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 20.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -489,9 +612,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 children: <Widget>[
                                   Text(
                                     widget.orderDetails.driver ?? '',
-                                    style: GoogleFonts.readexPro(
+                                    style: TextStyle(
                                       fontSize: 16.0.sp,
-                                      color: const Color(0xFF404040),
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -505,16 +627,15 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           ),
                         ),
                         Visibility(
-                          visible: widget.orderDetails.inviceNo != null,
+                          visible: widget.orderDetails.invoiceNo != null,
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 Languages.of(context)!.invoiceNo,
-                                style: GoogleFonts.readexPro(
+                                style: TextStyle(
                                   fontSize: 20.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -522,10 +643,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                 height: 12.h,
                               ),
                               Text(
-                                (widget.orderDetails.inviceNo ?? '').toString(),
-                                style: GoogleFonts.readexPro(
+                                (widget.orderDetails.invoiceNo ?? '')
+                                    .toString(),
+                                style: TextStyle(
                                   fontSize: 16.0.sp,
-                                  color: const Color(0xFF404040),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -542,90 +663,88 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 );
               }),
         ),
-        bottomSheet: ClipRRect(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(10.0.r),
-          ),
-          child: Container(
-            color: Colors.redAccent,
-            child: Padding(
-              padding: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).viewPadding.bottom),
-              child: TextButton(
-                style: ButtonStyle(
-                    overlayColor: MaterialStateColor.resolveWith(
-                        (states) => Colors.white.withOpacity(0.15)),
-                    splashFactory: InkSparkle.splashFactory,
-                    minimumSize:
-                        MaterialStatePropertyAll(Size(double.infinity, 60.h)),
-                    backgroundColor: const MaterialStatePropertyAll(
-                      Colors.redAccent,
-                    ),
-                    padding: MaterialStatePropertyAll(
-                        EdgeInsets.symmetric(vertical: 8.h)),
-                    tapTargetSize: MaterialTapTargetSize.padded),
-                onPressed: () async {
-                  print(Uri.parse(widget.orderDetails.url ?? '').toString());
-                  if (widget.cancelOption) {
-                    showDialog(
-                        context: context,
-                        builder: (c) => AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              elevation: 2.r,
-                              title: Text(
-                                '${Languages.of(context)!.areYouSureToCancelOrder}\n${widget.orderDetails.code!}',
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 16.0.sp,
-                                  color: Colors.black,
+        bottomSheet: Visibility(
+          visible: widget.cancelOption,
+          child: ClipRRect(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(10.0.r),
+            ),
+            child: Container(
+              color: Colors.redAccent,
+              child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewPadding.bottom),
+                child: TextButton(
+                  style: ButtonStyle(
+                      overlayColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.white.withOpacity(0.15)),
+                      splashFactory: InkSparkle.splashFactory,
+                      minimumSize:
+                          MaterialStatePropertyAll(Size(double.infinity, 60.h)),
+                      backgroundColor: const MaterialStatePropertyAll(
+                        Colors.redAccent,
+                      ),
+                      padding: MaterialStatePropertyAll(
+                          EdgeInsets.symmetric(vertical: 8.h)),
+                      tapTargetSize: MaterialTapTargetSize.padded),
+                  onPressed: () async {
+                    print(Uri.parse(widget.orderDetails.url ?? '').toString());
+                    if (widget.cancelOption) {
+                      showDialog(
+                          context: context,
+                          builder: (c) => AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r),
                                 ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Text(
-                                    Languages.of(context)!.no,
-                                    style: GoogleFonts.readexPro(
-                                      fontSize: 14.0.sp,
-                                      color: Colors.black87,
-                                    ),
+                                elevation: 2.r,
+                                title: Text(
+                                  '${Languages.of(context)!.areYouSureToCancelOrder}\n${widget.orderDetails.code!}',
+                                  style: TextStyle(
+                                    fontSize: 16.0.sp,
+                                    color: Colors.black,
                                   ),
                                 ),
-                                TextButton(
-                                  onPressed: () async {
-                                    Navigator.pop(context);
-                                    blocHome.add(CancelOrderEvent(
-                                        id: widget.orderDetails.id!
-                                            .toString()));
-                                  },
-                                  child: Text(
-                                    Languages.of(context)!.yesCancel,
-                                    style: GoogleFonts.readexPro(
-                                      fontSize: 14.0.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.red,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      Languages.of(context)!.no,
+                                      style: TextStyle(
+                                        fontSize: 14.0.sp,
+                                        color: Colors.black87,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ));
-                  } else if (widget.orderDetails.url != null) {
-                    await launchUrl(Uri.parse(widget.orderDetails.url ?? ''));
-                  }
-                },
-                child: Text(
-                  widget.orderDetails.url == null
-                      ? Languages.of(context)!.cancelOrder
-                      : 'طباعة الفاتورة',
-                  style: GoogleFonts.readexPro(
-                    fontSize: 16.0.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.pop(context);
+                                      blocHome.add(CancelOrderEvent(
+                                          id: widget.orderDetails.id!
+                                              .toString()));
+                                    },
+                                    child: Text(
+                                      Languages.of(context)!.yesCancel,
+                                      style: TextStyle(
+                                        fontSize: 14.0.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ));
+                    } else if (widget.orderDetails.url != null) {
+                      await launchUrl(Uri.parse(widget.orderDetails.url ?? ''));
+                    }
+                  },
+                  child: Text(
+                    widget.orderDetails.url == null
+                        ? Languages.of(context)!.cancelOrder
+                        : 'طباعة الفاتورة',
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
             ),

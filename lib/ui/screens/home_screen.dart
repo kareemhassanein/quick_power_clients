@@ -4,12 +4,17 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:Quick_Power/constrants/apis.dart';
 import 'package:Quick_Power/models/notifications_model.dart';
+import 'package:Quick_Power/repository/auth_repo.dart';
 import 'package:Quick_Power/repository/orders_repo.dart';
+import 'package:Quick_Power/ui/screens/QsScreen.dart';
+import 'package:Quick_Power/ui/screens/terms_screen.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:Quick_Power/bloc/home/home_bloc.dart';
@@ -130,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     String? token = await FirebaseMessaging.instance.getToken();
     print('token: $token');
     if(token != null) {
-      OrdersRepo().updateFCMToken(token);
+      await OrdersRepo().updateFCMToken(token);
     }
     return token;
   }
@@ -148,15 +153,375 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             return Scaffold(
               extendBody: false,
               extendBodyBehindAppBar: true,
+              endDrawerEnableOpenDragGesture: true,
+              endDrawer: Drawer(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusDirectional.horizontal(
+                        start: Radius.circular(20.r))),
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: SingleChildScrollView(
+                  child: SafeArea(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 16.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 4.w,
+                              ),
+                              SizedBox(
+                                width: 53.0.r,
+                                height: 53.0.r,
+                                child: ClipOval(
+                                  child: homeModel?.data?.user?.image == null
+                                      ? Container(
+                                      color: AppColors().primaryColor,child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset('assets/logo.png',),
+                                      ))
+                                      : imageNetwork(
+                                      homeModel?.data?.user?.image ?? ''),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 16.w,
+                              ),
+                              Text(
+                                (homeModel?.data?.user?.name ?? ''),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 20.0.sp,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 16.h,
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.account_circle),
+                            title: Text(
+                              Languages.of(context)!.myProfile,
+                              style: GoogleFonts.alexandria(
+                                fontSize: 14.0.sp,
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                            onTap: () {
+                              navigateToScreen(context, const ProfileScreen())
+                                  .then((value) {
+                                if (value != null) {
+                                  setState(() {
+                                    homeModel?.data?.user = value;
+                                  });
+                                }
+                              });
+                            },
+                          ),
+                          Divider(
+                            height: 8.h,
+                            thickness: 6.h,
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.question_answer),
+                            title: Text(
+                              Languages.of(context)!.faq,
+                              style: GoogleFonts.alexandria(
+                                fontSize: 14.0.sp,
+                              ),
+                            ),
+                            onTap: () {
+                              blocHome.add(GetQsEvent());
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.share),
+                            title: Text(
+                              Languages.of(context)!.shareApp,
+                              style: GoogleFonts.alexandria(
+                                fontSize: 14.0.sp,
+                              ),
+                            ),
+                            onTap: () {
+                              const String appStoreLink =
+                                  'https://apps.apple.com/app/';
+                              const String googlePlayLink =
+                                  'https://play.google.com/store/apps/details?id=com.hill.quickpower';
+                              String message = 'Quick Power App\n\n';
+                              message += 'App Store: $appStoreLink\n\n';
+                              message += 'Google Play: $googlePlayLink';
+                              FlutterShare.share(
+                                title: 'Quick Power App',
+                                text: message,
+                              );
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.rule),
+                            title: Text(
+                              Languages.of(context)!.termsAndConditions,
+                              style: GoogleFonts.alexandria(
+                                fontSize: 14.0.sp,
+                              ),
+                            ),
+                            onTap: () {
+                              blocHome.add(GetTermsEvent());
+                            },
+                          ),
+                          Divider(
+                            height: 8.h,
+                            thickness: 6.h,
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.translate),
+                            title: Text(
+                              Languages.of(context)!.changeLanguage,
+                              style: GoogleFonts.alexandria(
+                                fontSize: 14.0.sp,
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                            onTap: () async {
+                              showLanguagesDialog(context);
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.color_lens),
+                            title: Text(
+                              Languages.of(context)!.theme,
+                              style: GoogleFonts.alexandria(
+                                fontSize: 14.0.sp,
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                            onTap: () async {
+                              final selectedMode = await openDialog(context,
+                                      (context, animation, secondaryAnimation) {
+                                    final isDarkMode =
+                                        AdaptiveTheme.of(context).mode ==
+                                            AdaptiveThemeMode.dark;
+                                    final isLightMode =
+                                        AdaptiveTheme.of(context).mode ==
+                                            AdaptiveThemeMode.light;
+                                    final isSystemMode =
+                                        AdaptiveTheme.of(context).mode ==
+                                            AdaptiveThemeMode.system;
+                                    return Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CheckboxListTile(
+                                          value: isDarkMode,
+                                          onChanged: (value) {
+                                            if (value!) {
+                                              AdaptiveTheme.of(context).setDark();
+                                              Preferences().loaderInstance(
+                                                  AdaptiveTheme.of(context).mode);
+                                              Navigator.pop(context, 'dark');
+                                            }
+                                          },
+                                          title: Text(
+                                            Languages.of(context)!.darkMode,
+                                            style: GoogleFonts.alexandria(
+                                              fontSize: 14.0.sp,
+                                            ),
+                                          ),
+                                          secondary: const Icon(Icons.brightness_2),
+                                        ),
+                                        CheckboxListTile(
+                                          value: isLightMode,
+                                          onChanged: (value) {
+                                            if (value!) {
+                                              AdaptiveTheme.of(context).setLight();
+                                              Navigator.pop(context, 'light');
+                                            }
+                                          },
+                                          title: Text(
+                                            Languages.of(context)!.lightMode,
+                                            style: GoogleFonts.alexandria(
+                                              fontSize: 14.0.sp,
+                                            ),
+                                          ),
+                                          secondary: const Icon(Icons.wb_sunny),
+                                        ),
+                                        CheckboxListTile(
+                                          value: isSystemMode,
+                                          onChanged: (value) {
+                                            if (value!) {
+                                              AdaptiveTheme.of(context).setSystem();
+                                              Navigator.pop(context, 'system');
+                                            }
+                                          },
+                                          title: Text(
+                                            Languages.of(context)!.systemMode,
+                                            style: GoogleFonts.alexandria(
+                                              fontSize: 14.0.sp,
+                                            ),
+                                          ),
+                                          secondary: const Icon(
+                                              Icons.settings_system_daydream),
+                                        ),
+                                      ],
+                                    );
+                                  });
+
+                              if (selectedMode == 'dark') {
+                                AdaptiveTheme.of(context).setDark();
+                              } else if (selectedMode == 'light') {
+                                AdaptiveTheme.of(context).setLight();
+                              } else if (selectedMode == 'system') {
+                                AdaptiveTheme.of(context).setSystem();
+                              }
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.lock),
+                            title: Text(
+                              Languages.of(context)!.changePassword,
+                              style: GoogleFonts.alexandria(
+                                fontSize: 14.0.sp,
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                            onTap: () {
+                              navigateToScreen(
+                                  context, const ChangePasswordScreen(type: Apis.changePassword,));
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.logout),
+                            title: Text(
+                              Languages.of(context)!.logOut,
+                              style: GoogleFonts.alexandria(
+                                fontSize: 14.0.sp,
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                            onTap: () async {
+                              showDialog(
+                                context: context,
+                                builder: (c) => AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  elevation: 2.r,
+                                  title: Text(
+                                    Languages.of(context)!.areYouSureToLogOut,
+                                    style: GoogleFonts.alexandria(
+                                      fontSize: 16.0.sp,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        Languages.of(context)!.cancel,
+                                        style: GoogleFonts.alexandria(
+                                          fontSize: 14.0.sp,
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        await Preferences.removeUserData();
+                                        navigateToScreen(
+                                            context, const LoginScreen(),
+                                            withRemoveUntil: true);
+                                      },
+                                      child: Text(
+                                        Languages.of(context)!.logOut,
+                                        style: GoogleFonts.alexandria(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.delete_rounded, color: Colors.red),
+                            title: Text(
+                              Languages.of(context)!.deleteMyAccount,
+                              style: GoogleFonts.alexandria(
+                                  fontSize: 14.0.sp,
+                                  color: Colors.red
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                            onTap: () async {
+                              showDialog(
+                                context: context,
+                                builder: (c) => AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  elevation: 2.r,
+                                  title: Text(
+                                    Languages.of(context)!.deleteMyAccountHint,
+                                    style: GoogleFonts.alexandria(
+                                      fontSize: 16.0.sp,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        Languages.of(context)!.cancel,
+                                        style: GoogleFonts.alexandria(
+                                            fontSize: 14.0.sp,
+                                            color: Colors.grey
+                                        ),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        await AuthRepo().deleteAccount();
+                                        await Preferences.removeUserData();
+                                        navigateToScreen(
+                                            context, const LoginScreen(),
+                                            withRemoveUntil: true);
+                                      },
+                                      child: Text(
+                                        Languages.of(context)!.delete,
+                                        style: GoogleFonts.alexandria(
+                                          fontSize: 14.0.sp,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
               body: BlocListener<HomeBloc, GeneralStates>(
                 bloc: blocHome,
                 listener: (context, state) {
                   if (state is SuccessState &&
                       state.response is CreateOrderModel) {
-                    openDialog(
-                        context,
-                        (p0, p1, p2) => AddNewOrderScreen(
-                            createOrderModel: state.response)).then((value) {
+                    navigateToScreen(context, AddNewOrderScreen(
+                        createOrderModel: state.response)).then((value) {
                       if (value != null && value) {
                         blocHome.add(GetHomeAllEvent());
                       }
@@ -174,7 +539,20 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         blocHome.add(GetHomeAllEvent());
                       }
                     });
-                    print(homeModel!.data!.user!.toJson().toString());
+                  } else if (state is SuccessState &&
+                      state.type == Apis.getTerms) {
+                    navigateToScreen(
+                        context,
+                        TermsScreen(
+                          model: state.response,
+                        ));
+                  } else if (state is SuccessState &&
+                      state.type == Apis.getQs) {
+                    navigateToScreen(
+                        context,
+                        QsScreen(
+                          model: state.response,
+                        ));
                   }
                 },
                 child: BlocBuilder<HomeBloc, GeneralStates>(
@@ -211,7 +589,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           children: [
                             Text(
                               state.msg.toString(),
-                              style: GoogleFonts.readexPro(
+                              style: TextStyle(
                                 fontSize: 20.0.sp,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
@@ -245,7 +623,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 },
                                 child: Text(
                                   'Try again',
-                                  style: GoogleFonts.readexPro(
+                                  style: TextStyle(
                                     fontSize: 16.0.sp,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
@@ -268,466 +646,298 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           SliverAppBar(
                             backgroundColor: AppColors().primaryColor,
                             pinned: true,
-                            expandedHeight: 190.h,
+                            elevation: 5,
+                            automaticallyImplyLeading: true,
+                            expandedHeight: 180.h,
+                            actions: [
+                              IconButton(
+                                onPressed: null,
+                                icon: FutureBuilder(
+                                  future: notificationsRepo,
+                                  builder: (c, snapshot) {
+                                    NotificationModel?
+                                    notificationsModel;
+                                    if (snapshot.hasData &&
+                                        (snapshot.data!.data
+                                            ?.isNotEmpty ??
+                                            false)) {
+                                      notificationsModel =
+                                          snapshot.data;
+                                    }
+                                    return Stack(
+                                      children: [
+                                        PopupMenuButton(
+                                          padding:
+                                          EdgeInsets.zero,
+                                          color: Colors.white,
+                                          constraints: BoxConstraints(
+                                              maxHeight: 300.h,
+                                              minWidth: 250.w,
+                                              maxWidth: 250.w
+                                          ), // Set max height here
+                                          position:
+                                          PopupMenuPosition
+                                              .under,
+                                          icon: const Icon(
+                                            Icons
+                                                .notifications_rounded,
+                                            color: Colors.white,
+                                          ),
+                                          tooltip: Languages.of(
+                                              context)!
+                                              .profile,
+                                          elevation: 2,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius
+                                                  .circular(
+                                                  12.r)),
+                                          onOpened: () async {
+                                            if (notificationsModel
+                                                ?.data
+                                                ?.where((element) =>
+                                            element
+                                                .seen ==
+                                                0)
+                                                .isNotEmpty ??
+                                                false) {
+                                              await OrdersRepo()
+                                                  .seenAllNotifications();
+                                              updateNotifications();
+                                            }
+
+                                          },
+                                          itemBuilder:
+                                              (BuildContext bc) {
+                                            return (notificationsModel
+                                                ?.data
+                                                ?.map<PopupMenuItem>(
+                                                    (e) {
+                                                  final isLast = e ==
+                                                      notificationsModel!
+                                                          .data
+                                                          ?.last;
+                                                  return PopupMenuItem(
+                                                    onTap: () {
+                                                      if (e.data
+                                                          .notifyType ==
+                                                          'CarWaybill') {
+                                                        blocHome.add(GetOrderDetailsEvent(
+                                                            id: e
+                                                                .data
+                                                                .id
+                                                                .toString()));
+                                                      }
+                                                    },
+                                                    height: 0,
+                                                    padding:
+                                                    EdgeInsets
+                                                        .zero,
+                                                    child:
+                                                    Container(
+                                                      color: AppColors()
+                                                          .primaryColor
+                                                          .withOpacity(e.seen ==
+                                                          0
+                                                          ? 0.2
+                                                          : 0.0),
+                                                      child:
+                                                      Column(
+                                                        crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                        children: [
+                                                          Container(
+                                                            padding: EdgeInsets.symmetric(
+                                                                vertical: 16.h,
+                                                                horizontal: 16.w),
+                                                            width:
+                                                            double.infinity,
+                                                            child:
+                                                            Column(
+                                                              crossAxisAlignment:
+                                                              CrossAxisAlignment.start,
+                                                              children: [
+                                                                Text(
+                                                                  e.body,
+                                                                  style: TextStyle(
+                                                                    fontSize: 15.0.sp,
+                                                                    color: Colors.black,
+                                                                  ),
+                                                                  textAlign: TextAlign.start,
+                                                                ),
+                                                                SizedBox(
+                                                                  height: 4.h,
+                                                                ),
+                                                                Align(
+                                                                  alignment: AlignmentDirectional.centerEnd,
+                                                                  child: Text(
+                                                                    timeago.format(e.createdAt, locale: Localizations.localeOf(context).languageCode, allowFromNow: true),
+                                                                    style: TextStyle(
+                                                                      fontSize: 14.0.sp,
+                                                                      color: Colors.grey,
+                                                                    ),
+                                                                    textAlign: TextAlign.center,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          if (!isLast)
+                                                            PopupMenuDivider(
+                                                              height:
+                                                              4.h,
+                                                            ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                }).toList() ??
+                                                []);
+                                          },
+                                        ),
+                                        PositionedDirectional(
+                                          end: 0,
+                                          top: 0,
+                                          child: Visibility(
+                                            visible: snapshot
+                                                .connectionState ==
+                                                ConnectionState
+                                                    .waiting ||
+                                                (notificationsModel
+                                                    ?.data
+                                                    ?.where((element) =>
+                                                element
+                                                    .seen ==
+                                                    0)
+                                                    .isNotEmpty ??
+                                                    false),
+                                            child: Container(
+                                              width: 22,
+                                              height: 22,
+                                              decoration:
+                                              const BoxDecoration(
+                                                shape: BoxShape
+                                                    .circle,
+                                                color: Colors.red,
+                                              ),
+                                              child: Center(
+                                                child: snapshot
+                                                    .connectionState ==
+                                                    ConnectionState
+                                                        .waiting
+                                                    ? Padding(
+                                                  padding: EdgeInsets
+                                                      .all(4.0
+                                                      .r),
+                                                  child:
+                                                  const CircularProgressIndicator(
+                                                    color: Colors
+                                                        .white,
+                                                    strokeWidth:
+                                                    1.7,
+                                                  ),
+                                                )
+                                                    : Text(
+                                                  '${notificationsModel?.data?.where((element) => element.seen == 0).length ?? ''}',
+                                                  style:
+                                                  const TextStyle(
+                                                    color: Colors
+                                                        .white,
+                                                    fontSize:
+                                                    16,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.menu),
+                                onPressed: () => Scaffold.of(context).openEndDrawer(),
+                              ),],
                             flexibleSpace: SafeArea(
                               child: FlexibleSpaceBar(
                                 background: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 22.w, vertical: 20.h),
+                                  padding: EdgeInsetsDirectional.only(
+                                    top: 12.h,
+                                      start: 22.w, end: 42.h),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.start,
                                     children: [
-                                      Row(
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 8.h),
+                                        child: SizedBox(
+                                          width: 48.w,
+                                          child: Image.asset(
+                                              'assets/logo.png'),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10.w,
+                                      ),
+                                      Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
                                         children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 8.h),
-                                            child: SizedBox(
-                                              width: 48.w,
-                                              child: Image.asset(
-                                                  'assets/logo.png'),
+                                          Text(
+                                            '${Languages.of(context)!.hello} ${(homeModel!.data!.user!.name ?? '')}',
+                                            style: TextStyle(
+                                              fontSize: 28.0.sp,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          SizedBox(
+                                            height: 3.h,
+                                          ),
+                                          StreamBuilder<DateTime>(
+                                            stream: Stream.periodic(
+                                                const Duration(minutes: 2),
+                                                (i) => DateTime.now()),
+                                            builder: (context, snapshot) =>
+                                                Text(
+                                              DateFormat(
+                                                      'EEEE, dd MMMM yyyy',
+                                                      Localizations
+                                                              .localeOf(
+                                                                  context)
+                                                          .languageCode)
+                                                  .format(snapshot.data ??
+                                                      DateTime.now()),
+                                              style: TextStyle(
+                                                fontSize: 15.0.sp,
+                                                color: Colors.white
+                                                    .withOpacity(0.7),
+                                                height: 1.87.h,
+                                              ),
                                             ),
                                           ),
                                           SizedBox(
-                                            width: 10.w,
+                                            height: 12.h,
                                           ),
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '${Languages.of(context)!.hello} ${(homeModel!.data!.user!.name ?? '')}',
-                                                style: GoogleFonts.readexPro(
-                                                  fontSize: 28.0.sp,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              SizedBox(
-                                                height: 3.h,
-                                              ),
-                                              StreamBuilder<DateTime>(
-                                                stream: Stream.periodic(
-                                                    const Duration(minutes: 2),
-                                                    (i) => DateTime.now()),
-                                                builder: (context, snapshot) =>
-                                                    Text(
-                                                  DateFormat(
-                                                          'EEEE, dd MMMM yyyy',
-                                                          Localizations
-                                                                  .localeOf(
-                                                                      context)
-                                                              .languageCode)
-                                                      .format(snapshot.data ??
-                                                          DateTime.now()),
-                                                  style: GoogleFonts.readexPro(
-                                                    fontSize: 15.0.sp,
-                                                    color: Colors.white
-                                                        .withOpacity(0.7),
-                                                    height: 1.87.h,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 12.h,
-                                              ),
-                                              SizeTransition(
-                                                sizeFactor: Tween(
-                                                        begin: 0.0, end: 1.0)
-                                                    .animate(CurvedAnimation(
-                                                        parent:
-                                                            _animationController,
-                                                        curve: Curves
-                                                            .easeInOutBack)),
-                                                axis: Axis.horizontal,
-                                                child: Container(
-                                                  color: Colors.white,
-                                                  width: 64.w,
-                                                  height: 6.h,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          FutureBuilder(
-                                              future: notificationsRepo,
-                                              builder: (c, snapshot) {
-                                                NotificationModel?
-                                                notificationsModel;
-                                                if (snapshot.hasData &&
-                                                    (snapshot.data!.data
-                                                        ?.isNotEmpty ??
-                                                        false)) {
-                                                  notificationsModel =
-                                                      snapshot.data;
-                                                }
-                                                return Stack(
-                                                  children: [
-                                                    PopupMenuButton(
-                                                      padding:
-                                                      EdgeInsets.zero,
-                                                      color: Colors.white,
-                                                      constraints: BoxConstraints(
-                                                          maxHeight: 300.h,
-                                                          minWidth: 250.w,
-                                                          maxWidth: 250.w
-                                                              ), // Set max height here
-                                                      position:
-                                                      PopupMenuPosition
-                                                          .under,
-                                                      icon: const Icon(
-                                                        Icons
-                                                            .notifications_rounded,
-                                                        color: Colors.white,
-                                                      ),
-                                                      tooltip: Languages.of(
-                                                          context)!
-                                                          .profile,
-                                                      elevation: 2,
-                                                      shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                          BorderRadius
-                                                              .circular(
-                                                              12.r)),
-                                                      onOpened: () async {
-                                                        if (notificationsModel
-                                                            ?.data
-                                                            ?.where((element) =>
-                                                        element
-                                                            .seen ==
-                                                            0)
-                                                            .isNotEmpty ??
-                                                            false) {
-                                                          await OrdersRepo()
-                                                              .seenAllNotifications();
-                                                          updateNotifications();
-                                                        }
-
-                                                      },
-                                                      itemBuilder:
-                                                          (BuildContext bc) {
-                                                        return (notificationsModel
-                                                            ?.data
-                                                            ?.map<PopupMenuItem>(
-                                                                (e) {
-                                                              final isLast = e ==
-                                                                  notificationsModel!
-                                                                      .data
-                                                                      ?.last;
-                                                              return PopupMenuItem(
-                                                                onTap: () {
-                                                                  if (e.data
-                                                                      .notifyType ==
-                                                                      'CarWaybill') {
-                                                                    blocHome.add(GetOrderDetailsEvent(
-                                                                        id: e
-                                                                            .data
-                                                                            .id
-                                                                            .toString()));
-                                                                  }
-                                                                },
-                                                                height: 0,
-                                                                padding:
-                                                                EdgeInsets
-                                                                    .zero,
-                                                                child:
-                                                                Container(
-                                                                  color: AppColors()
-                                                                      .primaryColor
-                                                                      .withOpacity(e.seen ==
-                                                                      0
-                                                                      ? 0.2
-                                                                      : 0.0),
-                                                                  child:
-                                                                  Column(
-                                                                    crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                    children: [
-                                                                      Container(
-                                                                        padding: EdgeInsets.symmetric(
-                                                                            vertical: 16.h,
-                                                                            horizontal: 16.w),
-                                                                        width:
-                                                                        double.infinity,
-                                                                        child:
-                                                                        Column(
-                                                                          crossAxisAlignment:
-                                                                          CrossAxisAlignment.start,
-                                                                          children: [
-                                                                            Text(
-                                                                              e.body,
-                                                                              style: GoogleFonts.readexPro(
-                                                                                fontSize: 15.0.sp,
-                                                                                color: Colors.black,
-                                                                              ),
-                                                                              textAlign: TextAlign.start,
-                                                                            ),
-                                                                            SizedBox(
-                                                                              height: 4.h,
-                                                                            ),
-                                                                            Align(
-                                                                              alignment: AlignmentDirectional.centerEnd,
-                                                                              child: Text(
-                                                                                timeago.format(e.createdAt, locale: Localizations.localeOf(context).languageCode, allowFromNow: true),
-                                                                                style: GoogleFonts.readexPro(
-                                                                                  fontSize: 14.0.sp,
-                                                                                  color: Colors.grey,
-                                                                                ),
-                                                                                textAlign: TextAlign.center,
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                      if (!isLast)
-                                                                        PopupMenuDivider(
-                                                                          height:
-                                                                          4.h,
-                                                                        ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }).toList() ??
-                                                            []);
-                                                      },
-                                                    ),
-                                                    PositionedDirectional(
-                                                      end: 0,
-                                                      top: 0,
-                                                      child: Visibility(
-                                                        visible: snapshot
-                                                            .connectionState ==
-                                                            ConnectionState
-                                                                .waiting ||
-                                                            (notificationsModel
-                                                                ?.data
-                                                                ?.where((element) =>
-                                                            element
-                                                                .seen ==
-                                                                0)
-                                                                .isNotEmpty ??
-                                                                false),
-                                                        child: Container(
-                                                          width: 22,
-                                                          height: 22,
-                                                          decoration:
-                                                          const BoxDecoration(
-                                                            shape: BoxShape
-                                                                .circle,
-                                                            color: Colors.red,
-                                                          ),
-                                                          child: Center(
-                                                            child: snapshot
-                                                                .connectionState ==
-                                                                ConnectionState
-                                                                    .waiting
-                                                                ? Padding(
-                                                              padding: EdgeInsets
-                                                                  .all(4.0
-                                                                  .r),
-                                                              child:
-                                                              const CircularProgressIndicator(
-                                                                color: Colors
-                                                                    .white,
-                                                                strokeWidth:
-                                                                1.7,
-                                                              ),
-                                                            )
-                                                                : Text(
-                                                              '${notificationsModel?.data?.where((element) => element.seen == 0).length ?? ''}',
-                                                              style:
-                                                              const TextStyle(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize:
-                                                                16,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                );
-                                              }),
-                                          PopupMenuButton(
-                                            color: Colors.white,
-                                            icon: const Icon(
-                                              Icons.more_vert_rounded,
+                                          SizeTransition(
+                                            sizeFactor: Tween(
+                                                    begin: 0.0, end: 1.0)
+                                                .animate(CurvedAnimation(
+                                                    parent:
+                                                        _animationController,
+                                                    curve: Curves
+                                                        .easeInOutBack)),
+                                            axis: Axis.horizontal,
+                                            child: Container(
                                               color: Colors.white,
+                                              width: 100.w,
+                                              height: 4.h,
                                             ),
-                                            onSelected: (value) async {
-                                              if (value == 'log_out') {
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (c) => AlertDialog(
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        12.r),
-                                                          ),
-                                                          elevation: 2.r,
-                                                          title: Text(
-                                                            Languages.of(
-                                                                    context)!
-                                                                .areYouSureToLogOut,
-                                                            style: GoogleFonts
-                                                                .readexPro(
-                                                              fontSize: 16.0.sp,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: Text(
-                                                                Languages.of(
-                                                                        context)!
-                                                                    .cancel,
-                                                                style: GoogleFonts
-                                                                    .readexPro(
-                                                                  fontSize:
-                                                                      14.0.sp,
-                                                                  color: Colors
-                                                                      .black87,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                await Preferences
-                                                                    .removeUserData();
-                                                                navigateToScreen(
-                                                                    context,
-                                                                    const LoginScreen(),
-                                                                    withRemoveUntil:
-                                                                        true);
-                                                              },
-                                                              child: Text(
-                                                                Languages.of(
-                                                                        context)!
-                                                                    .logOut,
-                                                                style: GoogleFonts
-                                                                    .readexPro(
-                                                                  fontSize:
-                                                                      14.0.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ));
-                                              } else if (value ==
-                                                  'changePassword') {
-                                                navigateToScreen(
-                                                    context,
-                                                    const ChangePasswordScreen(
-                                                      type: Apis.changePassword,
-                                                    ));
-                                              } else if (value ==
-                                                  '/changeLanguage') {
-                                                showLanguagesDialog(context);
-                                              } else {
-                                                navigateToScreen(context,
-                                                        const ProfileScreen())
-                                                    .then((value) {
-                                                  if (value != null) {
-                                                    setState(() {
-                                                      homeModel!.data!.user =
-                                                          value;
-                                                    });
-                                                  }
-                                                });
-                                              }
-                                            },
-                                            tooltip:
-                                                Languages.of(context)!.profile,
-                                            elevation: 2,
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        12.r)),
-                                            itemBuilder: (BuildContext bc) {
-                                              return [
-                                                PopupMenuItem(
-                                                  value: '/changeLanguage',
-                                                  child: Text(
-                                                    Languages.of(context)!
-                                                        .changeLanguage,
-                                                    style:
-                                                        GoogleFonts.readexPro(
-                                                      fontSize: 14.0.sp,
-                                                      color: Colors.black,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: '/profile',
-                                                  child: Text(
-                                                    Languages.of(context)!
-                                                        .myProfile,
-                                                    style:
-                                                        GoogleFonts.readexPro(
-                                                      fontSize: 14.0.sp,
-                                                      color: Colors.black,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: 'changePassword',
-                                                  child: Text(
-                                                    Languages.of(context)!
-                                                        .changePassword,
-                                                    style:
-                                                        GoogleFonts.readexPro(
-                                                      fontSize: 14.0.sp,
-                                                      color: Colors.black,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                  value: 'log_out',
-                                                  child: Text(
-                                                    Languages.of(context)!
-                                                        .logOut,
-                                                    style:
-                                                        GoogleFonts.readexPro(
-                                                      fontSize: 14.0.sp,
-                                                      color: Colors.black,
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                              ];
-                                            },
                                           ),
                                         ],
                                       ),
@@ -771,7 +981,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                                 vertical: 2.h),
                                             child: Text(
                                               Languages.of(context)!.pending,
-                                              style: GoogleFonts.readexPro(
+                                              style: TextStyle(
                                                 fontSize: 13.0.sp,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w600,
@@ -784,7 +994,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                                 vertical: 2.h),
                                             child: Text(
                                               Languages.of(context)!.inProgress,
-                                              style: GoogleFonts.readexPro(
+                                              style: TextStyle(
                                                 fontSize: 13.0.sp,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w600,
@@ -797,7 +1007,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                                 vertical: 2.h),
                                             child: Text(
                                               Languages.of(context)!.done,
-                                              style: GoogleFonts.readexPro(
+                                              style: TextStyle(
                                                 fontSize: 13.0.sp,
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.w600,
@@ -825,8 +1035,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                           ),
                           SliverAppBar(
                             toolbarHeight: 30.h,
-                            backgroundColor: Colors.transparent,
+                            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                             pinned: false,
+                            actions: const [SizedBox()],
                             flexibleSpace: GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
@@ -852,16 +1063,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                       ),
                                     ),
                                     SizedBox(
-                                      width: 16.w,
+                                      width: 12.w,
                                     ),
                                     Hero(
                                       tag: 'stations',
                                       child: Text(
                                         Languages.of(context)!.stations,
-                                        style: GoogleFonts.readexPro(
+                                        style: TextStyle(
                                           fontSize: 16.0.sp,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ),
@@ -885,11 +1094,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                               double refreshIndicatorExtent,
                             ) {
                               // You can also use custom widget/animation for the refresh indicator
-                              return Center(
-                                  child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors().primaryColor),
-                              ));
+                              return const Center(
+                                  child: LogoRotatingIndicatorWidget());
                             },
                           ),
                           StatefulBuilder(builder: (context, snapshot) {
@@ -944,7 +1150,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       },
                       child: Text(
                         Languages.of(context)!.createNewOrder,
-                        style: GoogleFonts.readexPro(
+                        style: TextStyle(
                           fontSize: 16.0.sp,
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -997,7 +1203,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           padding: EdgeInsets.only(top: 140.0.h),
           child: Text(
             Languages.of(context)!.noOrders,
-            style: GoogleFonts.readexPro(
+            style: TextStyle(
               fontSize: 16.0.sp,
               color: Colors.black,
               fontWeight: FontWeight.w500,
@@ -1027,14 +1233,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 height: 90.0.h,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0.r),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      offset: Offset(0, 1.0.r),
-                      blurRadius: 4.0.r,
-                    ),
-                  ],
+                  color: Theme.of(context).cardColor,
                 ),
                 child: Row(
                   children: [
@@ -1062,9 +1261,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     selectedOrders[index].code! ?? '',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.readexPro(
+                                    style: TextStyle(
                                       fontSize: 15.0.sp,
-                                      color: Colors.black,
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -1083,9 +1281,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                             selectedOrders[index].date!)),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.readexPro(
+                                    style: TextStyle(
                                       fontSize: 15.0.sp,
-                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
@@ -1100,7 +1297,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         '',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.readexPro(
+                                    style: TextStyle(
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -1118,9 +1315,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                             selectedOrders[index].quantity!)),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.readexPro(
+                                    style: TextStyle(
                                       fontSize: 15.0.sp,
-                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
@@ -1134,7 +1330,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                     selectedOrders[index].location!.name! ?? '',
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.readexPro(
+                                    style: TextStyle(
                                       fontSize: 15.0.sp,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -1151,7 +1347,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                         .format(selectedOrders[index].total!),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.readexPro(
+                                    style: TextStyle(
                                       fontSize: 15.0.sp,
                                       color: AppColors().primaryColor,
                                     ),

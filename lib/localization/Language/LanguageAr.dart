@@ -161,7 +161,7 @@ class LanguageAr extends Languages {
 
   @override
   // TODO: implement sar
-  String get sar => 'ريال سعودي';
+  String get sar => 'ر.س';
 
   @override
   // TODO: implement save
@@ -235,19 +235,27 @@ class LanguageAr extends Languages {
   // TODO: implement email
   String get email => 'الإيميل';
 
+  @override
   String get deliveryAddress => 'عنوان التسليم';
 
+  @override
   String get deliveryDate => 'تاريخ الاستلام';
 
+  @override
   String get exclusiveVAT => 'غير شامل ضريبة القيمة المضافة';
 
+  @override
   String get inclusiveVAT => 'شامل ضريبة القيمة المضافة';
 
+  @override
   String get requiredQuantity => 'الكمية المطلوبة باللتر';
 
+  @override
   String get requiredProduct => 'المنتج المطلوب';
 
+  @override
   String get confirmOrder => 'تأكيد الطلب';
+  @override
   String get paymentMethod => 'وسيلة الدفع';
 
   @override
@@ -320,4 +328,52 @@ class LanguageAr extends Languages {
   @override
   String get driverLocation => 'موقع السائق';
 
+  @override
+  // TODO: implement addNewAddress
+  String get addNewAddress => 'اضافه عنوان';
+
+  @override
+  // TODO: implement delete
+  String get delete => 'حذف';
+
+  @override
+  // TODO: implement deleteMyAccount
+  String get deleteMyAccount => 'حذف الحساب';
+
+
+  @override
+  // TODO: implement deleteMyAccountHint
+  String get deleteMyAccountHint => 'هل انت متأكد من حذف الحساب نهائياً';
+
+
+  @override
+  // TODO: implement faq
+  String get faq => 'الأسئلة الشائعة';
+
+  @override
+  // TODO: implement firstName
+  String get firstName => 'الاسم الأول';
+
+  @override
+  // TODO: implement lastName
+  String get lastName => 'الاسم الأخير';
+
+  @override
+  // TODO: implement shareApp
+  String get shareApp => 'مشاركة التطبيق';
+
+  @override
+  // TODO: implement termsAndConditions
+  String get termsAndConditions => 'الشروط والأحكام';
+
+  @override
+  String get theme => "المظهر";
+  @override
+  String get systemMode => "الوضع النظامي";
+  @override
+  String get lightMode => "الوضع الفاتح";
+  @override
+  String get darkMode => "الوضع الداكن";
+  @override
+  String get chooseTheme => "اختر المظهر";
 }

@@ -24,8 +24,9 @@ class LoadingState extends GeneralStates {
 
 class SuccessState extends GeneralStates {
   dynamic response;
+  String? type;
 
-  SuccessState({String? msg, this.response, bool showDialog = false}) {
+  SuccessState({String? msg, this.response, bool showDialog = false, this.type}) {
     if (showDialog) {
       EasyLoading.showSuccess(msg ?? '', dismissOnTap: true);
     } else {

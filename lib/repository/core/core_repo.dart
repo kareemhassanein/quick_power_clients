@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 
 import '../../localization/LanguageHelper.dart';
 import '../../preference.dart';
@@ -17,8 +17,8 @@ class CoreRepo{
         'app-type': 'CUSTOMER',
         'Authorization': 'Bearer ${Preferences.getUserToken()!}',
         'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
-      sendTimeout: const Duration(seconds: 7).inMilliseconds,
-      receiveTimeout: const Duration(seconds: 7).inMilliseconds,
+      sendTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
       receiveDataWhenStatusError: true,
       validateStatus: (stats) {
         return true;
@@ -37,8 +37,8 @@ class CoreRepo{
       );
       return response;
     } on DioError catch (e) {
-      String msg = e.message;
-      if (e.type == DioErrorType.connectTimeout ||
+      String msg = e.message!;
+      if (e.type == DioErrorType.connectionTimeout ||
           e.type == DioErrorType.sendTimeout) {
         msg = 'Make sure you are connected to the network';
       }
@@ -62,8 +62,8 @@ class CoreRepo{
                 'app-type': 'CUSTOMER',
                 'Authorization': 'Bearer ${Preferences.getUserToken()!}',
                 'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
-              sendTimeout: const Duration(seconds: 7).inMilliseconds,
-              receiveTimeout: const Duration(seconds: 7).inMilliseconds,
+              sendTimeout: const Duration(seconds: 7),
+              receiveTimeout: const Duration(seconds: 7),
               receiveDataWhenStatusError: true,
               validateStatus: (stats) {
                 return true;
@@ -71,8 +71,8 @@ class CoreRepo{
       );
       return response;
     } on DioError catch (e) {
-      String msg = e.message;
-      if (e.type == DioErrorType.connectTimeout ||
+      String msg = e.message!;
+      if (e.type == DioErrorType.connectionTimeout ||
           e.type == DioErrorType.sendTimeout) {
         msg = 'Make sure you are connected to the network';
       }

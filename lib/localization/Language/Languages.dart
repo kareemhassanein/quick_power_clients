@@ -46,6 +46,7 @@ abstract class Languages {
   String get userId;
   String get save;
   String get addNewStation;
+  String get addNewAddress;
   String get address;
   String get location;
   String get cancel;
@@ -97,4 +98,18 @@ abstract class Languages {
   String get trackShipment;
   String get trackingShipment;
   String get driverLocation;
+  String get faq;
+  String get shareApp;
+  String get termsAndConditions;
+  String get firstName;
+  String get lastName;
+  String get delete;
+  String get deleteMyAccount;
+  String get deleteMyAccountHint;
+  String get theme;
+  String get systemMode;
+  String get lightMode;
+  String get darkMode;
+  String get chooseTheme;
+
 }

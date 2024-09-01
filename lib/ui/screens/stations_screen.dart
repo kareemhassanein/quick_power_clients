@@ -36,7 +36,6 @@ class _StationsScreenState extends State<StationsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors().backgroundColor,
       body: BlocBuilder<StationsBloc, GeneralStates>(
           bloc: bloc,
           builder: (context, state) {
@@ -46,9 +45,6 @@ class _StationsScreenState extends State<StationsScreen> {
               }
             }
             return CustomScrollView(
-              scrollBehavior: const ScrollBehavior(
-                  androidOverscrollIndicator:
-                      AndroidOverscrollIndicator.stretch),
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverAppBar(
@@ -58,10 +54,8 @@ class _StationsScreenState extends State<StationsScreen> {
                     tag: 'stations',
                     child: Text(
                       Languages.of(context)!.stations,
-                      style: GoogleFonts.readexPro(
-                        fontSize: 18.0.sp,
+                      style: const TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -93,7 +87,7 @@ class _StationsScreenState extends State<StationsScreen> {
                                   padding: EdgeInsets.only(bottom: 48.0.h),
                                   child: Text(
                                     Languages.of(context)!.noStationsAdded,
-                                    style: GoogleFonts.readexPro(
+                                    style: TextStyle(
                                       fontSize: 18.0.sp,
                                       color: Colors.black,
                                       fontWeight: FontWeight.w500,
@@ -127,47 +121,32 @@ class _StationsScreenState extends State<StationsScreen> {
                                     child: Container(
                                       margin: EdgeInsets.symmetric(
                                           horizontal: 8.w, vertical: 8.h),
-                                      height: 70.0.h,
+
+                                      height: 80.0.h,
                                       decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(10.0.r),
-                                        color: Colors.white,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(0.25),
-                                            offset: Offset(0, 1.0.r),
-                                            blurRadius: 4.0.r,
-                                          ),
-                                        ],
+                                        color: Theme.of(context).cardColor,
+
                                       ),
                                       child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
-                                          Container(
-                                            width: 12.0.w,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadiusDirectional.horizontal(
-                                                start: Radius.circular(10.0.r),
-                                              ),
-                                              color: AppColors().primaryColor,
-                                            ),
-                                          ),
                                           SizedBox(
                                             width: 16.w,
                                           ),
                                           Expanded(
                                               child: Padding(
                                             padding: EdgeInsets.symmetric(
-                                                horizontal: 8.w, vertical: 8.h),
+                                                horizontal: 8.w, vertical: 16.h),
                                             child: Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   stations![index].name!,
-                                                  style: GoogleFonts.readexPro(
+                                                  style: TextStyle(
                                                     fontSize: 15.0.sp,
-                                                    color: Colors.black,
                                                     fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
@@ -181,7 +160,7 @@ class _StationsScreenState extends State<StationsScreen> {
                                                   overflow: TextOverflow.ellipsis,
                                                   textAlign: TextAlign.justify,
                                                   maxLines: 1,
-                                                  style: GoogleFonts.readexPro(
+                                                  style: TextStyle(
                                                     fontSize: 14.0.sp,
                                                     color:
                                                         AppColors().primaryColor,
@@ -232,8 +211,7 @@ class _StationsScreenState extends State<StationsScreen> {
               style: ButtonStyle(
                   overlayColor: MaterialStateColor.resolveWith(
                       (states) => Colors.white.withOpacity(0.15)),
-                  splashFactory: InkSparkle.splashFactory,
-                  minimumSize:
+                  splashFactory: InkSparkle.splashFactory, minimumSize:
                       MaterialStatePropertyAll(Size(double.infinity, 60.h)),
                   backgroundColor:
                       MaterialStatePropertyAll(AppColors().primaryColor),
@@ -250,11 +228,7 @@ class _StationsScreenState extends State<StationsScreen> {
               },
               child: Text(
                 Languages.of(context)!.addNewStation,
-                style: GoogleFonts.readexPro(
-                  fontSize: 16.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+
                 textAlign: TextAlign.center,
               ),
             ),

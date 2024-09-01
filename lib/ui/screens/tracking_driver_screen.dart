@@ -82,7 +82,7 @@ class _TrackingDriverScreenState extends State<TrackingDriverScreen> {
           backgroundColor: AppColors().primaryColor,
           title: Text(
             '${Languages.of(context)?.trackingShipment} ${widget.waybillCode}',
-            style: GoogleFonts.readexPro(
+            style: TextStyle(
               fontSize: 18.0.sp,
               color: Colors.white,
               fontWeight: FontWeight.w600,

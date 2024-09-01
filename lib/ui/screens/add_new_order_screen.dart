@@ -1,12 +1,17 @@
 import 'package:Quick_Power/bloc/stations/stations_bloc.dart';
 import 'package:Quick_Power/bloc/stations/stations_event.dart';
 import 'package:Quick_Power/models/stations_model.dart';
+import 'package:Quick_Power/ui/widgets/date_picker_widget.dart';
+import 'package:Quick_Power/ui/widgets/dropdown_cus.dart';
+import 'package:Quick_Power/ui/widgets/widgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -34,7 +39,7 @@ class AddNewOrderScreen extends StatefulWidget {
 }
 
 class _AddNewOrderScreenState extends State<AddNewOrderScreen> {
-  late DateTime? dateTime;
+  DateTime? dateTime;
   final TextEditingController _quantityController = MoneyMaskedTextController(
       precision: 0, decimalSeparator: '', thousandSeparator: ',')
     ..text = '0.0';
@@ -45,163 +50,175 @@ class _AddNewOrderScreenState extends State<AddNewOrderScreen> {
   ProductType? selectedProductType;
   final StationsBloc blocStations = StationsBloc();
   FocusNode focusNode = FocusNode();
+  late DateTime minDate;
+  late DateTime maxDate;
+  List<ProductType> avilableProducts = [];
+  int avilableQty = 0;
 
   @override
   void initState() {
     super.initState();
+    minDate = widget.createOrderModel.data!.availabilityProducts!
+        .map((e) => e.date!)
+        .toList()
+        .reduce((a, b) => a.isBefore(b) ? a : b);
+    maxDate = widget.createOrderModel.data!.availabilityProducts!
+        .map((e) => e.date!)
+        .toList()
+        .reduce((a, b) => a.isAfter(b) ? a : b);
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: BlocListener<HomeBloc, GeneralStates>(
-        bloc: blocHome,
-        listener: (context, state) {
-          if (state is SuccessState) {
-            Navigator.pop(context, true);
-          }
-        },
-        child: BlocListener<StationsBloc, GeneralStates>(
-          bloc: blocStations,
-          listener: (context, state) {
-            if (state is SuccessState) {
-              if (state.response != null) {
-                setState(() {
-
-                  widget.createOrderModel.data!.locations =
-                      state.response!.data!;
-                  if(widget.createOrderModel.data!.locations != null && widget.createOrderModel.data!.locations!.isNotEmpty) {
-                    selectedStation = widget.createOrderModel.data!.locations?.last;
-                  }
-                });
-              }
-            }
+    return Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: AppColors().primaryColor,
+          title: Text(
+            Languages.of(context)!.addNewStation,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+          centerTitle: true,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(16.0.r),
+            ),
+          ),
+        ),
+        body: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            FocusManager.instance.primaryFocus?.unfocus();
           },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 24.w),
-            child: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () async {
-                        dateTime = await selectDate(context);
-                        if (dateTime != null) {
-                          _dateController.text = DateFormat('EEEE, dd/MM/yyyy',
-                                  LanguageHelper.isEnglish ? 'en' : 'ar')
-                              .format(dateTime!);
+          child: BlocListener<HomeBloc, GeneralStates>(
+            bloc: blocHome,
+            listener: (context, state) {
+              if (state is SuccessState) {
+                Navigator.pop(context, true);
+              }
+            },
+            child: BlocListener<StationsBloc, GeneralStates>(
+                bloc: blocStations,
+                listener: (context, state) {
+                  if (state is SuccessState) {
+                    if (state.response != null) {
+                      setState(() {
+                        widget.createOrderModel.data!.locations =
+                            state.response!.data!;
+                        if (widget.createOrderModel.data!.locations != null &&
+                            widget
+                                .createOrderModel.data!.locations!.isNotEmpty) {
+                          selectedStation =
+                              widget.createOrderModel.data!.locations?.last;
                         }
-                      },
-                      child: Container(
-                          margin: EdgeInsets.only(bottom: 16.h),
-                          alignment: Alignment(-0.89.r, 0.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7.0.r),
-                            color: AppColors().backgroundColor,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.16),
-                                offset: Offset(0, 3.0.r),
-                                blurRadius: 6.0.r,
-                              ),
-                            ],
-                          ),
-                          child: TextFormField(
-                            enabled: false,
-                            cursorColor: AppColors().primaryColor,
-                            cursorHeight: 18.h,
-                            controller: _dateController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(
-                              isCollapsed: true,
-                              contentPadding: EdgeInsets.only(
-                                  left: 16.w,
-                                  right: 16.w,
-                                  bottom: 12.h,
-                                  top: 18.h),
-                              border: InputBorder.none,
-                              suffixIcon: Icon(
-                                Icons.calendar_month_rounded,
-                                color: AppColors().primaryColor,
-                              ),
-                              hintText: Languages.of(context)!.deliveryDate,
-                              hintMaxLines: 1,
-                              hintStyle: GoogleFonts.readexPro(
-                                fontSize: 13.0.sp,
-                                color: const Color(0xFF656565),
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            minLines: 1,
-                            maxLines: 3,
-                            validator: (s) {
-                              if (s!.isEmpty) {
+                      });
+                    }
+                  }
+                },
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 16.0, horizontal: 16.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DatePickerWidget(
+                          selectedDateTime: dateTime,
+                          availabilityProduct: widget
+                              .createOrderModel.data?.availabilityProducts,
+                          validation: (s) {
+                            if (dateTime == null) {
+                              return Languages.of(context)!.required;
+                            }
+                            return null;
+                          },
+                          onChanged: (date) {
+                            if (date != null) {
+                              selectedProductType = null;
+                              setState(() {
+                                dateTime = date;
+                                avilableProducts.clear();
+                                avilableProducts.addAll(widget
+                                        .createOrderModel.data?.productTypes ??
+                                    []);
+                                avilableProducts.removeWhere((element) =>
+                                    !(widget.createOrderModel.data
+                                            ?.availabilityProducts
+                                            ?.firstWhere((el) => (el.date
+                                                    ?.isAtSameMomentAs(date) ??
+                                                false))
+                                            .availabilityProductsDts
+                                            ?.any((e) => ((e.product!.id! ==
+                                                    element.id) &&
+                                                e.remainderQty != 0 &&
+                                                e.remainderTruck != 0)) ??
+                                        false));
+                              });
+                            }
+                            return null;
+                          },
+                          minDateTime: minDate,
+                          maxDateTime: maxDate,
+                          label: '*${Languages.of(context)?.deliveryDate}',
+                        ),
+                        GestureDetector(
+                          onTap: dateTime == null
+                              ? () {
+                                  Fluttertoast.showToast(
+                                      msg: 'برجاء اختيار تاريخ الاستلام أولاُ');
+                                }
+                              : null,
+                          behavior: HitTestBehavior.translucent,
+                          child: DropdownCus(
+                            title: '*${Languages.of(context)!.productType}',
+                            items: avilableProducts,
+                            selected: selectedProductType,
+                            enabled: dateTime != null,
+                            hintSearch: '',
+                            withSearch: false,
+                            validation: (s) {
+                              if (selectedProductType == null) {
                                 return Languages.of(context)!.required;
                               }
                               return null;
                             },
-                            style: GoogleFonts.readexPro(
-                                fontSize: 14.0.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          )),
-                    ),
-                    Container(
-                        margin: EdgeInsets.only(bottom: 16.h),
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        alignment: Alignment(-0.89.r, 0.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7.0.r),
-                          color: AppColors().backgroundColor,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.16),
-                              offset: Offset(0, 3.0.r),
-                              blurRadius: 6.0.r,
-                            ),
-                          ],
-                        ),
-                        child: DropdownButton<ProductType>(
-                          borderRadius: BorderRadius.circular(7.0.r),
-                          underline: const SizedBox(),
-                          isExpanded: true,
-                          style: GoogleFonts.readexPro(
-                              fontSize: 14.0.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
-                          elevation: 2.r.toInt(),
-                          value: selectedProductType,
-                          hint: Text(
-                            Languages.of(context)!.requiredProduct,
-                            style: GoogleFonts.readexPro(
-                                fontSize: 14.0.sp,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                          ),
-                          isDense: false,
-                          items: widget.createOrderModel.data!.productTypes!
-                              .map((ProductType value) {
-                            return DropdownMenuItem<ProductType>(
-                              value: value,
+                            itemBuilder: (c, e, b) => Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 16.h, horizontal: 24.w),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(value.name!),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Visibility(
+                                        visible: e == selectedProductType,
+                                        child: Icon(
+                                          Icons.check_rounded,
+                                          color: AppColors().primaryColor,
+                                        ),
+                                      ),
+                                      Text(
+                                        e?.name ?? '',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                    ],
+                                  ),
                                   Padding(
                                     padding:
                                         EdgeInsets.symmetric(horizontal: 8.0.w),
                                     child: Text(
-                                      '${NumberFormat("###,###0.00 ${Languages.of(context)!.sar}", LanguageHelper.isEnglish ? "en_US" : 'ar_EG').format(value.unitPrice ?? 0)} / ${Languages.of(context)!.l}',
-                                      style: GoogleFonts.readexPro(
+                                      '${NumberFormat("###,###0.00 ${Languages.of(context)!.sar}", LanguageHelper.isEnglish ? "en_US" : 'ar_EG').format(e.unitPrice ?? 0)} / ${Languages.of(context)!.l}',
+                                      style: TextStyle(
                                         fontSize: 13.0.sp,
                                         color: AppColors().primaryColor,
                                       ),
@@ -209,395 +226,315 @@ class _AddNewOrderScreenState extends State<AddNewOrderScreen> {
                                   ),
                                 ],
                               ),
-                            );
-                          }).toList(),
-                          onChanged: (_) {
-                            if (_ != null) {
+                            ),
+                            onChanged: (s) {
                               setState(() {
-                                selectedProductType = _;
+                                selectedProductType = s;
+                                _quantityController.text = '0';
+                                avilableQty = widget.createOrderModel.data
+                                        ?.availabilityProducts
+                                        ?.firstWhere((el) => (el.date
+                                                ?.isAtSameMomentAs(dateTime!) ??
+                                            false))
+                                        .availabilityProductsDts
+                                        ?.firstWhere((element) =>
+                                            element.product?.id == s.id)
+                                        .remainderQty ??
+                                    0;
                               });
-                            }
-                          },
-                        )),
-                    Container(
-                        margin: EdgeInsets.only(bottom: 16.h),
-                        alignment: Alignment(-0.89.r, 0.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7.0.r),
-                          color: AppColors().backgroundColor,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.16),
-                              offset: Offset(0, 3.0.r),
-                              blurRadius: 6.0.r,
-                            ),
-                          ],
-                        ),
-                        child: TextFormField(
-                          cursorColor: AppColors().primaryColor,
-                          cursorHeight: 18.h,
-                          controller: _quantityController,
-                          autovalidateMode: AutovalidateMode.disabled,
-                          textInputAction: TextInputAction.done,
-                          focusNode: focusNode,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          decoration: InputDecoration(
-                            isCollapsed: true,
-                            suffix: Text(Languages.of(context)!.l,
-                                style: GoogleFonts.readexPro(
-                                    fontSize: 14.0.sp,
-                                    color: AppColors().primaryColor,
-                                    fontWeight: FontWeight.w500)),
-                            contentPadding: EdgeInsets.only(
-                                left: 16.w,
-                                right: 16.w,
-                                bottom: 12.h,
-                                top: 12.h),
-                            border: InputBorder.none,
-
-                            hintText: Languages.of(context)!.requiredQuantity,
-                            hintMaxLines: 1,
-                            hintStyle: GoogleFonts.readexPro(
-                              fontSize: 13.0.sp,
-                              color: const Color(0xFF656565),
-                              fontWeight: FontWeight.w500,
-                            ),
+                            },
                           ),
-                          minLines: 1,
-                          onChanged: (s) {
-                            if (s == '0') {
-                              _quantityController.text = '';
-                            } else if (int.parse(s.replaceAll(',', '')) >
-                                50000) {
-                              _quantityController.value = const TextEditingValue(text: '0');
-                            }
-                            focusNode.notifyListeners();
-                            setState(() {});
-                          },
-                          maxLines: 3,
-                          validator: (s) {
-                            if (s!.isEmpty) {
+                        ),
+
+                        Visibility(
+                          visible: avilableQty != 0,
+                          child:  Padding(padding: EdgeInsets.only(bottom: 16.h),
+                            child: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(' الكمية المتاحة للمنتج : ${NumberFormat(
+                                "###,###",
+                                LanguageHelper.isEnglish ? 'en_US' : 'ar_EG',
+                              ).format(avilableQty)} ${Languages.of(context)!.l}'),
+                            ),)
+                        ),
+
+                        filedTextWidget(
+                            context: context,
+                            label: '*${Languages.of(context)!.quantity}',
+                            onChange: (s) {
+                              if (s == '') {
+                                _quantityController.text = '0';
+                              }
+                              focusNode.notifyListeners();
+                              setState(() {});
+                            },
+                            controller: _quantityController,
+                            inputType: TextInputType.number,
+                            suffixText: Languages.of(context)!.l,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9]')),
+                            ],
+                            textInputAction: TextInputAction.done,
+                            validation: (s) {
+                              if (s!.isEmpty) {
+                                return Languages.of(context)!.required;
+                              } else {
+                                if (int.parse(s.replaceAll(',', '')) < 10000) {
+                                  return 'Minimum 10,000';
+                                }
+                                
+                                if (int.parse(s.replaceAll(',', '')) >
+                                    avilableQty) {
+                                  return 'Maximum ${NumberFormat('###,###').format(avilableQty)}';
+                                }
+
+                              }
+                              return null;
+                            }),
+                        DropdownCus(
+                          title: '*${Languages.of(context)!.deliveryAddress}',
+                          items: [
+                            ...(widget.createOrderModel.data?.locations ?? []),
+                            Station(
+                              id: -500,
+                              name: 'dd',
+                            )
+                          ],
+                          selected: selectedStation,
+                          hintSearch: 'بحث',
+                          withSearch:
+                              (widget.createOrderModel.data?.locations ?? [])
+                                      .length >
+                                  7,
+                          validation: (s) {
+                            if (selectedStation == null) {
                               return Languages.of(context)!.required;
-                            } else if (int.parse(s.replaceAll(',', '')) <
-                                10000) {
-                              return 'Minimum 10,000';
-                            } else if (int.parse(s.replaceAll(',', '')) >
-                                50000) {
-                              return 'Maximum 50,000';
                             }
                             return null;
                           },
-                          style: GoogleFonts.readexPro(
-                              fontSize: 14.0.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
-                        )),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 16.h),
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      alignment: Alignment(-0.89.r, 0.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(7.0.r),
-                        color: AppColors().backgroundColor,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.16),
-                            offset: Offset(0, 3.0.r),
-                            blurRadius: 6.0.r,
-                          ),
-                        ],
-                      ),
-                      child: DropdownButton<Station>(
-                        borderRadius: BorderRadius.circular(7.0.r),
-                        underline: const SizedBox(),
-                        isExpanded: true,
-                        style: GoogleFonts.readexPro(
-                          fontSize: 14.0.sp,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        elevation: 2.r.toInt(),
-                        value: selectedStation,
-                        hint: Row(
-                          children: [
-                            Text(Languages.of(context)!.deliveryAddress),
-                          ],
-                        ),
-                        isDense: false,
-                        items: [
-                          ...widget.createOrderModel.data!.locations!
-                              .map((Station value) {
-                            return DropdownMenuItem<Station>(
-                              value: value,
-                              child: Text(value.name!),
-                            );
-                          }).toList(),
-                          DropdownMenuItem<Station>(
-                            value: Station(id: -5),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                                openDialog(
-                                        context,
-                                        (p0, p1, p2) =>
-                                            const AddNewStationScreen())
-                                    .then((value) {
-                                  if (value != null) {
-                                    blocStations.add(
-                                        AddNewStationEvent(value.toJson()));
-                                  }
-                                });
-                              },
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.add_rounded,
-                                    color: AppColors().primaryColor,
-                                  ),
-                                  SizedBox(
-                                    width: 4.w,
-                                  ),
-                                  Text(
-                                    Languages.of(context)!.addNewStation,
-                                    style: GoogleFonts.readexPro(
-                                        fontSize: 13.0.sp,
-                                        color: AppColors().primaryColor,
-                                        fontWeight: FontWeight.w500),
+                          itemBuilder: (c, e, b) => Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16.w, vertical: 16.w),
+                            child: e.id != -500
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: 275.w,
+                                        child: Text(
+                                          e?.name ?? '',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: e == selectedStation,
+                                        child: const Icon(Icons.check_rounded),
+                                      ),
+                                    ],
                                   )
-                                ],
-                              ),
-                            ),
+                                : Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        Languages.of(context)!.addNewStation,
+                                        style: TextStyle(
+                                            color: AppColors().primaryColor),
+                                      ),
+                                      Icon(
+                                        Icons.add_rounded,
+                                        color: AppColors().primaryColor,
+                                      )
+                                    ],
+                                  ),
                           ),
-                        ],
-                        onChanged: (_) {
-                          if (_?.id != -5) {
-                            setState(() {
-                              selectedStation = _;
-                            });
-                          } else {
-                            selectedStation = null;
-                          }
-                        },
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                            margin: EdgeInsets.only(bottom: 8.h),
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
-                            alignment: Alignment(-0.89.r, 0.0),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7.0.r),
-                              color: AppColors().backgroundColor,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.16),
-                                  offset: Offset(0, 3.0.r),
-                                  blurRadius: 6.0.r,
-                                ),
-                              ],
-                            ),
-                            child: DropdownButton<ProductType>(
-                              borderRadius: BorderRadius.circular(7.0.r),
-                              underline: const SizedBox(),
-                              isExpanded: true,
-                              style: GoogleFonts.readexPro(
-                                  fontSize: 14.0.sp,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500),
-                              elevation: 2.r.toInt(),
-                              value: selectedPaymentMethod,
-                              hint: Text(
-                                Languages.of(context)!.paymentMethod,
-                              ),
-                              isDense: false,
-                              items: widget.createOrderModel.data!.paymentMethods!
-                                  .map((ProductType value) {
-                                return DropdownMenuItem<ProductType>(
-                                  value: value,
-                                  child: Text(value.name!),
-                                );
-                              }).toList(),
-                              onChanged: (_) {
-                                if (_ != null) {
-                                  setState(() {
-                                    selectedPaymentMethod = _;
-                                  });
+                          onChanged: (s) {
+                            if (s.id == -500) {
+                              openDialog(
+                                      context,
+                                      (p0, p1, p2) =>
+                                          const AddNewStationScreen())
+                                  .then((value) {
+                                if (value != null) {
+                                  blocStations
+                                      .add(AddNewStationEvent(value.toJson()));
                                 }
-                              },
-                            )),
-                        Visibility(
-                          visible: selectedPaymentMethod == null,
-                          child: Padding(
-                            padding:  EdgeInsets.symmetric(horizontal: 10.w),
-                            child: Text(Languages.of(context)!.required,style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12.sp
-                            ),),
+                              });
+                            } else {
+                              setState(() {
+                                selectedStation = s;
+                              });
+                            }
+                          },
+                        ),
+                        DropdownCus(
+                          title: '*${Languages.of(context)!.paymentMethod}',
+                          items: widget.createOrderModel.data?.paymentMethods ??
+                              [],
+                          selected: selectedPaymentMethod,
+                          withSearch: false,
+                          validation: (s) {
+                            if (selectedPaymentMethod == null) {
+                              return Languages.of(context)!.required;
+                            }
+                            return null;
+                          },
+                          onChanged: (s) {
+                            setState(() {
+                              selectedPaymentMethod = s;
+                            });
+                          },
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0.w, vertical: 8.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                Languages.of(context)!.subTotal,
+                                style: TextStyle(
+                                  fontSize: 15.0.sp,
+                                  color: const Color(0xFF656565),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  selectedProductType == null
+                                      ? '--.--'
+                                      : '${NumberFormat.currency(decimalDigits: 0, symbol: '', locale: LanguageHelper.isEnglish ? 'en_US' : 'ar_EG').format(getTotal(unitPrice: selectedProductType?.unitPrice ?? 0.0, quantity: _quantityController.text))} ${Languages.of(context)!.sar}',
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    color: AppColors().primaryColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 10.h,)
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0.w, vertical: 4.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                '${NumberFormat.decimalPercentPattern(locale: LanguageHelper.isEnglish ? 'en_US' : 'ar_EG').format(widget.createOrderModel.data?.vat ?? 0.0)} ${Languages.of(context)!.vat}',
+                                style: TextStyle(
+                                  fontSize: 15.0.sp,
+                                  color: const Color(0xFF656565),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  selectedProductType == null
+                                      ? '--.--'
+                                      : '${NumberFormat.currency(decimalDigits: 0, symbol: '', locale: LanguageHelper.isEnglish ? 'en_US' : 'ar_EG').format(getTotal(unitPrice: selectedProductType?.unitPrice, quantity: _quantityController.text) * (widget.createOrderModel.data?.vat ?? 0.0))} ${Languages.of(context)!.sar}',
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    color: AppColors().primaryColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0.w, vertical: 8.h),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text(
+                                Languages.of(context)!.total,
+                              ),
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  selectedProductType == null
+                                      ? '--.--'
+                                      : '${NumberFormat.currency(decimalDigits: 0, symbol: '', locale: LanguageHelper.isEnglish ? 'en_US' : 'ar_EG').format(getTotal(unitPrice: selectedProductType?.unitPrice ?? 0, quantity: _quantityController.text) + getTotal(unitPrice: selectedProductType?.unitPrice ?? 0, quantity: _quantityController.text) * widget.createOrderModel.data!.vat!)} ${Languages.of(context)!.sar}',
+                                  style: TextStyle(
+                                    fontSize: 14.0.sp,
+                                    color: AppColors().primaryColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0.w, vertical: 8.h),
+                          child: Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: Text(
+                              Languages.of(context)?.notePriceBefore ?? '',
+                              style: TextStyle(
+                                fontSize: 12.0.sp,
+                                color: AppColors().primaryColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            style: ButtonStyle(
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(vertical: 16.h)),
+                                backgroundColor: MaterialStateProperty.all(
+                                    AppColors().primaryColor),
+                                shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0.r),
+                                ))),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                blocHome.add(StoreOrderEvent(data: {
+                                  'quantity': _quantityController.text
+                                      .replaceAll(',', ''),
+                                  'date': DateFormat('yyyy-MM-dd')
+                                      .format(dateTime!),
+                                  'product_type_id':
+                                      selectedProductType!.id!.toString(),
+                                  'payment_method_id':
+                                      selectedPaymentMethod!.id!.toString(),
+                                  'user_location_id':
+                                      selectedStation!.id!.toString(),
+                                }));
+                              }
+                            },
+                            child: Text(
+                              Languages.of(context)!.submit,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8.0.w, vertical: 8.h),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            Languages.of(context)!.subTotal,
-                            style: GoogleFonts.readexPro(
-                              fontSize: 15.0.sp,
-                              color: const Color(0xFF656565),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Text(
-                              selectedProductType == null
-                                  ? ''
-                                  : '${NumberFormat.currency(decimalDigits: 0, symbol: '', locale: LanguageHelper.isEnglish ? 'en_US' : 'ar_EG').format(getTotal(unitPrice: selectedProductType?.unitPrice ?? 0.0, quantity: _quantityController.text))} ${Languages.of(context)!.sar}',
-                              style: GoogleFonts.readexPro(
-                                fontSize: 14.0.sp,
-                                color: AppColors().primaryColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8.0.w, vertical: 4.h),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            '${NumberFormat.decimalPercentPattern(locale: LanguageHelper.isEnglish ? 'en_US' : 'ar_EG').format(widget.createOrderModel.data?.vat ?? 0.0)} ${Languages.of(context)!.vat}',
-                            style: GoogleFonts.readexPro(
-                              fontSize: 15.0.sp,
-                              color: const Color(0xFF656565),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Text(
-                              selectedProductType == null
-                                  ? ''
-                                  : '${NumberFormat.currency(decimalDigits: 0, symbol: '', locale: LanguageHelper.isEnglish ? 'en_US' : 'ar_EG').format(getTotal(unitPrice: selectedProductType?.unitPrice, quantity: _quantityController.text) * (widget.createOrderModel.data?.vat ?? 0.0))} ${Languages.of(context)!.sar}',
-                              style: GoogleFonts.readexPro(
-                                fontSize: 14.0.sp,
-                                color: AppColors().primaryColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8.0.w, vertical: 8.h),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            Languages.of(context)!.total,
-                            style: GoogleFonts.readexPro(
-                              fontSize: 15.0.sp,
-                              color: const Color(0xFF656565),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Text(
-                              selectedProductType == null
-                                  ? ''
-                                  : '${NumberFormat.currency(decimalDigits: 0, symbol: '', locale: LanguageHelper.isEnglish ? 'en_US' : 'ar_EG').format(getTotal(unitPrice: selectedProductType?.unitPrice ?? 0, quantity: _quantityController.text) + getTotal(unitPrice: selectedProductType?.unitPrice ?? 0, quantity: _quantityController.text) * widget.createOrderModel.data!.vat!)} ${Languages.of(context)!.sar}',
-                              style: GoogleFonts.readexPro(
-                                fontSize: 14.0.sp,
-                                color: AppColors().primaryColor,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8.0.w, vertical: 8.h),
-                      child: Align(
-                        alignment: AlignmentDirectional.centerStart,
-                        child: Text(
-                         Languages.of(context)?.notePriceBefore??'',
-                          style: GoogleFonts.readexPro(
-                            fontSize: 12.0.sp,
-                            color: AppColors().primaryColor,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                    Center(
-                      child: TextButton(
-                        style: ButtonStyle(
-                            padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                    horizontal: 34.w, vertical: 10.h)),
-                            backgroundColor: MaterialStateProperty.all(
-                                AppColors().primaryColor),
-                            shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0.r),
-                            ))),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            blocHome.add(StoreOrderEvent(data: {
-                              'quantity':
-                                  _quantityController.text.replaceAll(',', ''),
-                              'date':
-                                  DateFormat('yyyy-MM-dd').format(dateTime!),
-                              'product_type_id':
-                                  selectedProductType!.id!.toString(),
-                              'payment_method_id':
-                                  selectedPaymentMethod!.id!.toString(),
-                              'user_location_id':
-                                  selectedStation!.id!.toString(),
-                            }));
-                          }
-                        },
-                        child: Text(
-                          Languages.of(context)!.submit,
-                          style: GoogleFonts.readexPro(
-                            fontSize: 15.0.sp,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
+                )),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

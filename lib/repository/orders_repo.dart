@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:Quick_Power/models/driver_location.dart';
 import 'package:Quick_Power/models/notifications_model.dart';
+import 'package:Quick_Power/models/terms_model.dart';
 import 'package:dio/dio.dart';
 import 'package:Quick_Power/localization/LanguageHelper.dart';
 import 'package:Quick_Power/models/cancel_order_model.dart';
@@ -120,20 +121,20 @@ class OrdersRepo{
 
 
 
-  Future<Future<String?>> updateFCMToken(String token) async {
+  Future<String> updateFCMToken(String token) async {
     var headers = {
       'Accept': 'application/json',
       'app-type': 'CUSTOMER',
-      'lang': LanguageHelper.isEnglish ? 'en' : 'ar',
+      'lang':  'en',
       'Authorization': 'Bearer ${Preferences.getUserToken()!}'
     };
     var request = http.MultipartRequest('POST', Uri.parse(Apis.updateFCMToken));
-    request.fields.addAll({'user_token' : token});
+    request.fields.addAll({'token' : token});
 
     request.headers.addAll(headers);
 
     final response = await request.send().timeout(const Duration(seconds: 60));
-      return response.stream.bytesToString();
+      return await response.stream.bytesToString();
   }
 
 
@@ -207,5 +208,53 @@ class OrdersRepo{
 
     return modelResponse;
   }
+
+  Future<TermsModel?> getTerms() async {
+    var headers = {
+      'Accept': 'application/json',
+      'app-type': 'CUSTOMER',
+      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
+    };
+    var request = http.MultipartRequest('GET', Uri.parse(Apis.getTerms));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    TermsModel modelResponse;
+
+    if (response.statusCode == 200) {
+      modelResponse = TermsModel.fromJson(
+          jsonDecode(await response.stream.bytesToString()));
+    } else {
+      modelResponse = TermsModel(message: response.reasonPhrase, success: false);
+    }
+
+    return modelResponse;
+  }
+
+  Future<TermsModel?> getQs() async {
+    var headers = {
+      'app-type': 'CUSTOMER',
+      'Accept': 'application/json',
+      'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',
+      'Authorization': 'Bearer ${Preferences.getUserToken()!}'
+    };
+    var request = http.MultipartRequest('GET', Uri.parse(Apis.getQs));
+
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+    TermsModel modelResponse;
+
+    if (response.statusCode == 200) {
+      modelResponse = TermsModel.fromJson(
+          jsonDecode(await response.stream.bytesToString()));
+    } else {
+      modelResponse = TermsModel(message: response.reasonPhrase, success: false);
+    }
+
+    return modelResponse;
+  }
+
 
 }

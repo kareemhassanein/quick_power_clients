@@ -106,7 +106,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                 ),
                                 Text(
                                   Languages.of(context)!.forgerPassword,
-                                  style: GoogleFonts.readexPro(
+                                  style: TextStyle(
                                     fontSize: 30.0.sp,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -124,7 +124,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                 ),
                                 Text(
                                   Languages.of(context)!.forgetPasswordHint,
-                                  style: GoogleFonts.readexPro(
+                                  style: TextStyle(
                                     fontSize: 16.0.sp,
 
                                     height: 1.87.h,
@@ -167,7 +167,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                     padding: EdgeInsets.only(bottom: 24.h),
                                     child: Text(
                                       '${Languages.of(context)?.resendAfter} $_countDown ${Languages.of(context)?.seconds}',
-                                      style: GoogleFonts.readexPro(
+                                      style: TextStyle(
                                         fontSize: 16.0.sp,
                                         height: 1.87.h,
                                       ),
@@ -207,7 +207,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                       },
                                       child: Text(
                                         Languages.of(context)!.send,
-                                        style: GoogleFonts.readexPro(
+                                        style: TextStyle(
                                           fontSize: 24.0.sp,
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600,
@@ -226,7 +226,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                   child: Center(
                                     child: Text.rich(
                                       TextSpan(
-                                        style: GoogleFonts.readexPro(
+                                        style: TextStyle(
                                           fontSize: 16.5.sp,
 
                                           fontWeight: FontWeight.w500,
@@ -235,7 +235,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                                         children: [
                                           TextSpan(
                                             text: Languages.of(context)!.signIn.toUpperCase(),
-                                            style: GoogleFonts.readexPro(
+                                            style: TextStyle(
                                               color: AppColors().primaryColor,
                                             ),
                                           ),

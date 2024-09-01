@@ -319,4 +319,55 @@ class LanguageEn extends Languages {
   @override
   String get driverLocation => 'Driver Location';
 
+  @override
+  // TODO: implement addNewAddress
+  String get addNewAddress => 'Add Address';
+
+  @override
+// TODO: implement delete
+  String get delete => 'Delete';
+
+  @override
+// TODO: implement deleteMyAccount
+  String get deleteMyAccount => 'Delete My Account';
+
+  @override
+// TODO: implement deleteMyAccountHint
+  String get deleteMyAccountHint => 'Are you sure you want to permanently delete your account?';
+
+  @override
+// TODO: implement faq
+  String get faq => 'FAQ';
+
+  @override
+// TODO: implement firstName
+  String get firstName => 'First Name';
+
+  @override
+// TODO: implement lastName
+  String get lastName => 'Last Name';
+
+  @override
+// TODO: implement shareApp
+  String get shareApp => 'Share App';
+
+  @override
+// TODO: implement termsAndConditions
+  String get termsAndConditions => 'Terms and Conditions';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get systemMode => 'System Mode';
+
+  @override
+  String get lightMode => 'Light Mode';
+
+  @override
+  String get darkMode => 'Dark Mode';
+
+  @override
+  String get chooseTheme => 'Choose Theme';
+
 }
