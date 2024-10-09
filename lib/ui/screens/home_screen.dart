@@ -63,12 +63,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   ];
 
   _scrollListener() async {
-    var position = _scrollController.offset /
-        (_scrollController.position.maxScrollExtent -
-            _scrollController.position.minScrollExtent);
-    if (position > 0.5 &&
-        !_scrollController.position.outOfRange &&
-        loadingMore != _tabController.index &&
+    var position = _scrollController.offset / (_scrollController.position.maxScrollExtent - _scrollController.position.minScrollExtent);
+    if (position > 0.5 && !_scrollController.position.outOfRange && loadingMore != _tabController.index &&
         ((_tabController.index == 0 &&
                 homeModel!.data!.pagination!.totalPending! >
                     homeModel!.data!.pending!.length) ||
@@ -117,7 +113,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       if(message.data['notify_type'] == 'CarWaybill'){
         blocHome.add(GetOrderDetailsEvent(id: message.data['id'].toString()));
       }
-
     });
     super.initState();
   }
@@ -145,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    return DefaultTabController (
       length: 3,
       child: AnimatedBuilder(
           animation: _animationController,
