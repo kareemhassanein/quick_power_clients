@@ -44,7 +44,8 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
 
   Future<void> _updatePlaceMark() async {
     List<Placemark> placemarks = await placemarkFromCoordinates(
-        latLng!.latitude, latLng!.longitude,
+      latLng!.latitude,
+      latLng!.longitude,
     );
     Placemark placeMark = placemarks[0];
     String? name = placeMark.street;
@@ -68,13 +69,12 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               filedTextWidget(
-                  context: context,
-                  label: '*${Languages.of(context)!.name}',
-
-                  controller: _nameController,
-                  inputType: TextInputType.name,
-
-                  textInputAction: TextInputAction.done,
+                context: context,
+                label: '*${Languages.of(context)!.name}',
+                bgColor: Theme.of(context).scaffoldBackgroundColor,
+                controller: _nameController,
+                inputType: TextInputType.name,
+                textInputAction: TextInputAction.done,
                 minLines: 1,
                 maxLines: 3,
                 validation: (s) {
@@ -82,24 +82,24 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
                     return Languages.of(context)!.required;
                   }
                   return null;
-                },),
+                },
+              ),
               filedTextWidget(
-                  context: context,
-                  label: '*${Languages.of(context)!.address}',
-
-                  controller: _addressController,
-                  inputType: TextInputType.streetAddress,
-
-                  textInputAction: TextInputAction.done,
+                context: context,
+                label: '*${Languages.of(context)!.address}',
+                bgColor: Theme.of(context).scaffoldBackgroundColor,
+                controller: _addressController,
+                inputType: TextInputType.streetAddress,
+                textInputAction: TextInputAction.done,
                 validation: (s) {
                   if (s!.isEmpty) {
                     return Languages.of(context)!.required;
                   }
                   return null;
-                },),
-
+                },
+              ),
               GestureDetector(
-                onTap: (){
+                onTap: () {
                   navigateToScreen(
                       context,
                       MapPickLocationScreen(
@@ -112,23 +112,23 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
                   });
                 },
                 child: filedTextWidget(
-                    context: context,
-                    enabled: false,
-                    label: '*${Languages.of(context)!.location}',
-
-                    controller: _locationController,
-                    inputType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
+                  context: context,
+                  enabled: false,
+                  label: '*${Languages.of(context)!.location}',
+                  bgColor: Theme.of(context).scaffoldBackgroundColor,
+                  controller: _locationController,
+                  inputType: TextInputType.text,
+                  textInputAction: TextInputAction.done,
                   minLines: 1,
                   maxLines: 5,
                   validation: (s) {
-                    if (s!.isEmpty && widget.station == null ) {
+                    if (s!.isEmpty && widget.station == null) {
                       return Languages.of(context)!.required;
                     }
                     return null;
-                  },),
+                  },
+                ),
               ),
-
               SizedBox(
                 height: 20.h,
               ),
@@ -156,8 +156,7 @@ class _AddNewStationScreenState extends State<AddNewStationScreen> {
                     }
                   },
                   child: Text(
-                    '${Languages.of(context)!.submit}${widget.station != null ?' ${Languages.of(context)!.edit}' : ''}',
-
+                    '${Languages.of(context)!.submit}${widget.station != null ? ' ${Languages.of(context)!.edit}' : ''}',
                   ),
                 ),
               ),

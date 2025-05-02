@@ -1,5 +1,7 @@
 
 
+import 'dart:io';
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -60,7 +62,9 @@ class Preferences {
   }
 
   static Future<bool> removeUserData() async {
-    await FirebaseMessaging.instance.deleteToken();
+    if(Platform.isAndroid) {
+      await FirebaseMessaging.instance.deleteToken();
+    }
     return await sharedPreferences.remove('userToken');
   }
 }

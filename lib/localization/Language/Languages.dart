@@ -111,5 +111,8 @@ abstract class Languages {
   String get lightMode;
   String get darkMode;
   String get chooseTheme;
-
+  String get loginRequerdMessage;
+  String get skip;
+  String get aboutApp;
+  String get aboutAppDesc;
 }

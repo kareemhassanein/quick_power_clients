@@ -61,10 +61,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: AppColors().primaryColor,
           title: Text(
             Languages.of(context)!.myProfile,
-            style: TextStyle(
-              fontSize: 18.0.sp,
+            style: const TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w600,
             ),
           ),
           centerTitle: true,
@@ -133,7 +131,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: SizedBox(
                                       width: 95.0.r,
                                       height: 95.0.r,
-                                      child: ClipOval(child:_userModel!.data!.image == null ? Image.asset('assets/logo.png') : imageNetwork(_userModel!.data!.image!)),
+                                      child: ClipOval(
+                                        child: _userModel?.data?.image == null
+                                            ? Container(
+                                            color: AppColors().primaryColor,child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Image.asset('assets/logo.png',),
+                                        ))
+                                            : imageNetwork(
+                                            _userModel?.data?.image ?? ''),
+                                      ),
                                     ),
                                   ),
                                   Positioned(
@@ -213,30 +220,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: StatefulBuilder(
                             builder: (context, snapshot) {
                               _stateSetter = snapshot;
-                              return ElevatedButton(
-                                style: ButtonStyle(
-                                  elevation: const MaterialStatePropertyAll(0.0),
-                                  overlayColor: const MaterialStatePropertyAll(Colors.white12),
-                                  backgroundColor: MaterialStatePropertyAll(AppColors().primaryColor.withOpacity((_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email!  || _idController.text.length>=10 ) ? 1.0 : 0.25) ),
-                                  padding: MaterialStatePropertyAll(EdgeInsets.symmetric(vertical: 8.h)),
-                                  shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.r)
-                                  ))
-                                ),
-                                  onPressed: (_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email! || _idController.text.length>=10 ) ? (){
-                                  bloc.add(UpdateUserDataEvent(DataOfUser(
-                                    name: _nameController.text,
-                                    email: _emailController.text,
-                                    vatNo: _vatNoController.text,
-                                    address: _addressController.text,
-                                    userId: _idController.text,
-                                  ).toDataMap()));
-                                  } : null,
-                                  child: Text(Languages.of(context)!.save, style: TextStyle(
-                                fontSize: 22.0.sp,
-                                color: AppColors().backgroundColor,
-                                fontWeight: FontWeight.w600,
-                              ),));
+                            return  SizedBox(
+                                  width: double.infinity,
+                                  child: TextButton(
+                                    style: ButtonStyle(
+                                        padding: MaterialStateProperty.all(
+                                            EdgeInsets.symmetric(vertical: 16.h)),
+                                        backgroundColor: MaterialStatePropertyAll(AppColors().primaryColor.withOpacity((_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email!  || ( (_idController.text != _userModel?.data?.userId ) && _idController.text.length >= 10 ) ) ? 1.0 : 0.25) ),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10.0.r),
+                                            ))),
+                                    onPressed: (_nameController.text != _userModel!.data!.name! || _emailController.text != _userModel!.data!.email! || ( (_idController.text != _userModel?.data?.userId ) && _idController.text.length >= 10 )) ? (){
+                                      bloc.add(UpdateUserDataEvent(DataOfUser(
+                                        name: _nameController.text,
+                                        email: _emailController.text,
+                                        vatNo: _vatNoController.text,
+                                        address: _addressController.text,
+                                        userId: _idController.text,
+                                      ).toDataMap()));
+
+                                    } : null,
+                                    child: Text(
+                                      Languages.of(context)!.save,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ));
                             }
                           ),
                         )

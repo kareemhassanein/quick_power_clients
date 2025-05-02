@@ -370,4 +370,29 @@ class LanguageEn extends Languages {
   @override
   String get chooseTheme => 'Choose Theme';
 
+  @override
+  String get loginRequerdMessage => 'Login is required to use this service';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  // TODO: implement aboutApp
+  String get aboutApp => 'About App';
+
+  @override
+  String get aboutAppDesc => '''
+Quick Power is a personal organizational tool that helps users easily log and track fuel needs for their specific locations.
+
+Through the app, the user can:
+- Create fuel requests for their various locations.
+- Track the status of a request from creation to completion.
+- Add and manage their locations.
+- View the history of previous requests and their details.
+- Receive notifications when the request status is updated.
+- Customize site names for easier tracking and management.
+
+The app requires login when the user tries to create a new request or manage their locations, as these operations depend on data tied to the user's account to ensure accurate tracking of each request.
+''';
+
 }

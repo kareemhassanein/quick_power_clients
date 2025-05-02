@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+import 'package:Quick_Power/localization/Language/Languages.dart';
 import 'package:Quick_Power/models/create_order_model.dart';
 import 'package:Quick_Power/ui/functions/functions.dart';
+import 'package:Quick_Power/ui/screens/login_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -235,7 +237,7 @@ Widget imageNetwork(String url, {BoxFit boxFit = BoxFit.cover}) =>
         url,
       ) =>
           loadingWidget(),
-      errorWidget: (context, url, error) => const Icon(Icons.close_rounded),
+      errorWidget: (context, url, error) => Image.asset('assets/logo.png'),
     );
 
 Future<DateTime?> showCalendarDialog(
@@ -377,6 +379,32 @@ Widget Function(BuildContext, Animation<double>, Animation<double>,
       );
     };
 
+void showLoginDialog(BuildContext context){
+  openDialog(context, (a1,a2,d)=> Padding(
+    padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.h),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(Languages.of(context)!.loginRequerdMessage, style: TextStyle(fontWeight: FontWeight.w700),),
+        SizedBox(height: 8.h,),
+        Row(mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          TextButton(onPressed: (){
+            Navigator.pop(context);
+          }, child: Text(Languages.of(context)!.skip, style: const TextStyle(
+            color: Colors.grey
+          ),)),
+          TextButton(onPressed: (){
+            navigateToScreen(context, const LoginScreen());
+          }, child: Text(Languages.of(context)!.signIn, style: TextStyle(
+            color: AppColors().primaryColor
+          ),)),
+        ],),
+      ],
+    ),
+  ));
+}
+
 Widget filedTextWidget({
   String? label,
   String? hint,
@@ -392,6 +420,7 @@ Widget filedTextWidget({
   bool? enabled,
   bool passwordVisible = false,
   Function()? onPasswordChange,
+  Color? bgColor,
   List<TextInputFormatter>? inputFormatters,
   Widget? prefix,
   String? suffixText,
@@ -456,7 +485,7 @@ Widget filedTextWidget({
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 14.h),
                 filled: true,
-                fillColor: Theme.of(context).cardColor,
+                fillColor: bgColor??Theme.of(context).cardColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
                   borderSide: BorderSide.none,

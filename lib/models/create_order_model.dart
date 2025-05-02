@@ -45,7 +45,7 @@ class Data {
   });
 
   double? vat;
-  int? customerCreditLimit;
+  dynamic customerCreditLimit;
   List<Station>? locations;
   List<ProductType>? paymentMethods;
   List<ProductType>? productTypes;

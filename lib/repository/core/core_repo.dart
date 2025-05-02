@@ -17,8 +17,8 @@ class CoreRepo{
         'app-type': 'CUSTOMER',
         'Authorization': 'Bearer ${Preferences.getUserToken()!}',
         'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
-      sendTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
+      sendTimeout: const Duration(seconds: 120),
+      receiveTimeout: const Duration(seconds: 120),
       receiveDataWhenStatusError: true,
       validateStatus: (stats) {
         return true;
@@ -62,8 +62,8 @@ class CoreRepo{
                 'app-type': 'CUSTOMER',
                 'Authorization': 'Bearer ${Preferences.getUserToken()!}',
                 'lang' : LanguageHelper.isEnglish ? 'en' : 'ar',},
-              sendTimeout: const Duration(seconds: 7),
-              receiveTimeout: const Duration(seconds: 7),
+              sendTimeout: const Duration(seconds: 120),
+              receiveTimeout: const Duration(seconds: 120),
               receiveDataWhenStatusError: true,
               validateStatus: (stats) {
                 return true;

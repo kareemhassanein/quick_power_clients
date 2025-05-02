@@ -50,22 +50,27 @@ class _AddNewOrderScreenState extends State<AddNewOrderScreen> {
   ProductType? selectedProductType;
   final StationsBloc blocStations = StationsBloc();
   FocusNode focusNode = FocusNode();
-  late DateTime minDate;
-  late DateTime maxDate;
+  DateTime? minDate;
+  DateTime? maxDate;
   List<ProductType> avilableProducts = [];
   int avilableQty = 0;
 
   @override
   void initState() {
     super.initState();
-    minDate = widget.createOrderModel.data!.availabilityProducts!
-        .map((e) => e.date!)
-        .toList()
-        .reduce((a, b) => a.isBefore(b) ? a : b);
-    maxDate = widget.createOrderModel.data!.availabilityProducts!
-        .map((e) => e.date!)
-        .toList()
-        .reduce((a, b) => a.isAfter(b) ? a : b);
+    if(widget.createOrderModel.data?.availabilityProducts?.isNotEmpty??false){
+      print(widget.createOrderModel.toJson().toString());
+      minDate = widget.createOrderModel.data!.availabilityProducts!.map((e) => e.date!).toList()
+          .reduce((a, b) => a.isBefore(b) ? a : b);
+      maxDate = widget.createOrderModel.data!.availabilityProducts!.map((e) => e.date??DateTime.now()).toList()
+          .reduce((a, b) => a.isAfter(b) ? a : b);
+    }else{
+      minDate = DateTime.now();
+      maxDate = DateTime.now()..add(const Duration(days: 1));
+    }
+    if(widget.createOrderModel.data?.availabilityProducts?.length== 1){
+      maxDate = maxDate?.add(const Duration(days: 1));
+    }
   }
 
   @override
@@ -75,7 +80,7 @@ class _AddNewOrderScreenState extends State<AddNewOrderScreen> {
           elevation: 0,
           backgroundColor: AppColors().primaryColor,
           title: Text(
-            Languages.of(context)!.addNewStation,
+            Languages.of(context)!.createNewOrder,
             style: const TextStyle(
               color: Colors.white,
             ),
@@ -161,7 +166,8 @@ class _AddNewOrderScreenState extends State<AddNewOrderScreen> {
                             return null;
                           },
                           minDateTime: minDate,
-                          maxDateTime: maxDate,
+                          enabled: widget.createOrderModel.data?.availabilityProducts?.isNotEmpty??false,
+                          maxDateTime: maxDate??DateTime.now()..add(const Duration(days: 1)),
                           label: '*${Languages.of(context)?.deliveryDate}',
                         ),
                         GestureDetector(

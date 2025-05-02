@@ -48,11 +48,9 @@
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true/>
 		<key>NSPhotoLibraryUsageDescription</key>
-		<string>Pick Customer Photo</string>
+		<string>Pick Customer photo from gallery</string>
 		<key>NSCameraUsageDescription</key>
-		<string>Pick Customer Photo</string>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>Pick Customer Photo with camera</string>
+		<string>Pick Customer photo using camera</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 		<key>LSApplicationQueriesSchemes</key>
@@ -61,13 +59,7 @@
 			<string>comgooglemaps</string>
 		</array>
 		<key>NSLocationWhenInUseUsageDescription</key>
-		<string>This app needs access to location when open.</string>
-		<key>NSLocationAlwaysUsageDescription</key>
-		<string>This app needs access to location when in the background.</string>
-		<key>NSAppTransportSecurity</key>
-        <dict>
-            <key>NSAllowsLocalNetworking</key>
-            <true/>
-        </dict>
+		<string>To enable the user to add his addresses using location</string>
+
 	</dict>
 </plist>

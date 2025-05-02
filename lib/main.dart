@@ -13,7 +13,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:Quick_Power/preference.dart';
-import 'package:Quick_Power/ui/screens/login_screen.dart';
 import 'package:Quick_Power/ui/screens/splash_screen.dart';
 
 import 'constrants/colors.dart';

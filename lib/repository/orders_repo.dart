@@ -76,7 +76,7 @@ class OrdersRepo{
 
     request.headers.addAll(headers);
 
-      final response = await request.send().timeout(const Duration(seconds: 12));
+      final response = await request.send().timeout(const Duration(seconds: 120));
 
       CreateOrderModel modelResponse;
       modelResponse =
@@ -96,7 +96,7 @@ class OrdersRepo{
 
     request.headers.addAll(headers);
 
-    final response = await request.send().timeout(const Duration(seconds: 60));
+    final response = await request.send().timeout(const Duration(seconds: 120));
 
     NotificationModel modelResponse;
       modelResponse =
@@ -115,7 +115,7 @@ class OrdersRepo{
 
     request.headers.addAll(headers);
 
-    final response = await request.send().timeout(const Duration(seconds: 60));
+    final response = await request.send().timeout(const Duration(seconds: 120));
       return response.stream.bytesToString();
   }
 
@@ -133,7 +133,7 @@ class OrdersRepo{
 
     request.headers.addAll(headers);
 
-    final response = await request.send().timeout(const Duration(seconds: 60));
+    final response = await request.send().timeout(const Duration(seconds: 120));
       return await response.stream.bytesToString();
   }
 
@@ -151,7 +151,7 @@ class OrdersRepo{
 
     http.StreamedResponse response = await request.send();
 
-    // print(await response.stream.bytesToString());
+    print(data);
     PostOrderModel modelResponse;
 
     if (response.statusCode == 200) {
@@ -201,8 +201,6 @@ class OrdersRepo{
 
     http.StreamedResponse response = await request.send();
     DriverLocation modelResponse;
-
-
       modelResponse = DriverLocation.fromJson(
           jsonDecode(await response.stream.bytesToString()));
 

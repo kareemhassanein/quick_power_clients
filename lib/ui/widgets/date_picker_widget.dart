@@ -57,7 +57,7 @@ class DatePickerWidget extends StatelessWidget {
                 await showCalendarDialog(
                   context,
                   selectedDateTime,
-                  min: minDateTime!,
+                  min: minDateTime??DateTime.now(),
                   max: maxDateTime,
                   availabilityProduct: availabilityProduct
                 ).then(onChanged);

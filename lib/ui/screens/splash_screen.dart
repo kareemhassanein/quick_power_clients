@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen>
     controller = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 3500))
       ..forward().then((value) => controller2.forward().then((value) =>
-          navigateToScreen(context, Preferences.getUserToken() == null ? const LoginScreen() : const HomeScreen(), transitionsBuilder:
+          navigateToScreen(context, const HomeScreen(), transitionsBuilder:
               (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: animation,

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:Quick_Power/bloc/general_states.dart';
 import 'package:Quick_Power/bloc/stations/stations_bloc.dart';
 import 'package:Quick_Power/bloc/stations/stations_event.dart';
@@ -13,7 +12,6 @@ import 'package:Quick_Power/constrants/colors.dart';
 import 'package:Quick_Power/localization/Language/Languages.dart';
 import 'package:Quick_Power/models/stations_model.dart';
 import 'package:Quick_Power/ui/screens/add_new_station_screen.dart';
-import 'package:Quick_Power/ui/widgets/widgets.dart';
 
 import '../functions/functions.dart';
 
